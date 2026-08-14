@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Yamilet Pérez</title>
+  <script>
+    (function(){
+      let saved = null;
+      try { saved = localStorage.getItem('yamiletLang'); } catch(e) {}
+      const lang = saved ? saved : ((navigator.language || 'es').toLowerCase().startsWith('it') ? 'it' : 'es');
+      location.replace(lang === 'it' ? './it/' : './es/');
+    })();
+  </script>
+</head>
+<body>
+  <p><a href="./es/">Español</a> · <a href="./it/">Italiano</a></p>
+</body>
+</html>
