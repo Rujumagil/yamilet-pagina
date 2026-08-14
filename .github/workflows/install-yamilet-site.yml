@@ -6,19 +6,25 @@ on:
       - feature/yamilet-v3-completa
     paths:
       - '.site-upload/READY'
+      - '.github/workflows/install-yamilet-site.yml'
 
 permissions:
   contents: write
 
 jobs:
   install:
-    if: ${{ hashFiles('.site-upload/READY') != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: feature/yamilet-v3-completa
+
+      - name: Confirmar paquete listo
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f .site-upload/READY
 
       - name: Reconstruir paquete
         shell: bash
@@ -73,9 +79,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          if git diff --cached --quiet; then
-            echo 'No hay cambios por guardar.'
-          else
-            git commit -m 'Build: sitio bilingüe Yamilet Pérez V3'
-            git push origin HEAD:feature/yamilet-v3-completa
-          fi
+          git commit -m 'Build: sitio bilingüe Yamilet Pérez V3'
+          git push origin HEAD:feature/yamilet-v3-completa
