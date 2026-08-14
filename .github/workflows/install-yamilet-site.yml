@@ -1,0 +1,81 @@
+name: Instalar sitio Yamilet
+
+on:
+  push:
+    branches:
+      - feature/yamilet-v3-completa
+    paths:
+      - '.site-upload/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    if: ${{ hashFiles('.site-upload/READY') != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: feature/yamilet-v3-completa
+
+      - name: Reconstruir paquete
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            .site-upload/chunk-00.txt \
+            .site-upload/chunk-01.txt \
+            .site-upload/chunk-02.txt \
+            .site-upload/chunk-03.txt \
+            .site-upload/chunk-04a.txt \
+            .site-upload/chunk-04b.txt \
+            .site-upload/chunk-04c.txt \
+            .site-upload/chunk-05.txt \
+            > /tmp/yamilet-site.b64
+          base64 --decode /tmp/yamilet-site.b64 > /tmp/yamilet-site.zip
+          unzip -t /tmp/yamilet-site.zip
+          rm -rf /tmp/yamilet-site
+          mkdir -p /tmp/yamilet-site
+          unzip -q /tmp/yamilet-site.zip -d /tmp/yamilet-site
+
+      - name: Instalar en raíz del repositorio
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf \
+            yamilet-perez-site-v2-verde-github \
+            assets es it \
+            index.html app.js styles.css README.md robots.txt sitemap.xml
+          cp -a /tmp/yamilet-site/. .
+          rm -rf .site-upload
+          rm -f .github/workflows/install-yamilet-site.yml
+
+      - name: Verificar estructura
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f index.html
+          test -f styles.css
+          test -f app.js
+          test -f es/index.html
+          test -f it/index.html
+          test -f assets/hero-yamilet.webp
+          test -f assets/curso-metodo-mes.webp
+          test -f assets/libro-metodo-mes.webp
+          echo 'Estructura validada correctamente.'
+
+      - name: Guardar sitio reconstruido
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No hay cambios por guardar.'
+          else
+            git commit -m 'Build: sitio bilingüe Yamilet Pérez V3'
+            git push origin HEAD:feature/yamilet-v3-completa
+          fi
