@@ -41,3 +41,5 @@ jobs:
           git add -A
           git commit -m 'Assets V6: alta calidad móvil, logo transparente y libros HD'
           git push origin HEAD:gh-pages
+
+# trigger 2026-08-16
