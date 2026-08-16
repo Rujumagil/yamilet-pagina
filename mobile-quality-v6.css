@@ -1,0 +1,31 @@
+/* V6 · Calidad móvil, proporciones premium y logo limpio */
+
+header{background:rgba(247,243,234,.82);backdrop-filter:blur(20px) saturate(135%);-webkit-backdrop-filter:blur(20px) saturate(135%)}
+.brand-logo{display:flex;align-items:center;gap:12px}
+.brand-logo img{width:64px;height:64px;object-fit:contain;border-radius:0;background:transparent;box-shadow:none;filter:none}
+
+.hero-media{background:linear-gradient(145deg,#f6f1e8,#e9efe7);box-shadow:0 24px 64px rgba(36,61,49,.14),inset 0 1px 0 rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.72)}
+.hero-media img{image-rendering:auto;object-fit:cover;object-position:center 34%}
+
+.book{background:rgba(255,255,255,.50);backdrop-filter:blur(18px) saturate(125%);-webkit-backdrop-filter:blur(18px) saturate(125%);border:1px solid rgba(255,255,255,.72);border-radius:30px;padding:24px 18px 28px;box-shadow:0 18px 46px rgba(42,67,53,.08)}
+.book .cover{width:min(100%,286px);height:auto!important;aspect-ratio:2/3!important;padding:0!important;border:none!important;background:transparent!important;box-shadow:none!important;overflow:visible!important}
+.book .cover img{width:100%;height:100%;object-fit:contain;transform:none!important;filter:drop-shadow(0 18px 20px rgba(27,42,34,.14))}
+
+@media(max-width:620px){
+  .container{width:min(100% - 32px,var(--max))}
+  .nav{height:82px}
+  .brand-logo img{width:60px;height:60px}
+  .hero{padding-top:46px}
+  .hero-grid{gap:34px}
+  .hero-media{width:min(100%,430px);max-width:none;aspect-ratio:4/5;border-radius:32px}
+  .hero-media img{width:100%;height:100%;object-fit:cover;object-position:center 32%}
+  .trustgrid{border-radius:28px;box-shadow:0 16px 42px rgba(45,69,56,.07)}
+  .books{padding:76px 0}
+  .books-grid{gap:32px}
+  .book{width:100%;padding:24px 18px 30px;border-radius:32px}
+  .book .cover{width:min(74vw,300px);max-width:300px;aspect-ratio:2/3!important;margin-bottom:22px}
+  .book h3{font-size:27px}
+  .book p{font-size:16px;line-height:1.6}
+  .about-media{width:min(100%,430px);max-width:none;aspect-ratio:4/5}
+  .about-media img{object-position:center 25%}
+}
