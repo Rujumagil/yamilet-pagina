@@ -1,0 +1,43 @@
+name: Instalar imágenes V6 Yamilet
+
+on:
+  push:
+    branches: [feature/mobile-quality-assets-v6]
+    paths:
+      - 'yamilet-assets-mobile-v6.zip'
+      - '.github/workflows/install-yamilet-assets-v6.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/mobile-quality-assets-v6
+          fetch-depth: 0
+
+      - name: Instalar imágenes optimizadas
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          unzip -o yamilet-assets-mobile-v6.zip -d assets
+          test -s assets/hero-yamilet.webp
+          test -s assets/logo-yamilet.webp
+          test -s assets/libro-apegos.webp
+          rm -f yamilet-assets-mobile-v6.zip
+          rm -f .github/workflows/install-yamilet-assets-v6.yml
+
+      - name: Publicar en gh-pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Assets V6: alta calidad móvil, logo transparente y libros HD'
+          git push origin HEAD:gh-pages
