@@ -1,4 +1,43 @@
 (function(){
+  // PNG oficiales: si el archivo existe en /assets, sustituye automáticamente
+  // la versión WebP actual. Si todavía no existe, conserva la imagen anterior.
+  const probeAndSwap = (img, nextSrc) => {
+    if(!img || !nextSrc) return;
+    const probe = new Image();
+    probe.onload = () => { img.src = nextSrc; };
+    probe.src = nextSrc;
+  };
+
+  document.querySelectorAll('img[src$=".webp"]').forEach(img => {
+    const current = img.getAttribute('src');
+    if(!current) return;
+    probeAndSwap(img, current.replace(/\.webp$/i, '.png'));
+  });
+
+  // Imágenes editoriales independientes para el blog.
+  const blogAssets = [
+    '../assets/blog-escritura-terapeutica.png',
+    '../assets/blog-mindfulness-mujer-actual.png',
+    '../assets/blog-soltar-volver-a-ti.png',
+    '../assets/blog-rituales-centro.png'
+  ];
+  document.querySelectorAll('#blog .thumb img').forEach((img, index) => {
+    if(blogAssets[index]) probeAndSwap(img, blogAssets[index]);
+  });
+
+  // En móvil preferimos la portada vertical del curso si ya fue subida.
+  const courseImg = document.querySelector('.course-media img');
+  const setResponsiveCourseAsset = () => {
+    if(!courseImg) return;
+    if(window.matchMedia('(max-width: 620px)').matches){
+      probeAndSwap(courseImg, '../assets/curso-metodo-mes-vertical.png');
+    } else {
+      probeAndSwap(courseImg, '../assets/curso-metodo-mes.png');
+    }
+  };
+  setResponsiveCourseAsset();
+  window.addEventListener('resize', setResponsiveCourseAsset, {passive:true});
+
   const menuBtn = document.querySelector('[data-menu-btn]');
   const nav = document.querySelector('[data-nav]');
   if(menuBtn && nav){
