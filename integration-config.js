@@ -3,6 +3,10 @@ window.YAMILET_INTEGRATION_CONFIG = {
     enabled: false,
     url: ""
   },
+  booking: {
+    enabled: false,
+    endpoint: ""
+  },
   leadCapture: {
     enabled: false,
     endpoint: ""
