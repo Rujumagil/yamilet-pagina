@@ -1,12 +1,14 @@
-window.YAMILET_INTEGRATION = Object.freeze({
-  workspaceSlug: "yamilet-mes",
-  localeDefault: "es",
+window.YAMILET_INTEGRATION_CONFIG = {
   academy: {
     enabled: false,
-    url: "https://academia.yamiletperez.com"
+    url: ""
+  },
+  booking: {
+    enabled: false,
+    endpoint: ""
   },
   leadCapture: {
     enabled: false,
     endpoint: ""
   }
-});
+};
