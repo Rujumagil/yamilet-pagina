@@ -1,83 +1,62 @@
-/* V6 · Calidad visual móvil y proporciones premium */
+/* V8 · Calidad móvil, logo transparente y proporciones elegantes */
 
-/* Header: integrar el logo actual mientras se sustituye por el PNG transparente maestro */
-header{
-  background:rgba(6,61,69,.94)!important;
-  border-bottom:1px solid rgba(231,189,106,.22)!important;
-  box-shadow:0 8px 28px rgba(6,61,69,.12);
-  -webkit-backdrop-filter:blur(18px) saturate(125%);
-  backdrop-filter:blur(18px) saturate(125%);
-}
-.nav{height:84px}
+/* Header / logo */
 .brand{
   display:flex;
   align-items:center;
-  min-width:0;
+  justify-content:center;
+  width:72px;
+  height:72px;
+  padding:8px;
+  background:linear-gradient(145deg,#073f45,#0a4e4f);
+  border:1px solid rgba(183,154,99,.35);
+  border-radius:18px;
+  box-shadow:0 10px 26px rgba(6,61,69,.14);
+  flex:0 0 auto;
 }
 .brand img{
-  width:82px;
-  height:62px;
+  width:100%;
+  height:100%;
   object-fit:contain;
-  object-position:center;
   display:block;
-  mix-blend-mode:screen;
-  filter:contrast(1.08) saturate(1.06);
+  background:transparent!important;
 }
-.navlinks a{color:#fffaf0!important}
-.navlinks a:hover{color:#e7bd6a!important}
-.navlinks .btn-primary{background:#e7bd6a!important;color:#173f3c!important}
-.lang{background:rgba(255,255,255,.10)!important;border-color:rgba(255,255,255,.24)!important}
-.lang a{color:#fffaf0!important}
-.lang a.active{background:#fffaf0!important;color:#174d46!important}
-.menu-btn{
-  color:#fffaf0!important;
-  background:rgba(255,255,255,.10)!important;
-  border:1px solid rgba(255,255,255,.26)!important;
-  box-shadow:0 8px 24px rgba(0,0,0,.10);
-}
-.welcome-logo{
-  mix-blend-mode:screen;
-  filter:contrast(1.08) saturate(1.08);
+.welcome-logo,.footer-logo{
+  background:transparent!important;
+  object-fit:contain;
 }
 
-/* Hero: no ampliar más de lo que soporta el archivo actual */
+/* Hero */
 .hero-grid{
-  grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);
-  gap:clamp(34px,5vw,70px);
+  grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
+  gap:clamp(36px,5vw,72px);
   align-items:center;
 }
 .hero-media{
   width:100%;
-  max-width:410px;
-  min-height:0!important;
+  max-width:430px;
+  min-height:0;
   aspect-ratio:4/5;
   justify-self:end;
-  padding:7px;
-  border-radius:34px;
+  border-radius:30px;
   overflow:hidden;
-  background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(232,238,229,.62));
-  border:1px solid rgba(183,154,99,.42);
-  box-shadow:0 28px 70px rgba(47,71,56,.16);
+  background:#e8eee5;
+  box-shadow:0 24px 60px rgba(37,63,48,.14);
 }
 .hero-media img{
   width:100%;
   height:100%;
   object-fit:cover;
   object-position:center 34%;
-  border-radius:27px;
   display:block;
-  transform:none!important;
-  filter:saturate(1.03) contrast(1.025);
-  image-rendering:auto;
 }
 
-/* Curso */
+/* Portada del curso */
 .course-media{
   max-width:1000px;
   margin-left:auto;
   margin-right:auto;
   border-radius:26px;
-  overflow:hidden;
 }
 .course-media img{
   width:100%;
@@ -85,13 +64,12 @@ header{
   aspect-ratio:16/9;
   object-fit:cover;
   display:block;
-  transform:none!important;
 }
 
-/* Biblioteca: presentación uniforme sin zoom digital */
+/* Biblioteca */
 .books-grid{
   grid-template-columns:repeat(3,minmax(220px,1fr));
-  gap:48px 34px;
+  gap:44px 34px;
   align-items:start;
 }
 .book{
@@ -100,117 +78,103 @@ header{
   align-items:center;
   text-align:center;
   min-width:0;
-  padding:26px 18px 24px;
-  border-radius:30px!important;
+  padding:0 8px 18px;
 }
 .book .cover{
   width:100%;
-  max-width:255px;
-  height:382px;
+  max-width:300px;
+  height:auto!important;
   min-height:0!important;
   aspect-ratio:2/3!important;
   margin:0 auto 22px;
-  padding:14px!important;
+  padding:12px!important;
   overflow:hidden!important;
-  border:1px solid rgba(183,154,99,.26)!important;
+  border:1px solid rgba(109,132,111,.26)!important;
   border-radius:24px;
-  background:rgba(255,255,255,.58)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 16px 38px rgba(47,71,56,.08)!important;
+  background:rgba(255,255,252,.72)!important;
+  box-shadow:0 18px 42px rgba(47,71,56,.11)!important;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 .book .cover img{
-  width:auto!important;
-  height:auto!important;
-  max-width:100%!important;
-  max-height:100%!important;
+  width:100%;
+  height:100%;
   object-fit:contain;
   object-position:center;
   display:block;
-  transform:none!important;
-  filter:drop-shadow(0 13px 15px rgba(31,45,35,.14));
-  image-rendering:auto;
+  transform:scale(1.03);
+  transform-origin:center;
+  filter:contrast(1.02) saturate(1.02) drop-shadow(0 10px 15px rgba(31,45,35,.10));
 }
 .book h3{
   font-size:25px;
   line-height:1.2;
   margin:0 0 9px;
+  min-height:30px;
 }
 .book p{
   font-size:15px;
   line-height:1.55;
   max-width:280px;
+  min-height:70px;
   margin:0 auto;
 }
-.book .book-link{margin-top:14px}
+.book .book-link{margin-top:10px}
 
 /* Sobre Yamilet */
 .about-media{
   width:100%;
-  max-width:410px;
-  min-height:0!important;
+  max-width:430px;
+  min-height:0;
   aspect-ratio:4/5;
   justify-self:start;
-  padding:7px;
-  border-radius:32px;
+  border-radius:28px;
   overflow:hidden;
-  background:rgba(255,255,255,.66);
-  border:1px solid rgba(183,154,99,.34);
-  box-shadow:0 24px 60px rgba(47,71,56,.13);
 }
 .about-media img{
   width:100%;
   height:100%;
   object-fit:cover;
   object-position:center 24%;
-  border-radius:25px;
-  transform:none!important;
 }
-.author-strip .author-photo{min-height:0!important;aspect-ratio:4/5}
-.author-strip .author-photo img{width:100%;height:100%;object-fit:cover;object-position:center 24%;transform:none!important}
+.author-strip .author-photo{
+  min-height:0;
+  aspect-ratio:4/5;
+}
+.author-strip .author-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 24%;
+}
 
 @media(max-width:980px){
-  .navlinks{
-    background:rgba(6,61,69,.97)!important;
-    border-color:rgba(255,255,255,.18)!important;
-    box-shadow:0 22px 50px rgba(0,0,0,.20)!important;
-  }
   .hero-grid{grid-template-columns:1fr;gap:34px}
-  .hero-media{justify-self:center;max-width:350px}
+  .hero-media{justify-self:center;max-width:380px}
   .books-grid{grid-template-columns:repeat(2,minmax(210px,1fr));gap:36px 24px}
-  .book .cover{max-width:245px;height:368px}
-  .about-media{justify-self:center;max-width:370px}
+  .book .cover{max-width:285px}
+  .about-media{justify-self:center;max-width:380px}
 }
 
 @media(max-width:620px){
-  .nav{height:78px}
-  .brand img{width:74px;height:56px}
-  .hero{padding-top:46px!important}
-  .hero-grid{gap:30px}
+  .brand{
+    width:62px;
+    height:62px;
+    padding:7px;
+    border-radius:16px;
+  }
   .hero-media{
-    width:min(78vw,292px);
-    max-width:292px;
-    padding:5px;
-    border-radius:29px;
-    box-shadow:0 22px 50px rgba(47,71,56,.13);
+    max-width:340px;
+    width:min(92vw,340px);
+    border-radius:26px;
   }
-  .hero-media img{border-radius:23px}
-  .trustbar{padding-top:4px}
+  .hero-media img{object-position:center 32%}
   .books-grid{grid-template-columns:1fr;gap:34px}
-  .book{
-    width:min(92vw,380px);
-    margin-inline:auto;
-    padding:22px 16px 26px;
-  }
   .book .cover{
-    width:min(62vw,230px);
-    max-width:230px;
-    height:345px;
-    padding:10px!important;
-    margin-bottom:20px;
+    width:min(82vw,310px);
+    max-width:310px;
+    aspect-ratio:2/3!important;
   }
-  .book h3{font-size:27px}
-  .book p{font-size:16px;max-width:310px}
-  .about-media{width:min(80vw,300px);max-width:300px;padding:5px}
+  .book p{min-height:0}
 }
