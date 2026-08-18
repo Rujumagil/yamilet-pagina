@@ -4,8 +4,8 @@ window.YAMILET_INTEGRATION_CONFIG = {
     url: ""
   },
   booking: {
-    enabled: false,
-    endpoint: ""
+    enabled: true,
+    endpoint: "https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/book-free-class"
   },
   leadCapture: {
     enabled: false,
