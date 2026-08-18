@@ -1,7 +1,7 @@
 window.YAMILET_INTEGRATION_CONFIG = {
   academy: {
-    enabled: false,
-    url: ""
+    enabled: true,
+    url: "../academia/"
   },
   booking: {
     enabled: true,
