@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Academia Yamilet | Método MES</title>
   <meta name="theme-color" content="#123f35">
-  <meta name="deployment" content="academia-yamilet-p16-students-v7">
+  <meta name="deployment" content="academia-yamilet-auth-recovery-v8">
   <link rel="stylesheet" href="./styles.css?v=5">
   <link rel="stylesheet" href="./auth-p0.css?v=2">
   <link rel="stylesheet" href="./learning-p1.css?v=1">
@@ -41,11 +41,11 @@
           <button class="btn primary" type="submit">Entrar a mi Academia</button>
         </form>
         <div class="auth-actions">
-          <button class="btn magic" type="button" data-magic-link>Enviarme un enlace de acceso</button>
-          <button class="text-action" type="button" data-password-recovery>Olvidé mi contraseña</button>
+          <button class="btn magic" type="button" data-magic-link>Entrar sin contraseña</button>
+          <button class="text-action" type="button" data-password-recovery>Cambiar mi contraseña</button>
         </div>
         <p class="status" data-auth-status aria-live="polite"></p>
-        <p class="fine">Los enlaces de acceso y recuperación solo funcionan para correos previamente registrados.</p>
+        <p class="fine">“Entrar sin contraseña” solo inicia sesión. “Cambiar mi contraseña” envía un correo distinto para crear una nueva contraseña.</p>
       </div>
     </section>
 
@@ -54,7 +54,7 @@
         <img class="login-logo" src="../assets/logo-yamilet.png" alt="Yamilet Pérez">
         <div class="kicker">Seguridad de tu cuenta</div>
         <h2>Crea una nueva contraseña</h2>
-        <p class="muted">Usa al menos 8 caracteres. Al guardarla entrarás directamente a tu Academia.</p>
+        <p class="muted">Usa al menos 8 caracteres. Esta pantalla solo aparece desde un enlace válido de recuperación.</p>
         <form data-reset-form>
           <label>Nueva contraseña<input type="password" name="password" autocomplete="new-password" minlength="8" required placeholder="Mínimo 8 caracteres"></label>
           <label>Confirmar contraseña<input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required placeholder="Repite tu contraseña"></label>
@@ -142,6 +142,7 @@
   <script src="./content-admin-p15.js?v=1"></script>
   <script src="./private-media-p15.js?v=1"></script>
   <script src="./students-p16.js?v=1"></script>
-  <script src="./content-admin-session-p15.js?v=1"></script>
+  <script src="./recovery-p17.js?v=1"></script>
+  <script src="./content-admin-session-p15.js?v=2"></script>
 </body>
 </html>
