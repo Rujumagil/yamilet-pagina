@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Academia Yamilet | Método MES</title>
   <meta name="theme-color" content="#123f35">
-  <meta name="deployment" content="academia-yamilet-p0-auth-v3">
-  <link rel="stylesheet" href="./styles.css?v=3">
-  <link rel="stylesheet" href="./auth-p0.css?v=1">
+  <meta name="deployment" content="academia-yamilet-p1-learning-v4">
+  <link rel="stylesheet" href="./styles.css?v=4">
+  <link rel="stylesheet" href="./auth-p0.css?v=2">
+  <link rel="stylesheet" href="./learning-p1.css?v=1">
 </head>
 <body>
   <header class="topbar">
@@ -24,9 +25,7 @@
         <div class="kicker">Tu espacio privado</div>
         <h1>Medita.<br><span>Escribe. Sana.</span></h1>
         <p>Accede a tus cursos, recursos, progreso y comunidad de Academia Yamilet.</p>
-        <div class="features">
-          <span>✓ Método MES</span><span>✓ Progreso personal</span><span>✓ Recursos y ejercicios</span><span>✓ Comunidad</span>
-        </div>
+        <div class="features"><span>✓ Método MES</span><span>✓ Progreso personal</span><span>✓ Recursos y ejercicios</span><span>✓ Comunidad</span></div>
       </div>
       <div class="login-card glass">
         <img class="login-logo" src="../assets/logo-yamilet.png" alt="Yamilet Pérez">
@@ -34,12 +33,8 @@
         <h2>Bienvenido</h2>
         <p class="muted">Ingresa con el correo registrado en la academia.</p>
         <form data-login-form>
-          <label>Correo
-            <input type="email" name="email" autocomplete="email" required placeholder="nombre@correo.com">
-          </label>
-          <label>Contraseña
-            <input type="password" name="password" autocomplete="current-password" required placeholder="••••••••">
-          </label>
+          <label>Correo<input type="email" name="email" autocomplete="email" required placeholder="nombre@correo.com"></label>
+          <label>Contraseña<input type="password" name="password" autocomplete="current-password" required placeholder="••••••••"></label>
           <button class="btn primary" type="submit">Entrar a mi Academia</button>
         </form>
         <div class="auth-actions">
@@ -58,12 +53,8 @@
         <h2>Crea una nueva contraseña</h2>
         <p class="muted">Usa al menos 8 caracteres. Al guardarla entrarás directamente a tu Academia.</p>
         <form data-reset-form>
-          <label>Nueva contraseña
-            <input type="password" name="password" autocomplete="new-password" minlength="8" required placeholder="Mínimo 8 caracteres">
-          </label>
-          <label>Confirmar contraseña
-            <input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required placeholder="Repite tu contraseña">
-          </label>
+          <label>Nueva contraseña<input type="password" name="password" autocomplete="new-password" minlength="8" required placeholder="Mínimo 8 caracteres"></label>
+          <label>Confirmar contraseña<input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required placeholder="Repite tu contraseña"></label>
           <button class="btn primary" type="submit">Guardar nueva contraseña</button>
         </form>
         <p class="status" data-reset-status aria-live="polite"></p>
@@ -85,26 +76,55 @@
       <aside class="sidebar">
         <div class="side-brand"><img src="../assets/logo-yamilet.png" alt="YP"><div><strong>Academia Yamilet</strong><small>Método MES</small></div></div>
         <nav>
-          <button class="nav-item active">Inicio</button>
+          <button class="nav-item active" data-scroll-home>Inicio</button>
+          <button class="nav-item" data-scroll-continue>Continuar</button>
           <button class="nav-item" data-scroll-courses>Mis cursos</button>
           <button class="nav-item" data-scroll-bookings data-manager-only>Clase gratis</button>
         </nav>
         <button class="signout" type="button" data-signout>Cerrar sesión</button>
       </aside>
-      <div class="dashboard-main">
-        <div class="dash-head"><div><div class="kicker">Panel de Academia</div><h1>Hola, <span data-user-name>Yamilet</span></h1><p data-user-role></p></div><a class="btn outline" href="../es/">Ver landing</a></div>
+
+      <div class="dashboard-main" id="inicio">
+        <div class="dash-head">
+          <div><div class="kicker">Panel de Academia</div><h1>Hola, <span data-user-name>Yamilet</span></h1><p data-user-role></p></div>
+          <a class="btn outline" href="../es/">Ver landing</a>
+        </div>
+
         <div class="stats">
           <article><span>Cursos disponibles</span><strong data-course-count>0</strong></article>
+          <article><span>Progreso general</span><strong data-overall-progress>0%</strong></article>
           <article data-manager-only><span>Reservas por atender</span><strong data-booking-count>0</strong></article>
-          <article><span>Academia</span><strong>MES</strong></article>
         </div>
-        <section class="panel" id="mis-cursos"><div class="panel-head"><div><div class="kicker">Formación</div><h2>Mis cursos</h2></div></div><div class="course-list" data-course-list><p class="muted">Cargando cursos…</p></div></section>
-        <section class="panel" id="reservas" data-manager-only><div class="panel-head"><div><div class="kicker">Seguimiento</div><h2>Reservas de clase gratis</h2></div></div><div class="booking-list" data-booking-list><p class="muted">Cargando reservaciones…</p></div></section>
+
+        <section class="panel continue-panel" id="continuar">
+          <div class="panel-head"><div><div class="kicker">Tu siguiente paso</div><h2>Continuar aprendiendo</h2></div></div>
+          <div data-continue-card><div class="empty">Cargando tu progreso…</div></div>
+        </section>
+
+        <section class="panel" id="mis-cursos">
+          <div class="panel-head"><div><div class="kicker">Formación</div><h2>Mis cursos</h2></div></div>
+          <div class="course-list learning-course-list" data-course-list><p class="muted">Cargando cursos…</p></div>
+        </section>
+
+        <section class="panel learning-view hidden" data-course-view>
+          <button class="text-action back-learning" type="button" data-back-courses>← Volver a mis cursos</button>
+          <div data-course-detail></div>
+        </section>
+
+        <section class="panel lesson-view hidden" data-lesson-view>
+          <button class="text-action back-learning" type="button" data-back-course>← Volver al temario</button>
+          <div data-lesson-detail></div>
+        </section>
+
+        <section class="panel" id="reservas" data-manager-only>
+          <div class="panel-head"><div><div class="kicker">Seguimiento</div><h2>Reservas de clase gratis</h2></div></div>
+          <div class="booking-list" data-booking-list><p class="muted">Cargando reservaciones…</p></div>
+        </section>
       </div>
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./app.js?v=3"></script>
+  <script src="./app.js?v=4"></script>
 </body>
 </html>
