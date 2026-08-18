@@ -1,0 +1,139 @@
+(() => {
+  'use strict';
+  const RELEASE = '20260818.22';
+  let timer = null;
+  const $ = (s,r=document)=>r.querySelector(s);
+  const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+
+  function route(name){
+    const btn=$(`[data-shell-route="${name}"]`);
+    if(btn){btn.click();return;}
+    if(name==='courses') $('[data-scroll-courses]')?.click();
+  }
+
+  function enhanceEmpty(page, icon, actionLabel, actionRoute){
+    const empty=$('.shell-empty',page);
+    if(!empty || empty.dataset.v22Empty) return;
+    empty.dataset.v22Empty='true';
+    empty.classList.add('v22-enhanced-empty');
+    const inner=empty.firstElementChild || empty;
+    if(inner && !$('.v22-empty-icon',inner)) inner.insertAdjacentHTML('afterbegin',`<div class="v22-empty-icon" aria-hidden="true">${icon}</div>`);
+    if(actionLabel && actionRoute && inner && !$('.v22-empty-action',inner)){
+      const b=document.createElement('button');b.type='button';b.className='v22-empty-action';b.textContent=actionLabel;b.addEventListener('click',()=>route(actionRoute));inner.appendChild(b);
+    }
+  }
+
+  function enhanceCourses(){
+    const page=$('#mis-cursos'); if(!page) return;
+    const list=$('.learning-course-list',page); if(!list) return;
+    if(!$('.v22-course-toolbar',page)){
+      const toolbar=document.createElement('div');toolbar.className='v22-course-toolbar';
+      toolbar.innerHTML=`<div class="v22-course-toolbar-copy">Tu formación en un solo lugar. El avance se actualiza con tu progreso real.</div><div class="v22-view-toggle" role="group" aria-label="Vista de cursos"><button type="button" data-v22-view="grid" aria-label="Cuadrícula">▦</button><button type="button" data-v22-view="list" aria-label="Lista">☰</button></div>`;
+      page.querySelector('.panel-head')?.insertAdjacentElement('afterend',toolbar);
+      const saved=localStorage.getItem('yamilet-course-view')||'grid';
+      applyCourseView(saved);
+      $$('[data-v22-view]',toolbar).forEach(b=>b.addEventListener('click',()=>{localStorage.setItem('yamilet-course-view',b.dataset.v22View);applyCourseView(b.dataset.v22View);}));
+    }
+    applyCourseView(localStorage.getItem('yamilet-course-view')||'grid');
+    $$('.learning-course-card',list).forEach(card=>{
+      if(card.dataset.v22Course) return; card.dataset.v22Course='true';
+      const img=card.querySelector('img'); if(img){img.loading='lazy';img.decoding='async';}
+    });
+  }
+
+  function applyCourseView(view){
+    const list=$('#mis-cursos .learning-course-list'); if(!list)return;
+    const isList=view==='list'; list.classList.toggle('v22-list-view',isList);
+    $$('#mis-cursos [data-v22-view]').forEach(b=>b.classList.toggle('active',b.dataset.v22View===view));
+  }
+
+  function enhanceEvaluations(){
+    const page=$('[data-shell-page="evaluations"]'); if(!page || page.classList.contains('hidden')) return;
+    page.classList.add('v22-evaluations');
+    $$('.shell-card',page).forEach(card=>{
+      const pill=$('.shell-pill',card); const text=(pill?.textContent||'').toLowerCase();
+      card.dataset.v22State=text.includes('aprob')?'approved':text.includes('intent')?'attempted':'pending';
+      if(!$('.v22-eval-orb',card)){
+        const minimum=[...card.querySelectorAll('span')].map(x=>x.textContent||'').find(t=>/%/.test(t));
+        card.insertAdjacentHTML('beforeend',`<div class="v22-eval-orb"><strong>${minimum?minimum.replace(/[^0-9%.,]/g,''):'—'}</strong><small>${minimum?'mínimo':'estado'}</small></div>`);
+      }
+    });
+    enhanceEmpty(page,'✓','Ver mis cursos','courses');
+  }
+
+  function enhanceLibrary(){
+    const page=$('[data-shell-page="library"]'); if(!page || page.classList.contains('hidden')) return;
+    page.classList.add('v22-library');
+    const grid=$('.shell-grid',page); const cards=grid?$$('.library-card',grid):[];
+    if(cards.length && !$('.v22-library-toolbar',page)){
+      const types=[...new Set(cards.map(c=>($('.library-meta',c)?.textContent||'Recurso').trim()).filter(Boolean))];
+      const toolbar=document.createElement('div');toolbar.className='v22-library-toolbar';
+      toolbar.innerHTML=`<div class="v22-library-filters"><button class="v22-library-filter active" type="button" data-v22-filter="all">Todos</button>${types.map(t=>`<button class="v22-library-filter" type="button" data-v22-filter="${escapeAttr(t)}">${escapeHtml(t)}</button>`).join('')}</div><span class="v22-course-toolbar-copy">${cards.length} recurso${cards.length===1?'':'s'} disponible${cards.length===1?'':'s'}</span>`;
+      page.querySelector('.shell-page-heading')?.insertAdjacentElement('afterend',toolbar);
+      $$('.v22-library-filter',toolbar).forEach(b=>b.addEventListener('click',()=>filterLibrary(b.dataset.v22Filter,toolbar,cards)));
+    }
+    cards.forEach(c=>{if(!c.dataset.v22Library)c.dataset.v22Library='true';});
+    enhanceEmpty(page,'▥','Volver a mis cursos','courses');
+  }
+
+  function filterLibrary(filter,toolbar,cards){
+    $$('.v22-library-filter',toolbar).forEach(b=>b.classList.toggle('active',b.dataset.v22Filter===filter));
+    cards.forEach(c=>{const type=($('.library-meta',c)?.textContent||'').trim();c.style.display=(filter==='all'||type===filter)?'':'none';});
+  }
+
+  function enhanceCalendar(){
+    const page=$('[data-shell-page="calendar"]'); if(!page || page.classList.contains('hidden')) return;
+    page.classList.add('v22-calendar');
+    const events=$$('.calendar-event',page);
+    const strip=$('.calendar-strip',page);
+    if(strip && !$('.v22-calendar-layout',page)){
+      const nodes=events.map(e=>e.cloneNode(true));
+      events.forEach(e=>e.remove());
+      const layout=document.createElement('div');layout.className='v22-calendar-layout';
+      const list=document.createElement('div');list.className='v22-calendar-events';
+      if(nodes.length) nodes.forEach(n=>list.appendChild(n));
+      else list.innerHTML='<div class="shell-empty v22-enhanced-empty"><div><div class="v22-empty-icon">◷</div><strong>Tu agenda está despejada</strong><span>Las sesiones y clases confirmadas aparecerán aquí cuando existan.</span></div></div>';
+      const aside=document.createElement('aside');aside.className='v22-calendar-aside';
+      aside.innerHTML=`<div class="eyebrow">Próximo evento</div><h3>${nodes.length?'Tu siguiente encuentro':'Sin eventos confirmados'}</h3><p>${nodes.length?'Consulta el detalle en tu agenda y mantén tus actividades de aprendizaje organizadas.':'Cuando exista una clase, sesión o actividad programada, verás aquí el próximo evento.'}</p><strong>${nodes.length?String(nodes.length).padStart(2,'0'):'—'}</strong><small>${nodes.length===1?'evento próximo':nodes.length?'eventos en agenda':'agenda disponible'}</small>`;
+      layout.append(list,aside); strip.insertAdjacentElement('afterend',layout);
+    }
+  }
+
+  function enhanceCertificates(){
+    const page=$('[data-shell-page="certificates"]'); if(!page || page.classList.contains('hidden')) return;
+    page.classList.add('v22-certificates');
+    $$('.shell-card',page).forEach(card=>{
+      if(card.dataset.v22Certificate) return; card.dataset.v22Certificate='true';
+      card.insertAdjacentHTML('afterbegin','<div class="v22-certificate-band"><span>Academia Yamilet · Método MES</span></div>');
+    });
+    enhanceEmpty(page,'✦','Continuar aprendiendo','courses');
+  }
+
+  function enhanceProfile(){
+    const page=$('[data-shell-page="profile"]'); if(!page || page.classList.contains('hidden')) return;
+    page.classList.add('v22-profile');
+  }
+
+  function enhanceHelpExploreAdmin(){
+    ['help','explore','admin'].forEach(name=>{
+      const page=$(`[data-shell-page="${name}"]`); if(!page || page.classList.contains('hidden'))return;
+      page.classList.add(`v22-${name}`);
+      if(name==='explore') enhanceEmpty(page,'◉','Ver mis cursos','courses');
+    });
+  }
+
+  function escapeHtml(v=''){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function escapeAttr(v=''){return escapeHtml(v).replace(/`/g,'&#96;');}
+
+  function enhance(){
+    document.body.dataset.academyV22='true';
+    enhanceCourses(); enhanceEvaluations(); enhanceLibrary(); enhanceCalendar(); enhanceCertificates(); enhanceProfile(); enhanceHelpExploreAdmin();
+  }
+  function schedule(){clearTimeout(timer);timer=setTimeout(enhance,55);}
+
+  document.addEventListener('click',e=>{if(e.target.closest('[data-shell-route], [data-scroll-courses], [data-course-list], [data-content-admin-nav], [data-students-admin-nav]'))schedule();},true);
+  window.addEventListener('hashchange',schedule);
+  new MutationObserver(schedule).observe(document.querySelector('[data-dashboard]')||document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+  window.ACADEMIA_YAMILET_MODULES_V22={release:RELEASE,enhance};
+  schedule();
+})();
