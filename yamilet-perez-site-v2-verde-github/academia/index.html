@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Academia Yamilet | Método MES</title>
+  <meta name="theme-color" content="#123f35">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../es/" aria-label="Volver a Yamilet Pérez">
+      <img src="../assets/logo-yamilet.png" alt="YP">
+      <span><strong>Academia Yamilet</strong><small>Método MES</small></span>
+    </a>
+    <a class="back" href="../es/">← Volver a la página</a>
+  </header>
+
+  <main>
+    <section class="auth-shell" data-auth-view>
+      <div class="welcome-card">
+        <div class="kicker">Tu espacio privado</div>
+        <h1>Medita.<br><span>Escribe. Sana.</span></h1>
+        <p>Accede a tus cursos, recursos, progreso y comunidad de Academia Yamilet.</p>
+        <div class="features">
+          <span>✓ Método MES</span><span>✓ Progreso personal</span><span>✓ Recursos y ejercicios</span><span>✓ Comunidad</span>
+        </div>
+      </div>
+      <div class="login-card glass">
+        <img class="login-logo" src="../assets/logo-yamilet.png" alt="Yamilet Pérez">
+        <div class="kicker">Acceso a la academia</div>
+        <h2>Bienvenido</h2>
+        <p class="muted">Ingresa con el correo registrado en la academia.</p>
+        <form data-login-form>
+          <label>Correo
+            <input type="email" name="email" autocomplete="email" required placeholder="nombre@correo.com">
+          </label>
+          <label>Contraseña
+            <input type="password" name="password" autocomplete="current-password" required placeholder="••••••••">
+          </label>
+          <button class="btn primary" type="submit">Entrar a mi Academia</button>
+        </form>
+        <button class="btn magic" type="button" data-magic-link>Enviarme un enlace de acceso</button>
+        <p class="status" data-auth-status aria-live="polite"></p>
+        <p class="fine">Si aún no tienes contraseña o no la recuerdas, usa el enlace seguro por correo.</p>
+      </div>
+    </section>
+
+    <section class="dashboard hidden" data-dashboard>
+      <aside class="sidebar">
+        <div class="side-brand"><img src="../assets/logo-yamilet.png" alt="YP"><div><strong>Academia Yamilet</strong><small>Método MES</small></div></div>
+        <nav><button class="nav-item active">Inicio</button><button class="nav-item" data-scroll-courses>Mis cursos</button><button class="nav-item" data-scroll-bookings>Clase gratis</button></nav>
+        <button class="signout" type="button" data-signout>Cerrar sesión</button>
+      </aside>
+      <div class="dashboard-main">
+        <div class="dash-head"><div><div class="kicker">Panel de Academia</div><h1>Hola, <span data-user-name>Yamilet</span></h1><p data-user-role></p></div><a class="btn outline" href="../es/">Ver landing</a></div>
+        <div class="stats"><article><span>Cursos</span><strong data-course-count>0</strong></article><article><span>Reservas pendientes</span><strong data-booking-count>0</strong></article><article><span>Workspace</span><strong>MES</strong></article></div>
+        <section class="panel" id="mis-cursos"><div class="panel-head"><div><div class="kicker">Formación</div><h2>Mis cursos</h2></div></div><div class="course-list" data-course-list><p class="muted">Cargando cursos…</p></div></section>
+        <section class="panel" id="reservas"><div class="panel-head"><div><div class="kicker">Seguimiento</div><h2>Reservas de clase gratis</h2></div></div><div class="booking-list" data-booking-list><p class="muted">Cargando reservaciones…</p></div></section>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
