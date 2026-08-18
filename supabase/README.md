@@ -1,22 +1,57 @@
-# Supabase · Academia MES / Yamilet
+# Supabase · Yamilet Academy
 
-Este directorio contiene plantillas de integración. No modifica producción por sí solo.
+Este directorio es la fuente reproducible de cambios de backend de Yamilet Academy.
+
+## Proyecto
+
+Backend dedicado para la evolución de Yamilet: proyecto Supabase con referencia `pvpgvzaasnkukhoziiyg` (nombre histórico: `aula-compas`). Está separado de Academia AG y de Compás One.
+
+Workspace inicial:
+- `Academia Yamilet`
+- slug `yamilet-mes`
 
 ## Estructura
-- `functions/capture-yamilet-lead/`: endpoint público para leads de la landing.
-- `sql/provision-yamilet-workspace.sql`: plantilla de provisión del workspace al momento de entrega.
 
-## Decisión de arquitectura
-Se reutiliza la arquitectura multi-workspace existente de Aula Compás. Yamilet debe tener un `workspace_id` propio y todos los cursos, productos y contactos deben quedar asociados a ese workspace cuando la tabla correspondiente lo soporte.
+- `migrations/`: DDL reproducible y versionado. Todo cambio estructural nuevo debe vivir aquí.
+- `functions/`: Edge Functions mantenidas como código fuente.
+- `sql/`: material legado/plantillas previas. No usar como ruta principal para nuevos cambios estructurales.
 
-## Variables de servidor requeridas al desplegar la función
-Configurar en el entorno de Supabase, no en archivos públicos:
-- URL del proyecto Supabase.
-- clave de servicio del proyecto.
-- UUID del workspace Yamilet.
-- lista de orígenes permitidos.
-- secreto anti-bot, si se activa.
-- endpoint y credencial de Compás One, solo si se habilita esa sincronización.
+## Convención de migraciones
 
-## Entrega
-Antes de habilitar la landing contra producción ejecutar la lista de aceptación documentada en `/SUPABASE-HANDOFF.md` y revisar los Advisors de seguridad y rendimiento de Supabase.
+Formato obligatorio:
+
+`YYYYMMDDHHMMSS_nombre_descriptivo.sql`
+
+Flujo:
+
+1. crear/editar la migración en una rama `feature/*`;
+2. revisar el SQL;
+3. aplicar exactamente ese DDL al proyecto Supabase;
+4. correr Security Advisors;
+5. abrir PR;
+6. verificar y fusionar a `main`.
+
+No ejecutar DDL manual que no quede representado por una migración equivalente.
+
+## Separación de responsabilidades
+
+Yamilet Academy administra autenticación académica, cursos, progreso, evaluaciones, biblioteca, eventos, certificados, soporte, compras y accesos.
+
+Compás One administra CRM, leads, conversaciones, campañas, ventas y seguimiento comercial. No se compartirán tablas entre ambos sistemas. La integración futura será por API/eventos.
+
+## Seguridad
+
+Nunca publicar:
+- `service_role`;
+- DB password;
+- JWT secret;
+- secretos de Edge Functions;
+- credenciales de integraciones.
+
+El frontend solo puede usar URL del proyecto y clave publicable. Las operaciones sensibles se protegen con RLS y, cuando corresponda, RPC/Edge Functions autorizadas.
+
+## Referencias
+
+- `/docs/YAMILET-ACADEMY-AUDIT-P0.md`
+- `/docs/YAMILET-ACADEMY-ARCHITECTURE.md`
+- `/SUPABASE-SECURITY-NOTES.md`
