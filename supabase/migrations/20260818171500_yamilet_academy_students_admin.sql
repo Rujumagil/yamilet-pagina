@@ -227,12 +227,17 @@ begin
     raise exception 'invalid_status';
   end if;
 
-  select e.*, c.workspace_id into row, ws
+  select e into row
   from public.enrollments e
-  join public.courses c on c.id=e.course_id
   where e.id=target_enrollment;
 
-  if row.id is null or ws is null then raise exception 'enrollment_not_found'; end if;
+  if row.id is null then raise exception 'enrollment_not_found'; end if;
+
+  select c.workspace_id into ws
+  from public.courses c
+  where c.id=row.course_id;
+
+  if ws is null then raise exception 'workspace_not_found'; end if;
   if not private.can_manage_academy_students(ws) then raise exception 'forbidden'; end if;
 
   update public.enrollments
