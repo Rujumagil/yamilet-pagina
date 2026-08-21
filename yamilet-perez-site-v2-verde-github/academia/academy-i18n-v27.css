@@ -1,0 +1,30 @@
+.academy-language-switch{display:inline-flex;align-items:center;gap:4px;padding:4px;border:1px solid rgba(18,63,53,.16);border-radius:999px;background:rgba(255,255,255,.72);backdrop-filter:blur(10px)}
+.academy-language-switch button{border:0;background:transparent;color:#31554c;font:700 12px/1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.08em;padding:8px 10px;border-radius:999px;cursor:pointer;transition:.2s ease}
+.academy-language-switch button:hover{background:rgba(18,63,53,.07)}
+.academy-language-switch button.active{background:#123f35;color:#fff;box-shadow:0 6px 18px rgba(18,63,53,.2)}
+.topbar .academy-language-switch{margin-left:auto}
+.topbar .back{margin-left:8px}
+
+.academy-translation-admin{margin-bottom:18px;border:1px solid rgba(18,63,53,.12);background:linear-gradient(180deg,rgba(247,250,247,.98),rgba(255,255,255,.98))}
+.translation-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}
+.translation-head h3{margin:4px 0 6px}
+.translation-status{display:inline-flex;align-items:center;white-space:nowrap;padding:7px 10px;border-radius:999px;background:#eef4ef;color:#31554c;font-size:12px;font-weight:800}
+.translation-selectors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.translation-selectors label,.translation-fields label{display:grid;gap:7px;color:#31554c;font-size:12px;font-weight:800}
+.translation-selectors select,.translation-fields textarea{width:100%;border:1px solid rgba(18,63,53,.18);border-radius:12px;background:#fff;color:#173c34;padding:11px 12px;font:inherit;outline:none}
+.translation-selectors select:focus,.translation-fields textarea:focus{border-color:#2e6a59;box-shadow:0 0 0 3px rgba(46,106,89,.1)}
+.translation-fields{display:grid;gap:14px}
+.translation-field{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.translation-field textarea{min-height:104px;resize:vertical;line-height:1.5;font-weight:500}
+.translation-field label:first-child textarea{background:#f5f6f3;color:#65746f}
+.translation-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:4px}
+
+@media (max-width:760px){
+  .topbar{gap:8px;flex-wrap:wrap}
+  .topbar .academy-language-switch{order:3;width:max-content;margin-left:0}
+  .topbar .back{margin-left:auto}
+  .translation-head{display:grid}
+  .translation-selectors,.translation-field{grid-template-columns:1fr}
+  .translation-actions{justify-content:stretch}
+  .translation-actions .btn{flex:1}
+}
