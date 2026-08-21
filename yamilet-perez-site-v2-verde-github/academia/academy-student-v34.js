@@ -82,6 +82,15 @@
     }
   }
 
+  function loadHeaderV45(){
+    if (document.querySelector('link[data-yamilet-header-v45]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = './academy-header-v45.css?v=45';
+    link.dataset.yamiletHeaderV45 = '1';
+    document.head.appendChild(link);
+  }
+
   function wireAdminLink(){
     const btn = document.querySelector('[data-shell-route="admin"]');
     if (!btn) return false;
@@ -99,6 +108,7 @@
     loadLayoutV42();
     loadLayoutV43();
     loadLayoutV44();
+    loadHeaderV45();
     if (wireAdminLink()) return;
     const timer = setInterval(() => {
       tries += 1;
