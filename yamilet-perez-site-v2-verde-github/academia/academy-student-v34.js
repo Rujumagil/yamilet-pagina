@@ -1,6 +1,23 @@
 (() => {
   'use strict';
   let tries = 0;
+
+  function loadHomeV38(){
+    if (!document.querySelector('link[data-yamilet-home-v38]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-home-v38.css?v=38';
+      link.dataset.yamiletHomeV38 = '1';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-yamilet-home-v38]')) {
+      const script = document.createElement('script');
+      script.src = './academy-home-v38.js?v=38';
+      script.dataset.yamiletHomeV38 = '1';
+      document.body.appendChild(script);
+    }
+  }
+
   function wireAdminLink(){
     const btn = document.querySelector('[data-shell-route="admin"]');
     if (!btn) return false;
@@ -15,13 +32,16 @@
     }, true);
     return true;
   }
+
   function boot(){
+    loadHomeV38();
     if (wireAdminLink()) return;
     const timer = setInterval(() => {
       tries += 1;
       if (wireAdminLink() || tries >= 24) clearInterval(timer);
     }, 250);
   }
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
 })();
