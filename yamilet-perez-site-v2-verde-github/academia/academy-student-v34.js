@@ -91,6 +91,15 @@
     document.head.appendChild(link);
   }
 
+  function loadHeaderV46(){
+    if (document.querySelector('link[data-yamilet-header-v46]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = './academy-header-v46.css?v=46';
+    link.dataset.yamiletHeaderV46 = '1';
+    document.head.appendChild(link);
+  }
+
   function wireAdminLink(){
     const btn = document.querySelector('[data-shell-route="admin"]');
     if (!btn) return false;
@@ -109,6 +118,7 @@
     loadLayoutV43();
     loadLayoutV44();
     loadHeaderV45();
+    loadHeaderV46();
     if (wireAdminLink()) return;
     const timer = setInterval(() => {
       tries += 1;
