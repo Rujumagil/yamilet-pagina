@@ -1,0 +1,329 @@
+/* Academia Yamilet · Método MES · Learning Player v35
+   Inspirado en la jerarquía de Academia AG, adaptado a la identidad Yamilet. */
+
+:root{
+  --mes-player-bg:#071c1a;
+  --mes-player-bg-2:#0b2823;
+  --mes-player-panel:#102f2a;
+  --mes-player-panel-soft:#143a33;
+  --mes-player-line:rgba(255,255,255,.10);
+  --mes-player-text:#f7f5ed;
+  --mes-player-muted:#a8bbb4;
+  --mes-player-green:#75bea3;
+  --mes-player-gold:#d7a82d;
+  --mes-player-shadow:0 30px 80px rgba(5,35,29,.24);
+}
+
+body.yamilet-player-mode{
+  background:#eef1ec!important;
+}
+
+body.yamilet-player-mode .dashboard-main{
+  background:linear-gradient(180deg,#071c1a 0%,#0a231f 58%,#0d2b25 100%)!important;
+  max-width:none!important;
+  padding-bottom:64px!important;
+}
+
+body.yamilet-player-mode .dash-head,
+body.yamilet-player-mode .stats,
+body.yamilet-player-mode #continuar,
+body.yamilet-player-mode #mis-cursos,
+body.yamilet-player-mode [data-course-view],
+body.yamilet-player-mode [data-shell-page]{
+  display:none!important;
+}
+
+body.yamilet-player-mode .academy-topbar{
+  background:rgba(7,28,26,.94)!important;
+  border-bottom:1px solid var(--mes-player-line)!important;
+  box-shadow:none!important;
+  backdrop-filter:blur(18px);
+}
+body.yamilet-player-mode .academy-topbar-brand small{color:#70b79e!important}
+body.yamilet-player-mode .academy-topbar-brand strong{color:#f5f4ec!important}
+body.yamilet-player-mode .academy-search{
+  color:#f5f4ec!important;
+  background:rgba(255,255,255,.065)!important;
+  border-color:rgba(255,255,255,.10)!important;
+}
+body.yamilet-player-mode .academy-search::placeholder{color:#91aaa1!important}
+body.yamilet-player-mode .academy-search-clear,
+body.yamilet-player-mode .academy-icon-btn{
+  color:#eef3ef!important;
+  background:rgba(255,255,255,.06)!important;
+  border-color:rgba(255,255,255,.10)!important;
+}
+
+body.yamilet-player-mode [data-lesson-view]{
+  display:block!important;
+  grid-column:1/-1!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:22px 0 0!important;
+  margin:0!important;
+}
+body.yamilet-player-mode [data-back-course]{
+  color:#dbe8e2!important;
+  font-weight:800!important;
+  margin:0 0 14px!important;
+  padding:0!important;
+}
+
+.mes-player-shell{
+  max-width:1480px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(320px,380px);
+  gap:22px;
+  align-items:start;
+}
+.mes-player-main{min-width:0}
+.mes-player-heading{margin:2px 0 18px}
+.mes-player-heading .lesson-breadcrumb{
+  color:#89cbb3!important;
+  font-size:12px!important;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  margin-bottom:12px!important;
+}
+.mes-player-heading .lesson-title{
+  display:block!important;
+  margin:0!important;
+}
+.mes-player-heading .lesson-title>div{max-width:980px}
+.mes-player-heading .lesson-title .eyebrow{
+  display:inline-flex;
+  color:var(--mes-player-gold)!important;
+  font-size:11px!important;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.mes-player-heading .lesson-title h2{
+  color:var(--mes-player-text)!important;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  font-size:clamp(34px,4.1vw,62px)!important;
+  line-height:1.02!important;
+  letter-spacing:-.04em!important;
+  font-weight:760!important;
+  margin:0 0 8px!important;
+  text-wrap:balance;
+}
+.mes-player-heading .lesson-title p{
+  color:var(--mes-player-muted)!important;
+  font-size:14px!important;
+  margin:0!important;
+}
+.mes-player-heading .lesson-complete-badge{
+  display:inline-flex!important;
+  margin-top:12px;
+  border:1px solid rgba(255,255,255,.12)!important;
+  background:rgba(255,255,255,.06)!important;
+  color:#c6d6d0!important;
+}
+.mes-player-heading .lesson-complete-badge.done{
+  color:#dff5eb!important;
+  border-color:rgba(117,190,163,.35)!important;
+  background:rgba(117,190,163,.12)!important;
+}
+
+.mes-player-main .video-shell,
+.mes-player-main .cloudflare-stream-shell,
+.mes-player-main .lesson-video{
+  width:100%!important;
+  border-radius:22px!important;
+  overflow:hidden!important;
+  background:#020806!important;
+  border:1px solid rgba(255,255,255,.11)!important;
+  box-shadow:0 30px 74px rgba(0,0,0,.36)!important;
+  margin:0 0 18px!important;
+}
+.mes-player-main .video-shell,
+.mes-player-main .cloudflare-stream-shell{
+  aspect-ratio:16/9!important;
+  min-height:0!important;
+}
+.mes-player-main .video-shell iframe,
+.mes-player-main .cloudflare-stream-shell iframe,
+.mes-player-main .lesson-video{
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  aspect-ratio:16/9!important;
+  display:block!important;
+  border:0!important;
+}
+
+.mes-player-main .lesson-content,
+.mes-player-main .transcript{
+  color:#dce7e2!important;
+  background:rgba(255,255,255,.045)!important;
+  border:1px solid rgba(255,255,255,.085)!important;
+  border-radius:18px!important;
+  padding:18px 20px!important;
+  line-height:1.7!important;
+  margin:14px 0!important;
+}
+.mes-player-main .lesson-content h1,
+.mes-player-main .lesson-content h2,
+.mes-player-main .lesson-content h3,
+.mes-player-main .lesson-content strong{color:#fff!important}
+.mes-player-main .lesson-content a{color:#9dd9c1!important}
+.mes-player-main .transcript summary{color:#f4f3eb!important;font-weight:800}
+
+.mes-player-main .lesson-actions{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  padding:3px 0 4px!important;
+}
+.mes-player-main .lesson-actions .btn.primary{
+  background:#77bea4!important;
+  color:#09231d!important;
+  border-color:#77bea4!important;
+}
+.mes-player-main .staff-preview{color:#a8bbb4!important}
+.mes-player-main .lesson-nav{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:12px!important;
+  margin-top:16px!important;
+}
+.mes-player-main .lesson-nav .btn{
+  min-height:54px!important;
+  color:#eaf1ee!important;
+  background:rgba(255,255,255,.045)!important;
+  border-color:rgba(255,255,255,.10)!important;
+  text-align:left;
+}
+.mes-player-main .lesson-nav .btn:last-child{text-align:right}
+
+.mes-outline{
+  position:sticky;
+  top:88px;
+  max-height:calc(100vh - 108px);
+  overflow:auto;
+  padding:15px;
+  border-radius:22px;
+  background:linear-gradient(180deg,rgba(16,47,42,.97),rgba(9,32,28,.97));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 24px 66px rgba(0,0,0,.24);
+  scrollbar-width:thin;
+  scrollbar-color:rgba(117,190,163,.36) transparent;
+}
+.mes-outline-head{padding:4px 3px 13px}
+.mes-outline-head h3{
+  color:#fff;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:17px;
+  margin:0 0 5px;
+}
+.mes-outline-head p{color:#9fb4ac;font-size:11px;margin:0}
+.mes-course-progress{
+  margin:0 0 13px;
+  padding:13px 14px;
+  border-radius:15px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.075);
+}
+.mes-course-progress-top,
+.mes-module-progress-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.mes-course-progress-top{color:#dce7e2;font-size:12px;font-weight:700;margin-bottom:8px}
+.mes-course-progress-top strong{color:#fff;font-size:14px}
+.mes-progress-track{
+  height:5px;
+  border-radius:999px;
+  background:rgba(255,255,255,.09);
+  overflow:hidden;
+}
+.mes-progress-track span{
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#68b99a,#d6ad42);
+}
+
+.mes-outline-module{
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:15px;
+  overflow:hidden;
+  background:rgba(255,255,255,.025);
+  margin-bottom:8px;
+}
+.mes-outline-module[open]{
+  border-color:rgba(117,190,163,.20);
+  background:rgba(255,255,255,.04);
+}
+.mes-outline-module summary{
+  list-style:none;
+  cursor:pointer;
+  padding:12px;
+}
+.mes-outline-module summary::-webkit-details-marker{display:none}
+.mes-outline-module summary strong{
+  display:block;
+  color:#eef3f0;
+  font-size:12px;
+  line-height:1.3;
+  margin-bottom:6px;
+}
+.mes-module-progress-meta{color:#8da39a;font-size:10px;margin-bottom:7px}
+.mes-module-progress-meta b{color:#dbe7e2;font-weight:800}
+.mes-module-lessons{border-top:1px solid rgba(255,255,255,.055)}
+.mes-outline-lesson{
+  width:100%;
+  display:grid;
+  grid-template-columns:28px minmax(0,1fr) auto;
+  gap:9px;
+  align-items:center;
+  text-align:left;
+  border:0;
+  border-bottom:1px solid rgba(255,255,255,.052);
+  background:transparent;
+  color:#dce7e2;
+  padding:10px 11px;
+  cursor:pointer;
+  transition:.16s ease;
+}
+.mes-outline-lesson:last-child{border-bottom:0}
+.mes-outline-lesson:hover{background:rgba(255,255,255,.05)}
+.mes-outline-lesson.current{
+  background:linear-gradient(90deg,rgba(117,190,163,.20),rgba(117,190,163,.055));
+  box-shadow:inset 3px 0 0 #77bea4;
+}
+.mes-outline-lesson.completed{opacity:.72}
+.mes-lesson-icon{
+  width:27px;height:27px;border-radius:50%;
+  display:grid;place-items:center;
+  border:1px solid rgba(117,190,163,.26);
+  color:#91d1b9;
+  background:rgba(117,190,163,.08);
+  font-size:10px;
+  font-weight:900;
+}
+.mes-outline-lesson.current .mes-lesson-icon{background:#77bea4;color:#08221c}
+.mes-lesson-copy{min-width:0}
+.mes-lesson-copy strong{display:block;color:#e5ede9;font-size:11px;line-height:1.25}
+.mes-lesson-copy small{display:block;color:#7f978e;font-size:9px;margin-top:3px}
+.mes-lesson-state{color:#95cdb8;font-size:11px;font-weight:900}
+
+@media(max-width:1180px){
+  .mes-player-shell{grid-template-columns:minmax(0,1fr) 320px}
+}
+@media(max-width:980px){
+  .mes-player-shell{grid-template-columns:1fr}
+  .mes-outline{position:relative;top:auto;max-height:none}
+}
+@media(max-width:640px){
+  body.yamilet-player-mode [data-lesson-view]{padding-top:12px!important}
+  .mes-player-heading .lesson-title h2{font-size:34px!important}
+  .mes-player-main .lesson-nav{grid-template-columns:1fr!important}
+  .mes-player-main .lesson-nav .btn:last-child{text-align:left}
+}
