@@ -1,0 +1,63 @@
+/* Academia Yamilet · Layout integrado definitivo · v43 */
+
+body.yamilet-home-v38 .home-v42-focus{
+  grid-column:1/-1!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 270px!important;
+  grid-auto-flow:column!important;
+  gap:16px!important;
+  align-items:stretch!important;
+  width:100%!important;
+  margin:8px 0 0!important;
+}
+body.yamilet-home-v38 .home-v42-focus > #continuar{
+  order:1!important;
+  grid-column:1!important;
+  grid-row:1!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:292px!important;
+  height:292px!important;
+  margin:0!important;
+}
+body.yamilet-home-v38 .home-v42-focus > .home-v38-progress{
+  order:2!important;
+  grid-column:2!important;
+  grid-row:1!important;
+  width:270px!important;
+  min-width:270px!important;
+  min-height:292px!important;
+  height:292px!important;
+  margin:0!important;
+  padding:22px!important;
+  align-self:stretch!important;
+}
+body.yamilet-home-v38 .home-v42-focus #continuar .panel-head{padding:24px 28px 0!important}
+body.yamilet-home-v38 .home-v42-focus #continuar [data-continue-card]{left:28px!important;right:28%!important;bottom:24px!important}
+body.yamilet-home-v38 .home-v42-focus #continuar h3,
+body.yamilet-home-v38 .home-v42-focus #continuar .empty h3{margin:6px 0 6px!important;max-width:560px!important;font-size:clamp(32px,3.1vw,48px)!important;line-height:.98!important}
+body.yamilet-home-v38 .home-v42-focus #continuar p,
+body.yamilet-home-v38 .home-v42-focus #continuar .empty p{margin:0!important;max-width:520px!important}
+body.yamilet-home-v38 .home-v42-focus .home-v38-progress strong{margin:12px 0 6px!important;font-size:31px!important}
+body.yamilet-home-v38 .home-v42-focus .home-v38-progress .home-v38-track{margin:15px 0 17px!important}
+body.yamilet-home-v38 .home-v42-focus .home-v38-progress .home-v38-program{padding-top:15px!important}
+body.yamilet-home-v38 .home-v42-focus .home-v38-progress button{min-height:38px!important;margin-top:14px!important}
+body.yamilet-home-v38 .dash-head{min-height:164px!important;padding:24px 38px 22px!important;gap:24px!important;grid-template-columns:minmax(0,1fr) 260px!important}
+body.yamilet-home-v38 .dash-head h1{font-size:clamp(42px,3.8vw,58px)!important;margin:5px 0 7px!important}
+body.yamilet-home-v38 .home-v38-intro{font-size:13px!important;line-height:1.45!important}
+body.yamilet-home-v38 .home-v38-quote{margin-top:12px!important;font-size:14px!important}
+body.yamilet-home-v38 .home-v38-activity{min-height:94px!important;padding:17px 19px!important;border-radius:18px!important}
+body.yamilet-home-v38 .home-v38-activity strong{margin-top:2px!important;font-size:24px!important}
+body.yamilet-home-v38 .stats{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+body.yamilet-home-v38 .stats article{min-height:88px!important;padding:16px 17px 14px!important;border-radius:17px!important}
+body.yamilet-home-v38 .stats strong{margin-top:7px!important;font-size:25px!important}
+body.yamilet-home-v38 .stats small{margin-top:4px!important;font-size:9px!important}
+body.yamilet-home-v38 #mis-cursos,
+.dashboard-main.shell-courses-mode > #mis-cursos{min-height:0!important;height:max-content!important;align-self:start!important}
+body.yamilet-home-v38 #mis-cursos .learning-course-list,
+.dashboard-main.shell-courses-mode #mis-cursos .learning-course-list{grid-template-columns:repeat(auto-fit,minmax(270px,320px))!important;grid-auto-rows:max-content!important;align-content:start!important;justify-content:start!important;min-height:0!important}
+body.yamilet-home-v38 #mis-cursos .learning-course-card,
+.dashboard-main.shell-courses-mode #mis-cursos .learning-course-card{max-width:320px!important}
+@media (min-width:760px){body.yamilet-home-v38 .home-v42-focus{grid-template-columns:minmax(0,1fr) 250px!important}body.yamilet-home-v38 .home-v42-focus > .home-v38-progress{grid-column:2!important;width:250px!important;min-width:250px!important}}
+@media (max-width:900px){body.yamilet-home-v38 .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.yamilet-home-v38 .dash-head{grid-template-columns:1fr!important}body.yamilet-home-v38 .home-v38-activity{display:none!important}}
+@media (max-width:759px){body.yamilet-home-v38 .home-v42-focus{grid-template-columns:1fr!important;grid-auto-flow:row!important}body.yamilet-home-v38 .home-v42-focus > #continuar,body.yamilet-home-v38 .home-v42-focus > .home-v38-progress{grid-column:1!important;grid-row:auto!important;width:100%!important;min-width:0!important}body.yamilet-home-v38 .home-v42-focus > #continuar{min-height:280px!important;height:280px!important}body.yamilet-home-v38 .home-v42-focus > .home-v38-progress{min-height:0!important;height:auto!important}body.yamilet-home-v38 .home-v42-focus #continuar [data-continue-card]{left:20px!important;right:20px!important;bottom:20px!important}}
