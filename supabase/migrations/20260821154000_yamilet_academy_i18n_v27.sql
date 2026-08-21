@@ -10,6 +10,9 @@ create table if not exists public.academy_user_preferences (
   primary key (user_id, workspace_id)
 );
 
+create index if not exists academy_user_preferences_workspace_idx
+  on public.academy_user_preferences(workspace_id);
+
 alter table public.academy_user_preferences enable row level security;
 grant select, insert, update on public.academy_user_preferences to authenticated;
 revoke delete on public.academy_user_preferences from authenticated;
@@ -54,6 +57,8 @@ create index if not exists academy_content_translations_course_locale_idx
   on public.academy_content_translations(course_id, locale, status);
 create index if not exists academy_content_translations_entity_idx
   on public.academy_content_translations(entity_type, entity_id, locale);
+create index if not exists academy_content_translations_created_by_idx
+  on public.academy_content_translations(created_by);
 
 alter table public.academy_content_translations enable row level security;
 grant select, insert, update, delete on public.academy_content_translations to authenticated;
