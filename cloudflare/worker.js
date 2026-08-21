@@ -59,11 +59,18 @@ async function lessonContext(env, lessonId, token) {
   const course = await readSingle(env, 'courses', 'id,workspace_id,title', { id: `eq.${module.course_id}` }, token);
   if (!course?.workspace_id) return null;
 
-  const workspace = await readSingle(env, 'workspaces', 'id,slug,name', { id: `eq.${course.workspace_id}` }, token);
-  const expectedSlug = String(env.ACADEMY_WORKSPACE_SLUG || 'yamilet-mes').trim();
-  if (!workspace?.id || workspace.slug !== expectedSlug) return null;
+  const expectedWorkspaceId = String(env.ACADEMY_WORKSPACE_ID || '').trim();
+  if (!UUID_RE.test(expectedWorkspaceId) || course.workspace_id !== expectedWorkspaceId) return null;
 
-  return { lesson, module, course, workspace };
+  return {
+    lesson,
+    module,
+    course,
+    workspace: {
+      id: course.workspace_id,
+      slug: String(env.ACADEMY_WORKSPACE_SLUG || 'yamilet-mes').trim(),
+    },
+  };
 }
 
 async function requireStaffForLesson(env, user, context, token) {
@@ -113,8 +120,10 @@ async function streamToken(request, env) {
     token,
   );
 
-  const isStaff = await requireStaffForLesson(env, user, context, token);
-  if (!enrollment?.id && !isStaff) return json({ error: 'course_access_required' }, 403);
+  if (!enrollment?.id) {
+    const isStaff = await requireStaffForLesson(env, user, context, token);
+    if (!isStaff) return json({ error: 'course_access_required' }, 403);
+  }
 
   if (!env.STREAM) return json({ error: 'stream_not_configured' }, 503);
   const uid = String(context.lesson.stream_video_uid || '').trim();
