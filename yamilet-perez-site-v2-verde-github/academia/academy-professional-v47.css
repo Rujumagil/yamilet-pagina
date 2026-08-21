@@ -1,0 +1,200 @@
+/* Academia Yamilet · Pulido profesional del inicio · v47 */
+
+body.yamilet-home-v38 .home-v47-continue{
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:space-between!important;
+  gap:22px!important;
+  width:100%!important;
+}
+body.yamilet-home-v38 .home-v47-continue .continue-copy{
+  max-width:720px!important;
+}
+body.yamilet-home-v38 .home-v47-continue h3{
+  margin:6px 0 7px!important;
+}
+body.yamilet-home-v38 .home-v47-continue p{
+  margin:0!important;
+  font-size:12px!important;
+}
+body.yamilet-home-v38 .home-v47-continue p strong{color:#fff!important}
+body.yamilet-home-v38 .home-v47-meta{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+body.yamilet-home-v38 .home-v47-meta span{
+  display:inline-flex;
+  align-items:center;
+  min-height:25px;
+  padding:0 9px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.84);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.04em;
+}
+body.yamilet-home-v38 .home-v47-continue .btn{
+  flex:0 0 auto!important;
+  min-width:112px!important;
+  margin:0!important;
+}
+
+/* Mis cursos: tarjeta + ruta del programa en lugar de un lienzo vacío. */
+body.yamilet-home-v38 #mis-cursos{
+  display:grid!important;
+  grid-template-columns:minmax(0,340px) minmax(420px,1fr)!important;
+  grid-template-rows:auto auto!important;
+  column-gap:20px!important;
+  row-gap:14px!important;
+  align-items:start!important;
+}
+body.yamilet-home-v38 #mis-cursos > .panel-head{
+  grid-column:1/-1!important;
+  grid-row:1!important;
+}
+body.yamilet-home-v38 #mis-cursos > .learning-course-list{
+  grid-column:1!important;
+  grid-row:2!important;
+  display:block!important;
+  width:100%!important;
+}
+body.yamilet-home-v38 #mis-cursos .learning-course-card{
+  width:100%!important;
+  max-width:340px!important;
+  border-radius:18px!important;
+  overflow:hidden!important;
+  box-shadow:0 14px 34px rgba(18,63,53,.09)!important;
+  border:1px solid rgba(18,63,53,.08)!important;
+}
+body.yamilet-home-v38 #mis-cursos .course-cover{
+  aspect-ratio:16/9!important;
+  object-fit:cover!important;
+}
+body.yamilet-home-v38 #mis-cursos .course-card-body{
+  padding:15px 16px 16px!important;
+}
+body.yamilet-home-v38 #mis-cursos .course-card-body h3{
+  margin:8px 0 5px!important;
+  font-size:20px!important;
+}
+body.yamilet-home-v38 #mis-cursos .course-card-body p{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  min-height:34px;
+  font-size:11px!important;
+  line-height:1.45!important;
+}
+body.yamilet-home-v38 #mis-cursos .course-meta{
+  font-size:9px!important;
+}
+body.yamilet-home-v38 #mis-cursos .course-action{
+  min-height:38px!important;
+  width:100%!important;
+  margin-top:12px!important;
+}
+
+.home-v47-program{
+  grid-column:2!important;
+  grid-row:2!important;
+  min-height:100%;
+  padding:20px 22px;
+  border:1px solid rgba(18,63,53,.08);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(250,248,241,.93));
+  box-shadow:0 12px 28px rgba(18,63,53,.06);
+}
+.home-v47-program-head span{
+  color:#b2862d;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+}
+.home-v47-program-head strong{
+  display:block;
+  margin-top:6px;
+  color:#123f35;
+  font:500 25px/1 Georgia,"Times New Roman",serif;
+}
+.home-v47-program-head p{
+  margin:7px 0 16px;
+  color:#788079;
+  font-size:11px;
+  line-height:1.45;
+}
+.home-v47-program ol{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.home-v47-program li{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  min-height:68px;
+  padding:11px 12px;
+  border:1px solid rgba(18,63,53,.07);
+  border-radius:14px;
+  background:#fff;
+}
+.home-v47-program li>b{
+  display:grid;
+  place-items:center;
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  background:#eef4ef;
+  color:#123f35;
+  font-size:10px;
+}
+.home-v47-program li strong{
+  display:block;
+  color:#2d3b34;
+  font-size:11px;
+  line-height:1.3;
+}
+.home-v47-program li span{
+  display:block;
+  margin-top:3px;
+  color:#8b918d;
+  font-size:8.5px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+
+/* En la pestaña Mis cursos mostrar solo el catálogo, no la tarjeta editorial del Inicio. */
+.dashboard-main.shell-courses-mode #mis-cursos{
+  display:block!important;
+}
+.dashboard-main.shell-courses-mode #mis-cursos .home-v47-program{
+  display:none!important;
+}
+.dashboard-main.shell-courses-mode #mis-cursos .learning-course-list{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(280px,340px))!important;
+}
+
+@media(max-width:1050px){
+  body.yamilet-home-v38 #mis-cursos{
+    grid-template-columns:320px minmax(0,1fr)!important;
+  }
+  .home-v47-program ol{grid-template-columns:1fr}
+}
+@media(max-width:800px){
+  body.yamilet-home-v38 #mis-cursos{
+    display:block!important;
+  }
+  body.yamilet-home-v38 #mis-cursos > .learning-course-list{margin-top:12px!important}
+  .home-v47-program{margin-top:16px}
+  .home-v47-continue{align-items:flex-start!important;flex-direction:column!important}
+}
