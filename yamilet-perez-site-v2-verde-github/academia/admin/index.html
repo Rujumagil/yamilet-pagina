@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Administración | Academia Yamilet</title>
+  <meta name="theme-color" content="#123f35">
+  <meta name="deployment" content="academia-yamilet-admin-v34">
+  <link rel="stylesheet" href="../styles.css?v=5">
+  <link rel="stylesheet" href="../auth-p0.css?v=2">
+  <link rel="stylesheet" href="../learning-p1.css?v=1">
+  <link rel="stylesheet" href="../content-admin-p15.css?v=1">
+  <link rel="stylesheet" href="../students-p16.css?v=1">
+  <link rel="stylesheet" href="../cloudflare-stream-v28.css?v=29">
+  <link rel="stylesheet" href="./admin-v34.css?v=34">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../" aria-label="Volver a Academia Yamilet">
+      <img src="../../assets/logo-yamilet.png" alt="YP">
+      <span><strong>Academia Yamilet</strong><small>Administración</small></span>
+    </a>
+    <a class="back" href="../">← Volver a la Academia</a>
+  </header>
+
+  <main>
+    <section class="auth-shell" data-auth-view>
+      <div class="welcome-card">
+        <div class="kicker">Área privada del equipo</div>
+        <h1>Gestiona.<br><span>Publica. Acompaña.</span></h1>
+        <p>Centro de operación para contenidos, alumnas, reservas y seguimiento de Academia Yamilet.</p>
+        <div class="features"><span>✓ Cursos y lecciones</span><span>✓ Alumnas</span><span>✓ Cloudflare Stream</span><span>✓ Reservas</span></div>
+      </div>
+      <div class="login-card glass">
+        <img class="login-logo" src="../../assets/logo-yamilet.png" alt="Yamilet Pérez">
+        <div class="kicker">Acceso administrativo</div>
+        <h2>Equipo Yamilet</h2>
+        <p class="muted">Ingresa con una cuenta Owner, Admin o Instructor.</p>
+        <form data-login-form>
+          <label>Correo<input type="email" name="email" autocomplete="email" required placeholder="nombre@correo.com"></label>
+          <label>Contraseña<input type="password" name="password" autocomplete="current-password" required placeholder="••••••••"></label>
+          <button class="btn primary" type="submit">Entrar a administración</button>
+        </form>
+        <div class="auth-actions"><button class="btn magic" type="button" data-magic-link>Entrar sin contraseña</button><button class="text-action" type="button" data-password-recovery>Cambiar mi contraseña</button></div>
+        <p class="status" data-auth-status aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="auth-shell single hidden" data-reset-view>
+      <div class="login-card glass compact-card">
+        <img class="login-logo" src="../../assets/logo-yamilet.png" alt="Yamilet Pérez">
+        <div class="kicker">Seguridad de tu cuenta</div>
+        <h2>Crea una nueva contraseña</h2>
+        <p class="muted">Usa al menos 8 caracteres.</p>
+        <form data-reset-form><label>Nueva contraseña<input type="password" name="password" autocomplete="new-password" minlength="8" required></label><label>Confirmar contraseña<input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required></label><button class="btn primary" type="submit">Guardar nueva contraseña</button></form>
+        <p class="status" data-reset-status aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="auth-shell single hidden" data-denied-view>
+      <div class="login-card glass compact-card access-card">
+        <img class="login-logo" src="../../assets/logo-yamilet.png" alt="Yamilet Pérez">
+        <div class="kicker">Administración</div>
+        <h2>Acceso restringido</h2>
+        <p class="muted">Esta ruta es exclusiva para el equipo de Academia Yamilet.</p>
+        <button class="btn primary" type="button" data-denied-signout>Volver a la Academia</button>
+      </div>
+    </section>
+
+    <section class="admin-dashboard hidden" data-dashboard data-admin-route="overview">
+      <aside class="admin-sidebar">
+        <a class="admin-brand" href="./"><img src="../../assets/logo-yamilet.png" alt="YP"><span><strong>Academia Yamilet</strong><small>Centro administrativo</small></span></a>
+        <div class="admin-sidebar-label">GESTIÓN</div>
+        <nav class="admin-nav">
+          <button class="active" type="button" data-admin-route-btn="overview"><span class="admin-nav-icon">⌂</span><span>Resumen</span></button>
+          <button type="button" data-admin-route-btn="content"><span class="admin-nav-icon">✎</span><span>Contenido</span></button>
+          <button type="button" data-admin-route-btn="students"><span class="admin-nav-icon">♙</span><span>Alumnas</span></button>
+          <button type="button" data-admin-route-btn="bookings"><span class="admin-nav-icon">◷</span><span>Reservas</span></button>
+          <a class="student-link" href="../"><span class="admin-nav-icon">↗</span><span>Vista alumna</span></a>
+        </nav>
+        <button class="admin-signout" type="button" data-signout>Cerrar sesión</button>
+      </aside>
+
+      <div class="admin-main">
+        <header class="admin-topbar"><div><small>YAMILET PÉREZ · OPERACIÓN</small><strong data-admin-breadcrumb>Resumen</strong></div><div class="admin-top-actions"><a class="admin-chip-link" href="../../es/">Ver landing</a><a class="admin-chip-link" href="../">Vista alumna</a><span class="admin-user" data-admin-avatar>YA</span></div></header>
+
+        <section class="admin-overview" data-admin-overview>
+          <div class="admin-hero"><div><div class="admin-kicker">Panel administrativo</div><h1>Hola, <span data-admin-name>Equipo Yamilet</span></h1><p>Administra el contenido y la operación sin mezclarla con la experiencia que ve una alumna.</p></div><div class="shell-pill gold" data-admin-role>staff</div></div>
+          <div class="admin-kpis">
+            <article class="admin-kpi"><span>Cursos</span><strong data-admin-course-count>—</strong></article>
+            <article class="admin-kpi"><span>Publicados</span><strong data-admin-published-count>—</strong></article>
+            <article class="admin-kpi"><span>Inscripciones activas</span><strong data-admin-student-count>—</strong></article>
+            <article class="admin-kpi"><span>Reservas pendientes</span><strong data-admin-booking-count>—</strong></article>
+          </div>
+          <div class="admin-grid-home">
+            <article class="admin-home-card" data-admin-launch="content"><div class="admin-home-icon">✎</div><div class="admin-kicker">Contenido</div><h3>Método MES®</h3><p>Edita semanas, lecciones, actividades, recursos, portadas y videos de Cloudflare Stream.</p><div class="admin-card-action">Abrir gestor →</div></article>
+            <article class="admin-home-card" data-admin-launch="students"><div class="admin-home-icon">♙</div><div class="admin-kicker">Alumnas</div><h3>Accesos y progreso</h3><p>Gestiona invitaciones, inscripciones, acceso a cursos y seguimiento académico.</p><div class="admin-card-action">Gestionar alumnas →</div></article>
+            <article class="admin-home-card gold" data-admin-launch="bookings"><div class="admin-home-icon">◷</div><div class="admin-kicker">Seguimiento</div><h3>Reservas de clase</h3><p>Consulta solicitudes y cambia su estado sin ocupar espacio en el dashboard de alumna.</p><div class="admin-card-action">Ver reservas →</div></article>
+          </div>
+        </section>
+
+        <button class="hidden" type="button" data-content-admin-nav>Contenido</button>
+        <button class="hidden" type="button" data-students-admin-nav>Alumnas</button>
+
+        <section class="panel content-admin hidden" data-content-admin><div data-content-admin-root><div class="empty">Preparando administrador de contenido…</div></div></section>
+        <section class="panel students-admin hidden" data-students-admin><div data-students-admin-root><div class="empty">Preparando administración de alumnas…</div></div></section>
+        <section class="panel hidden" id="reservas" data-manager-only><div class="panel-head"><div><div class="kicker">Seguimiento</div><h2>Reservas de clase gratis</h2></div></div><div class="booking-list" data-booking-list><p class="muted">Cargando reservaciones…</p></div></section>
+
+        <div class="hidden" aria-hidden="true"><span data-user-name></span><span data-user-role></span><span data-course-count></span><span data-overall-progress></span><span data-booking-count></span><div data-course-list></div><div data-continue-card></div><section data-course-view class="hidden"><div data-course-detail></div></section><section data-lesson-view class="hidden"><div data-lesson-detail></div></section></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../auth-email-p18.js?v=1"></script>
+  <script src="../app.js?v=4"></script>
+  <script src="../content-admin-p15.js?v=1"></script>
+  <script src="../cloudflare-stream-admin-v29.js?v=29"></script>
+  <script src="../students-p16.js?v=1"></script>
+  <script src="../recovery-p17.js?v=1"></script>
+  <script src="../content-admin-session-p15.js?v=2"></script>
+  <script src="./admin-v34.js?v=34"></script>
+</body>
+</html>
