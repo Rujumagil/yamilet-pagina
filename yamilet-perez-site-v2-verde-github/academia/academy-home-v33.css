@@ -1,0 +1,231 @@
+/* Academia Yamilet · Dashboard editorial compacto · v33
+   Solo presentación: no modifica navegación, datos ni lógica. */
+
+body:has(.dashboard:not(.hidden)){
+  background:#f6f5f0!important;
+}
+
+.dashboard{
+  grid-template-columns:224px minmax(0,1fr)!important;
+}
+
+.sidebar{
+  padding:16px 12px 18px!important;
+  gap:14px!important;
+  box-shadow:8px 0 26px rgba(20,57,45,.035)!important;
+}
+.side-brand{
+  margin-bottom:0!important;
+  padding-bottom:14px!important;
+}
+.side-brand img{
+  width:44px!important;
+  height:44px!important;
+}
+.side-brand strong{font-size:16px!important}
+.shell-sidebar-label{margin:6px 10px 3px!important}
+.shell-nav-item{
+  min-height:43px!important;
+  padding:8px 10px!important;
+  border-radius:12px!important;
+  font-size:12px!important;
+}
+.shell-nav-icon{
+  width:27px!important;
+  height:27px!important;
+  flex-basis:27px!important;
+}
+.signout{min-height:40px!important}
+
+body:has(.dashboard:not(.hidden)) .dashboard-main{
+  grid-template-columns:minmax(0,1fr) 290px!important;
+  gap:14px!important;
+  padding:0 28px 52px!important;
+  max-width:1620px;
+  width:100%;
+  margin:0 auto;
+}
+
+.academy-topbar{
+  min-height:68px!important;
+  margin:0 -28px 8px!important;
+  padding:0 28px!important;
+  grid-template-columns:minmax(180px,.7fr) minmax(320px,1.35fr) minmax(150px,.45fr)!important;
+  gap:16px!important;
+  background:rgba(255,255,255,.95)!important;
+  box-shadow:0 6px 22px rgba(18,63,53,.025);
+}
+.academy-topbar-brand strong{font-size:15px!important}
+.academy-search{height:40px!important;border-radius:13px!important}
+.academy-icon-btn{width:36px!important;height:36px!important}
+.academy-avatar{width:38px!important;height:38px!important}
+
+/* El shell antiguo dibujaba un segundo buscador falso dentro del saludo. */
+.dash-head::after{display:none!important;content:none!important}
+
+.dash-head{
+  grid-column:1/-1;
+  min-height:76px!important;
+  padding:10px 2px 0!important;
+  align-items:flex-start!important;
+}
+.dash-head h1{
+  font-size:clamp(30px,3vw,39px)!important;
+  margin:4px 0 5px!important;
+  line-height:1!important;
+  letter-spacing:-.025em!important;
+}
+.dash-head p{font-size:12px!important}
+.dash-head .outline{
+  min-height:38px!important;
+  padding:0 15px!important;
+  border-radius:12px!important;
+  font-size:12px!important;
+}
+
+.stats{
+  gap:12px!important;
+  margin:0 0 2px!important;
+}
+.stats article{
+  min-height:68px!important;
+  padding:12px 15px!important;
+  grid-template-columns:38px 1fr!important;
+  column-gap:10px!important;
+  border-radius:16px!important;
+  border:1px solid rgba(18,63,53,.09)!important;
+  box-shadow:0 8px 20px rgba(20,57,45,.045)!important;
+}
+.stats article::before{
+  width:34px!important;
+  height:34px!important;
+  border-radius:10px!important;
+}
+.stats strong{font-size:21px!important}
+.stats span{font-size:9px!important}
+
+#continuar,
+#reservas{
+  min-height:330px!important;
+  height:330px!important;
+  border-radius:22px!important;
+}
+
+#continuar{
+  background-position:center 48%!important;
+  box-shadow:0 18px 42px rgba(6,45,41,.16)!important;
+}
+#continuar::before{
+  background:
+    linear-gradient(90deg,rgba(3,26,23,.93) 0%,rgba(3,26,23,.74) 39%,rgba(3,26,23,.20) 76%,rgba(3,26,23,.08) 100%),
+    linear-gradient(0deg,rgba(3,26,23,.48),transparent 56%)!important;
+}
+#continuar .panel-head{padding:22px 25px 0!important}
+#continuar .panel-head h2{font-size:14px!important}
+#continuar [data-continue-card]{
+  left:25px!important;
+  right:31%!important;
+  bottom:24px!important;
+}
+#continuar .empty{
+  max-width:620px;
+  padding:17px 18px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  background:rgba(4,34,30,.46)!important;
+  border-radius:14px!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.08);
+}
+#continuar .empty strong,
+#continuar .empty h3{font-size:clamp(27px,2.6vw,40px)!important;line-height:1.02!important}
+
+#reservas{
+  padding:22px 20px!important;
+  background:#123f35!important;
+  box-shadow:0 18px 38px rgba(18,63,53,.18)!important;
+}
+#reservas h2{
+  font-size:27px!important;
+  margin:7px 0 15px!important;
+}
+#reservas .booking-list{margin-top:5px!important}
+#reservas .booking-row{
+  gap:8px!important;
+  padding:13px!important;
+  border-radius:13px!important;
+  font-size:11px!important;
+}
+#reservas .booking-row select{
+  min-height:34px;
+  font-size:11px;
+}
+
+#mis-cursos{
+  padding:20px 22px 24px!important;
+  border-radius:20px!important;
+  box-shadow:0 12px 30px rgba(20,57,45,.055)!important;
+}
+#mis-cursos .panel-head{margin-bottom:2px!important}
+#mis-cursos h2{
+  font-size:25px!important;
+  margin:3px 0 14px!important;
+}
+.learning-course-list{
+  grid-template-columns:repeat(auto-fit,minmax(320px,430px))!important;
+  gap:16px!important;
+  align-items:stretch!important;
+}
+.learning-course-card{
+  border-radius:18px!important;
+  box-shadow:0 10px 26px rgba(20,57,45,.065)!important;
+}
+.learning-course-card:hover{
+  transform:translateY(-3px)!important;
+  box-shadow:0 16px 36px rgba(20,57,45,.10)!important;
+}
+.course-cover{
+  aspect-ratio:16/8.7!important;
+  object-fit:cover!important;
+  background:#062d29!important;
+}
+.course-card-body{padding:15px 17px 17px!important}
+.course-card-body h3{font-size:20px!important;margin:6px 0 7px!important}
+.course-card-body p{font-size:12px!important;line-height:1.45!important}
+.course-action{min-height:38px!important}
+
+/* Mejor ritmo vertical entre bloques del inicio. */
+#continuar + #mis-cursos{margin-top:0!important}
+.dashboard-main > #mis-cursos{margin-top:0!important}
+
+@media(max-width:1180px){
+  body:has(.dashboard:not(.hidden)) .dashboard-main{grid-template-columns:minmax(0,1fr) 260px!important;padding:0 22px 44px!important}
+  .academy-topbar{margin:0 -22px 8px!important;padding:0 22px!important}
+  #continuar [data-continue-card]{right:24%!important}
+}
+
+@media(max-width:1080px){
+  .dashboard{grid-template-columns:210px minmax(0,1fr)!important}
+  body:has(.dashboard:not(.hidden)) .dashboard-main{grid-template-columns:1fr!important}
+  #continuar,#reservas{grid-column:1!important;height:auto!important;min-height:300px!important}
+  #reservas{min-height:auto!important}
+  .learning-course-list{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))!important}
+}
+
+@media(max-width:900px){
+  .dashboard{grid-template-columns:1fr!important}
+  body:has(.dashboard:not(.hidden)) .dashboard-main{padding:0 18px 38px!important}
+  .academy-topbar{margin:0 -18px 8px!important;padding:0 18px!important}
+  .stats{grid-template-columns:1fr!important}
+  #continuar [data-continue-card]{right:22px!important}
+}
+
+@media(max-width:580px){
+  body:has(.dashboard:not(.hidden)) .dashboard-main{padding:0 12px 30px!important}
+  .academy-topbar{margin:0 -12px 8px!important;padding:0 12px!important}
+  .dash-head{min-height:92px!important;flex-direction:column!important;gap:8px!important}
+  .dash-head h1{font-size:31px!important}
+  #continuar{min-height:290px!important}
+  #continuar .panel-head{padding:18px 18px 0!important}
+  #continuar [data-continue-card]{left:18px!important;right:18px!important;bottom:18px!important}
+  #mis-cursos{padding:17px!important}
+  .learning-course-list{grid-template-columns:1fr!important}
+}
