@@ -100,6 +100,22 @@
     document.head.appendChild(link);
   }
 
+  function loadProfessionalV47(){
+    if (!document.querySelector('link[data-yamilet-professional-v47]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-professional-v47.css?v=47';
+      link.dataset.yamiletProfessionalV47 = '1';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-yamilet-professional-v47]')) {
+      const script = document.createElement('script');
+      script.src = './academy-professional-v47.js?v=47';
+      script.dataset.yamiletProfessionalV47 = '1';
+      document.body.appendChild(script);
+    }
+  }
+
   function wireAdminLink(){
     const btn = document.querySelector('[data-shell-route="admin"]');
     if (!btn) return false;
@@ -119,6 +135,7 @@
     loadLayoutV44();
     loadHeaderV45();
     loadHeaderV46();
+    loadProfessionalV47();
     if (wireAdminLink()) return;
     const timer = setInterval(() => {
       tries += 1;
