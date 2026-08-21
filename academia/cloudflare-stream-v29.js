@@ -1,10 +1,13 @@
 (() => {
+  'use strict';
+
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
   const STREAM_ORIGIN = 'https://customer-l4ebvl2tw1zhwagv.cloudflarestream.com';
   const UID_RE = /^[A-Za-z0-9_-]{16,128}$/;
   let sb = null;
   let activeLessonId = null;
   let loadingLessonId = null;
+  let requestedLessonId = null;
 
   const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
@@ -24,7 +27,7 @@
   function currentLessonId() {
     const view = document.querySelector('[data-lesson-view]:not(.hidden)');
     if (!view) return null;
-    return view.querySelector('[data-toggle-complete]')?.dataset.toggleComplete || null;
+    return view.querySelector('[data-toggle-complete]')?.dataset.toggleComplete || requestedLessonId || null;
   }
 
   function clearPlayer() {
@@ -49,6 +52,8 @@
         .eq('id', lessonId)
         .maybeSingle();
 
+      clearPlayer();
+
       if (error || !lesson?.stream_video_uid) {
         activeLessonId = lessonId;
         return;
@@ -61,8 +66,7 @@
       const content = host?.querySelector('.lesson-content');
       if (!host || !content) return;
 
-      clearPlayer();
-      host.querySelector('.video-shell')?.remove();
+      host.querySelector('.video-shell:not([data-mes-video-pending])')?.remove();
       host.querySelector('.lesson-video')?.remove();
 
       const shell = document.createElement('div');
@@ -71,8 +75,9 @@
       shell.innerHTML = `<iframe src="${escapeHtml(playerUrl(uid))}" title="Video de la lección" loading="eager" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
       content.before(shell);
       activeLessonId = lessonId;
+      document.dispatchEvent(new CustomEvent('yamilet:stream-ready', { detail: { lessonId } }));
     } catch (error) {
-      console.warn('Academia Yamilet Cloudflare Stream v29', error);
+      console.warn('Academia Yamilet Cloudflare Stream v36', error);
       const host = document.querySelector('[data-lesson-detail]');
       if (host && !host.querySelector('[data-cloudflare-stream-error]')) {
         const note = document.createElement('p');
@@ -86,9 +91,19 @@
     }
   }
 
+  document.addEventListener('click', event => {
+    const lessonButton = event.target.closest('[data-open-lesson][data-course-id], [data-mes-open-lesson][data-course-id]');
+    if (!lessonButton) return;
+    requestedLessonId = lessonButton.dataset.openLesson || lessonButton.dataset.mesOpenLesson || null;
+    activeLessonId = null;
+    setTimeout(renderStreamForCurrentLesson, 80);
+  }, true);
+
   const observer = new MutationObserver(() => {
     const next = currentLessonId();
-    if (next && next !== activeLessonId) setTimeout(renderStreamForCurrentLesson, 0);
+    if (next && (next !== activeLessonId || !document.querySelector('[data-cloudflare-stream-player]'))) {
+      setTimeout(renderStreamForCurrentLesson, 0);
+    }
   });
 
   function boot() {
