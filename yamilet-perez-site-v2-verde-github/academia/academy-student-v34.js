@@ -18,6 +18,14 @@
     }
   }
 
+  function loadLanguageV39(){
+    if (document.querySelector('script[data-yamilet-language-v39]')) return;
+    const script = document.createElement('script');
+    script.src = './academy-language-v39.js?v=39';
+    script.dataset.yamiletLanguageV39 = '1';
+    document.body.appendChild(script);
+  }
+
   function wireAdminLink(){
     const btn = document.querySelector('[data-shell-route="admin"]');
     if (!btn) return false;
@@ -35,6 +43,7 @@
 
   function boot(){
     loadHomeV38();
+    loadLanguageV39();
     if (wireAdminLink()) return;
     const timer = setInterval(() => {
       tries += 1;
