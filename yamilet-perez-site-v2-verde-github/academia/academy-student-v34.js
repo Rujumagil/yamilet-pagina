@@ -26,11 +26,11 @@
     document.body.appendChild(script);
   }
 
-  function loadPagesV40(){
-    if (document.querySelector('script[data-yamilet-pages-v40]')) return;
+  function loadTabsV41(){
+    if (document.querySelector('script[data-yamilet-tabs-v41]')) return;
     const script = document.createElement('script');
-    script.src = './academy-pages-v40.js?v=40';
-    script.dataset.yamiletPagesV40 = '1';
+    script.src = './academy-tabs-v41.js?v=41';
+    script.dataset.yamiletTabsV41 = '1';
     document.body.appendChild(script);
   }
 
@@ -47,7 +47,7 @@
   function boot(){
     loadHomeV38();
     loadLanguageV39();
-    loadPagesV40();
+    loadTabsV41();
     if (wireAdminLink()) return;
     const timer = setInterval(() => {
       tries += 1;
