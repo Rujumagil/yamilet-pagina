@@ -1,11 +1,11 @@
 (() => {
   'use strict';
 
-  const RELEASE = '20260821.35';
+  const RELEASE = '20260821.36';
   const lessonView = document.querySelector('[data-lesson-view]');
-  const courseView = document.querySelector('[data-course-view]');
   const lessonHost = document.querySelector('[data-lesson-detail]');
   let timer = null;
+  let lastContext = null;
 
   const esc = (value = '') => String(value).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
@@ -14,10 +14,10 @@
   function currentContext() {
     if (!lessonView || lessonView.classList.contains('hidden')) return null;
     const complete = lessonView.querySelector('[data-toggle-complete]');
-    const anyLesson = lessonView.querySelector('[data-course-id][data-open-lesson]');
-    const lessonId = complete?.dataset.toggleComplete || null;
-    const courseId = complete?.dataset.courseId || anyLesson?.dataset.courseId || null;
-    return lessonId && courseId ? { lessonId, courseId } : null;
+    if (complete?.dataset.toggleComplete && complete?.dataset.courseId) {
+      return { lessonId: complete.dataset.toggleComplete, courseId: complete.dataset.courseId };
+    }
+    return lastContext;
   }
 
   function progressFromCourse(courseId) {
@@ -80,8 +80,9 @@
       button.onclick = () => {
         const id = button.dataset.mesOpenLesson;
         const courseId = button.dataset.courseId;
+        lastContext = { lessonId:id, courseId };
         const source = document.querySelector('[data-course-detail] [data-open-lesson="' + CSS.escape(id) + '"][data-course-id="' + CSS.escape(courseId) + '"]');
-        if (source) source.click();
+        source?.click();
       };
     });
   }
@@ -138,6 +139,7 @@
       [
         lessonHost.querySelector('.video-shell'),
         lessonHost.querySelector('.lesson-video'),
+        lessonHost.querySelector('[data-cloudflare-stream-player]'),
         lessonHost.querySelector('[data-cloudflare-stream-error]'),
         lessonHost.querySelector('.lesson-content'),
         lessonHost.querySelector('.transcript'),
@@ -155,13 +157,13 @@
     outline.innerHTML = outlineMarkup(context.courseId, context.lessonId);
     wireOutline(shell);
 
-    const strayMedia = [...lessonHost.children].filter(node => node.matches?.('.video-shell,.lesson-video,[data-cloudflare-stream-error]'));
+    const strayMedia = [...lessonHost.children].filter(node => node.matches?.('.video-shell,.lesson-video,[data-cloudflare-stream-player],[data-cloudflare-stream-error]'));
     strayMedia.forEach(node => {
       const content = main.querySelector('.lesson-content');
       if (content) content.before(node); else main.appendChild(node);
     });
 
-    setTimeout(() => ensurePendingVideo(main), 220);
+    setTimeout(() => ensurePendingVideo(main), 260);
   }
 
   function schedule(delay = 70) {
@@ -176,22 +178,31 @@
       setTimeout(() => {
         const rows = [...document.querySelectorAll('[data-course-detail] [data-open-lesson][data-course-id="' + CSS.escape(courseId) + '"]')];
         const next = rows.find(row => !row.classList.contains('is-complete')) || rows[0];
-        next?.click();
+        if (next) {
+          lastContext = { lessonId:next.dataset.openLesson, courseId };
+          next.click();
+        }
       }, 90);
       return;
     }
 
-    if (event.target.closest('[data-open-lesson]')) schedule(80);
+    const lessonButton = event.target.closest('[data-open-lesson][data-course-id]');
+    if (lessonButton) {
+      lastContext = { lessonId:lessonButton.dataset.openLesson, courseId:lessonButton.dataset.courseId };
+      schedule(80);
+    }
     if (event.target.closest('[data-toggle-complete]')) schedule(450);
     if (event.target.closest('[data-back-course],[data-back-courses]')) {
       setTimeout(() => document.body.classList.remove('yamilet-player-mode'), 0);
     }
   }, true);
 
+  document.addEventListener('yamilet:stream-ready', () => schedule(20));
+
   if (lessonHost) {
     const observer = new MutationObserver(mutations => {
       const meaningful = mutations.some(mutation => [...mutation.addedNodes, ...mutation.removedNodes].some(node =>
-        node.nodeType === 1 && (node.matches?.('.video-shell,.lesson-video,[data-cloudflare-stream-player],[data-cloudflare-stream-error]') || node.querySelector?.('.video-shell,.lesson-video,[data-cloudflare-stream-player],[data-cloudflare-stream-error]'))
+        node.nodeType === 1 && (node.matches?.('.video-shell,.lesson-video,[data-cloudflare-stream-player],[data-cloudflare-stream-error],.lesson-content') || node.querySelector?.('.video-shell,.lesson-video,[data-cloudflare-stream-player],[data-cloudflare-stream-error],.lesson-content'))
       ));
       if (meaningful) schedule(90);
     });
@@ -199,5 +210,5 @@
   }
 
   window.addEventListener('pageshow', () => schedule(120));
-  window.ACADEMIA_YAMILET_PLAYER_V35 = { release: RELEASE, enhance: enhanceLesson };
+  window.ACADEMIA_YAMILET_PLAYER_V36 = { release: RELEASE, enhance: enhanceLesson };
 })();
