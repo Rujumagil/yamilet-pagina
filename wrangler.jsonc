@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "academia-yamilet",
+  "main": "./cloudflare/worker.js",
+  "compatibility_date": "2026-08-21",
+  "assets": {
+    "directory": "./yamilet-perez-site-v2-verde-github",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "stream": {
+    "binding": "STREAM"
+  },
+  "vars": {
+    "ACADEMY_WORKSPACE_SLUG": "yamilet-mes",
+    "ACADEMY_WORKSPACE_ID": "0ed49bcb-a8fe-4d1c-87c3-a65fe43291bc"
+  }
+}
