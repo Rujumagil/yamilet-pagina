@@ -1,0 +1,424 @@
+/* Academia Yamilet · Inicio editorial inspirado en la jerarquía de ETERNI · v38 */
+
+body.yamilet-home-v38{
+  background:#f7f3e9!important;
+  color:#27372f;
+}
+
+body.yamilet-home-v38 .dashboard{
+  grid-template-columns:248px minmax(0,1fr)!important;
+  background:#f7f3e9!important;
+}
+
+/* Sidebar editorial verde profundo */
+body.yamilet-home-v38 .sidebar{
+  background:linear-gradient(180deg,#123f35 0%,#0d332b 100%)!important;
+  border-right:0!important;
+  color:#fff!important;
+  box-shadow:12px 0 38px rgba(9,49,40,.12)!important;
+}
+body.yamilet-home-v38 .side-brand{
+  border-bottom:1px solid rgba(255,255,255,.11)!important;
+}
+body.yamilet-home-v38 .side-brand strong{color:#fff!important}
+body.yamilet-home-v38 .side-brand small{color:#d8b052!important}
+body.yamilet-home-v38 .shell-sidebar-label{color:rgba(255,255,255,.46)!important}
+body.yamilet-home-v38 .shell-nav-item{
+  color:rgba(255,255,255,.78)!important;
+  background:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+}
+body.yamilet-home-v38 .shell-nav-item:hover,
+body.yamilet-home-v38 .shell-nav-item.active{
+  color:#fff!important;
+  background:rgba(255,255,255,.09)!important;
+  border-color:rgba(255,255,255,.08)!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
+body.yamilet-home-v38 .shell-nav-item.active::after{background:#e0b65b!important}
+body.yamilet-home-v38 .shell-nav-icon{
+  color:#e9f3ee!important;
+  background:rgba(255,255,255,.07)!important;
+  border-color:rgba(255,255,255,.11)!important;
+}
+body.yamilet-home-v38 .shell-nav-item.active .shell-nav-icon{
+  color:#123f35!important;
+  background:#f4e7bd!important;
+  border-color:#f4e7bd!important;
+  box-shadow:none!important;
+}
+body.yamilet-home-v38 .shell-nav-secondary,
+body.yamilet-home-v38 .shell-nav-admin{
+  color:#fff!important;
+  background:rgba(255,255,255,.055)!important;
+  border-color:rgba(255,255,255,.10)!important;
+}
+body.yamilet-home-v38 .signout{
+  color:#fff!important;
+  background:rgba(255,255,255,.07)!important;
+  border-color:rgba(255,255,255,.14)!important;
+}
+
+/* Main / topbar */
+body.yamilet-home-v38 .dashboard-main{
+  grid-template-columns:minmax(0,1fr) 300px!important;
+  gap:18px!important;
+  max-width:none!important;
+  padding:0 42px 64px!important;
+  background:
+    radial-gradient(circle at 78% 8%,rgba(216,176,82,.12),transparent 23%),
+    radial-gradient(circle at 20% 18%,rgba(18,63,53,.05),transparent 26%),
+    #f7f3e9!important;
+}
+body.yamilet-home-v38 .academy-topbar{
+  margin:0 -42px 0!important;
+  padding:0 42px!important;
+  min-height:72px!important;
+  background:rgba(255,255,255,.93)!important;
+  border-bottom:1px solid rgba(18,63,53,.07)!important;
+  box-shadow:0 7px 26px rgba(34,43,38,.035)!important;
+}
+
+/* Saludo tipo editorial */
+body.yamilet-home-v38 .dash-head{
+  grid-column:1/-1!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 320px!important;
+  align-items:center!important;
+  gap:48px!important;
+  min-height:238px!important;
+  margin:0 -42px!important;
+  padding:38px 64px 34px!important;
+  border-bottom:1px solid rgba(216,176,82,.30)!important;
+}
+body.yamilet-home-v38 .dash-head>.btn{display:none!important}
+body.yamilet-home-v38 .dash-head .kicker{
+  color:#bf8f2f!important;
+  font-size:11px!important;
+  letter-spacing:.17em!important;
+  text-transform:uppercase;
+  font-weight:850!important;
+}
+body.yamilet-home-v38 .dash-head h1{
+  margin:7px 0 10px!important;
+  color:#123f35!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(52px,5vw,76px)!important;
+  line-height:.94!important;
+  letter-spacing:-.045em!important;
+  font-weight:500!important;
+}
+body.yamilet-home-v38 .dash-head [data-user-role]{display:none!important}
+.home-v38-intro{
+  max-width:760px;
+  margin:0!important;
+  color:#68736c!important;
+  font-size:16px!important;
+  line-height:1.55!important;
+}
+.home-v38-quote{
+  max-width:720px;
+  margin:18px 0 0;
+  padding-left:18px;
+  border-left:2px solid rgba(191,143,47,.55);
+  color:#7a6c66;
+  font:italic 16px/1.5 Georgia,"Times New Roman",serif;
+}
+.home-v38-activity{
+  min-height:126px;
+  padding:24px 26px;
+  border:1px solid rgba(18,63,53,.07);
+  border-radius:22px;
+  background:rgba(255,255,255,.91);
+  box-shadow:0 18px 46px rgba(31,49,40,.09);
+}
+.home-v38-activity small{
+  display:block;
+  margin-bottom:12px;
+  color:#6f7b74;
+  font-size:11px;
+  font-weight:750;
+}
+.home-v38-activity strong{
+  display:block;
+  color:#123f35;
+  font:500 30px/1 Georgia,"Times New Roman",serif;
+}
+.home-v38-activity p{
+  margin:8px 0 0;
+  color:#8a8178;
+  font-size:12px;
+  line-height:1.45;
+}
+
+/* Métricas */
+body.yamilet-home-v38 .stats{
+  grid-column:1/-1!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:16px!important;
+  margin:0!important;
+  padding-top:2px;
+}
+body.yamilet-home-v38 .stats article{
+  position:relative;
+  display:block!important;
+  min-height:132px!important;
+  padding:24px 22px 20px!important;
+  border:1px solid rgba(18,63,53,.07)!important;
+  border-radius:20px!important;
+  background:rgba(255,255,255,.86)!important;
+  box-shadow:0 13px 34px rgba(28,46,37,.065)!important;
+  overflow:hidden;
+}
+body.yamilet-home-v38 .stats article::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:0 18px auto!important;
+  width:auto!important;
+  height:2px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:linear-gradient(90deg,#d9b25d,rgba(217,178,93,.25))!important;
+}
+body.yamilet-home-v38 .stats article::after{display:none!important}
+body.yamilet-home-v38 .stats span{
+  display:block!important;
+  color:#617068!important;
+  font-size:10px!important;
+  font-weight:760!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+}
+body.yamilet-home-v38 .stats strong{
+  display:block!important;
+  margin-top:16px;
+  color:#123f35!important;
+  font:500 31px/1 Georgia,"Times New Roman",serif!important;
+}
+body.yamilet-home-v38 .stats small{
+  display:block;
+  margin-top:8px;
+  color:#8a938d;
+  font-size:10px;
+}
+
+/* Hero continuar */
+body.yamilet-home-v38 #continuar{
+  grid-column:1!important;
+  position:relative!important;
+  min-height:390px!important;
+  height:390px!important;
+  margin:16px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:26px!important;
+  background-color:#123f35!important;
+  background-size:cover!important;
+  background-position:center!important;
+  box-shadow:0 24px 54px rgba(18,63,53,.18)!important;
+  overflow:hidden!important;
+}
+body.yamilet-home-v38 #continuar::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:
+    linear-gradient(90deg,rgba(9,42,35,.95) 0%,rgba(9,42,35,.78) 38%,rgba(9,42,35,.30) 68%,rgba(9,42,35,.08) 100%),
+    linear-gradient(0deg,rgba(6,28,24,.62),transparent 58%)!important;
+  z-index:0!important;
+}
+body.yamilet-home-v38 #continuar .panel-head,
+body.yamilet-home-v38 #continuar [data-continue-card]{position:relative!important;z-index:2!important}
+body.yamilet-home-v38 #continuar .panel-head{
+  padding:38px 42px 0!important;
+}
+body.yamilet-home-v38 #continuar .panel-head .kicker{
+  color:#f2cd78!important;
+  font-size:10px!important;
+  letter-spacing:.16em!important;
+}
+body.yamilet-home-v38 #continuar .panel-head h2{
+  margin-top:7px!important;
+  color:#fff!important;
+  font-size:13px!important;
+  font-weight:650!important;
+}
+body.yamilet-home-v38 #continuar [data-continue-card]{
+  position:absolute!important;
+  left:42px!important;
+  right:39%!important;
+  bottom:34px!important;
+}
+body.yamilet-home-v38 #continuar .continue-card,
+body.yamilet-home-v38 #continuar .continue-card.complete-state,
+body.yamilet-home-v38 #continuar .continue-card.empty-state{
+  min-height:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#fff!important;
+}
+body.yamilet-home-v38 #continuar .continue-copy .eyebrow{color:#f0ca75!important}
+body.yamilet-home-v38 #continuar h3,
+body.yamilet-home-v38 #continuar .empty h3{
+  max-width:650px!important;
+  margin:8px 0 8px!important;
+  color:#fff!important;
+  font:500 clamp(38px,4vw,62px)/.98 Georgia,"Times New Roman",serif!important;
+  letter-spacing:-.035em!important;
+}
+body.yamilet-home-v38 #continuar p,
+body.yamilet-home-v38 #continuar .empty p{
+  max-width:580px;
+  color:rgba(255,255,255,.82)!important;
+  font-size:13px!important;
+  line-height:1.5!important;
+}
+body.yamilet-home-v38 #continuar .progress-track{
+  max-width:360px;
+  height:5px!important;
+  margin:18px 0 13px!important;
+  background:rgba(255,255,255,.26)!important;
+}
+body.yamilet-home-v38 #continuar .progress-track span{background:#e1b95f!important}
+body.yamilet-home-v38 #continuar .btn.primary{
+  min-height:43px!important;
+  margin-top:16px!important;
+  padding:0 22px!important;
+  border-radius:13px!important;
+  background:#fff!important;
+  color:#123f35!important;
+  border-color:#fff!important;
+}
+
+/* Progreso lateral del programa */
+.home-v38-progress{
+  grid-column:2;
+  align-self:stretch;
+  min-height:390px;
+  margin-top:16px;
+  padding:30px 27px;
+  border:1px solid rgba(18,63,53,.075);
+  border-radius:24px;
+  background:rgba(255,255,255,.91);
+  box-shadow:0 17px 42px rgba(31,49,40,.08);
+}
+.home-v38-progress .home-v38-kicker{
+  color:#bf8f2f;
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.home-v38-progress .home-v38-progress-label{
+  margin:8px 0 0;
+  color:#123f35;
+  font:500 20px/1.2 Georgia,"Times New Roman",serif;
+}
+.home-v38-progress strong{
+  display:block;
+  margin:18px 0 8px;
+  color:#123f35;
+  font:500 36px/1 Georgia,"Times New Roman",serif;
+}
+.home-v38-progress p{
+  margin:0;
+  color:#68736d;
+  font-size:13px;
+  line-height:1.5;
+}
+.home-v38-progress .home-v38-track{
+  height:6px;
+  margin:20px 0 24px;
+  border-radius:999px;
+  background:#ebe7dc;
+  overflow:hidden;
+}
+.home-v38-progress .home-v38-track span{
+  display:block;
+  height:100%;
+  width:0;
+  border-radius:999px;
+  background:linear-gradient(90deg,#123f35,#d2aa52);
+  transition:width .35s ease;
+}
+.home-v38-progress .home-v38-program{
+  padding-top:21px;
+  border-top:1px solid rgba(18,63,53,.08);
+}
+.home-v38-progress .home-v38-program small{
+  display:block;
+  color:#7a857e;
+  font-size:10px;
+}
+.home-v38-progress .home-v38-program b{
+  display:block;
+  margin-top:5px;
+  color:#26362e;
+  font-size:14px;
+}
+.home-v38-progress button{
+  min-height:42px;
+  margin-top:20px;
+  padding:0 18px;
+  border:0;
+  border-radius:13px;
+  background:#123f35;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+}
+
+/* Cursos debajo del bloque principal */
+body.yamilet-home-v38 #mis-cursos{
+  grid-column:1/-1!important;
+  margin-top:4px!important;
+  padding:24px 26px 28px!important;
+  background:rgba(255,255,255,.78)!important;
+  border-color:rgba(18,63,53,.065)!important;
+  box-shadow:0 12px 34px rgba(31,49,40,.055)!important;
+}
+body.yamilet-home-v38 #mis-cursos .panel-head .kicker{color:#bf8f2f!important}
+body.yamilet-home-v38 #mis-cursos .panel-head h2{
+  color:#123f35!important;
+  font:500 30px/1 Georgia,"Times New Roman",serif!important;
+}
+
+@media(max-width:1220px){
+  body.yamilet-home-v38 .dashboard{grid-template-columns:220px minmax(0,1fr)!important}
+  body.yamilet-home-v38 .dashboard-main{padding:0 28px 48px!important;grid-template-columns:minmax(0,1fr) 270px!important}
+  body.yamilet-home-v38 .academy-topbar{margin:0 -28px!important;padding:0 28px!important}
+  body.yamilet-home-v38 .dash-head{margin:0 -28px!important;padding:34px 42px 30px!important;grid-template-columns:minmax(0,1fr) 290px!important;gap:28px!important}
+  body.yamilet-home-v38 #continuar [data-continue-card]{right:28%!important}
+}
+
+@media(max-width:1020px){
+  body.yamilet-home-v38 .dashboard-main{grid-template-columns:1fr!important}
+  body.yamilet-home-v38 .dash-head{grid-template-columns:1fr!important;min-height:auto!important}
+  .home-v38-activity{max-width:560px}
+  body.yamilet-home-v38 .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.yamilet-home-v38 #continuar,
+  .home-v38-progress{grid-column:1!important}
+  .home-v38-progress{min-height:auto!important;margin-top:0!important}
+}
+
+@media(max-width:900px){
+  body.yamilet-home-v38 .dashboard{grid-template-columns:1fr!important}
+  body.yamilet-home-v38 .dashboard-main{padding:0 18px 36px!important}
+  body.yamilet-home-v38 .academy-topbar{margin:0 -18px!important;padding:0 18px!important}
+  body.yamilet-home-v38 .dash-head{margin:0 -18px!important;padding:30px 24px!important}
+  body.yamilet-home-v38 #continuar [data-continue-card]{left:26px!important;right:26px!important;bottom:26px!important}
+}
+
+@media(max-width:620px){
+  body.yamilet-home-v38 .stats{grid-template-columns:1fr!important}
+  body.yamilet-home-v38 .dash-head h1{font-size:48px!important}
+  body.yamilet-home-v38 #continuar{height:360px!important;min-height:360px!important}
+  body.yamilet-home-v38 #continuar .panel-head{padding:28px 26px 0!important}
+  body.yamilet-home-v38 #continuar h3{font-size:38px!important}
+}
