@@ -59,7 +59,11 @@ async function lessonContext(env, lessonId, token) {
   const course = await readSingle(env, 'courses', 'id,workspace_id,title', { id: `eq.${module.course_id}` }, token);
   if (!course?.workspace_id) return null;
 
-  return { lesson, module, course };
+  const workspace = await readSingle(env, 'workspaces', 'id,slug,name', { id: `eq.${course.workspace_id}` }, token);
+  const expectedSlug = String(env.ACADEMY_WORKSPACE_SLUG || 'yamilet-mes').trim();
+  if (!workspace?.id || workspace.slug !== expectedSlug) return null;
+
+  return { lesson, module, course, workspace };
 }
 
 async function requireStaffForLesson(env, user, context, token) {
@@ -150,7 +154,7 @@ async function streamUpload(request, env) {
   if (!UUID_RE.test(lessonId)) return json({ error: 'invalid_lesson_id' }, 400);
 
   const context = await lessonContext(env, lessonId, token);
-  if (!context) return json({ error: 'lesson_not_found' }, 404);
+  if (!context) return json({ error: 'lesson_not_found_or_wrong_workspace' }, 404);
 
   if (!(await requireStaffForLesson(env, user, context, token))) {
     return json({ error: 'staff_access_required' }, 403);
@@ -161,20 +165,22 @@ async function streamUpload(request, env) {
   const requestedDuration = Number(body?.max_duration_seconds || 7200);
   const maxDurationSeconds = Math.max(60, Math.min(21600, Number.isFinite(requestedDuration) ? requestedDuration : 7200));
   const filename = String(body?.filename || 'video').trim().slice(0, 180);
-  const project = 'yamilet';
-  const courseId = context.course.id;
+  const courseTitle = String(context.course.title || '').trim().slice(0, 120);
+  const lessonTitle = String(context.lesson.title || '').trim().slice(0, 160);
 
   const directUpload = await env.STREAM.createDirectUpload({
     maxDurationSeconds,
     creator: `yamilet:${user.id}`,
     requireSignedURLs: true,
     meta: {
-      project,
+      name: `YAMILET · ${courseTitle || 'Curso'} · ${lessonTitle || 'Lección'}`.slice(0, 240),
+      project: 'yamilet',
       academy: 'yamilet',
-      course_id: courseId,
+      workspace_slug: context.workspace.slug,
+      course_id: context.course.id,
       lesson_id: lessonId,
-      course_title: String(context.course.title || '').slice(0, 120),
-      lesson_title: String(context.lesson.title || '').slice(0, 160),
+      course_title: courseTitle,
+      lesson_title: lessonTitle,
       source_filename: filename,
     },
   });
