@@ -87,7 +87,7 @@
   }
 
   function ensurePendingVideo(main) {
-    const media = main.querySelector('.video-shell,.lesson-video,[data-cloudflare-stream-player]');
+    const media = main.querySelector('.video-shell:not([data-mes-video-pending]),.lesson-video,[data-cloudflare-stream-player]');
     let pending = main.querySelector('[data-mes-video-pending]');
     if (media) {
       pending?.remove();
@@ -191,8 +191,13 @@
   }, true);
 
   if (lessonHost) {
-    const observer = new MutationObserver(() => schedule(90));
-    observer.observe(lessonHost, { childList:true, subtree:false });
+    const observer = new MutationObserver(mutations => {
+      const meaningful = mutations.some(mutation => [...mutation.addedNodes, ...mutation.removedNodes].some(node =>
+        node.nodeType === 1 && (node.matches?.('.video-shell,.lesson-video,[data-cloudflare-stream-player],[data-cloudflare-stream-error]') || node.querySelector?.('.video-shell,.lesson-video,[data-cloudflare-stream-player],[data-cloudflare-stream-error]'))
+      ));
+      if (meaningful) schedule(90);
+    });
+    observer.observe(lessonHost, { childList:true, subtree:true });
   }
 
   window.addEventListener('pageshow', () => schedule(120));
