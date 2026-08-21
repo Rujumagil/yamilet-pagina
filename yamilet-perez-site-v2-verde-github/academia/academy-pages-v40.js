@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const RELEASE = '20260821.40';
+  const RELEASE = '20260821.40.1';
   const ROUTE_TO_SEGMENT = {
     home: '',
     courses: 'cursos/',
@@ -71,19 +71,24 @@
 
   function activatePageRoute() {
     const route = currentRoute();
-    let attempts = 0;
-    const timer = setInterval(() => {
-      attempts += 1;
+    let activated = false;
+    let observer = null;
+
+    const tryActivate = () => {
+      if (activated) return true;
       const button = document.querySelector(`[data-shell-route="${route}"]`);
-      if (button) {
-        clearInterval(timer);
-        button.dataset.v40Internal = '1';
-        button.click();
-        document.body.dataset.academyPage = route;
-      } else if (attempts >= 60) {
-        clearInterval(timer);
-      }
-    }, 100);
+      if (!button) return false;
+      activated = true;
+      button.dataset.v40Internal = '1';
+      button.click();
+      document.body.dataset.academyPage = route;
+      observer?.disconnect();
+      return true;
+    };
+
+    if (tryActivate()) return;
+    observer = new MutationObserver(() => tryActivate());
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
   if (document.readyState === 'loading') {
