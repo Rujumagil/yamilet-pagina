@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const RELEASE = '20260821.41';
+  const RELEASE = '20260821.41.1';
   const HASH_BY_ROUTE = {
     home: 'inicio',
     courses: 'cursos',
@@ -22,17 +22,38 @@
     return index >= 0 ? path.slice(0, index + marker.length) : './';
   }
 
+  function legacyPathRoute() {
+    const root = academyRoot();
+    const relative = window.location.pathname.slice(root.length).replace(/^\/+|\/+$/g, '');
+    const segment = relative.split('/')[0] || '';
+    return ROUTE_BY_HASH[segment] || null;
+  }
+
   function currentHashRoute() {
     const hash = window.location.hash.replace(/^#/, '').trim().toLowerCase();
-    return ROUTE_BY_HASH[hash] || 'home';
+    return ROUTE_BY_HASH[hash] || null;
+  }
+
+  function normalizeInitialLocation() {
+    const hashRoute = currentHashRoute();
+    if (hashRoute) return hashRoute;
+
+    const legacyRoute = legacyPathRoute();
+    if (legacyRoute && legacyRoute !== 'home') {
+      const hash = HASH_BY_ROUTE[legacyRoute];
+      history.replaceState({ academyTab: legacyRoute }, '', `${academyRoot()}#${hash}`);
+      return legacyRoute;
+    }
+
+    return 'home';
   }
 
   function setHash(route) {
     const hash = HASH_BY_ROUTE[route];
     if (!hash) return;
-    const next = `#${hash}`;
-    if (window.location.hash === next) return;
-    history.pushState({ academyTab: route }, '', `${academyRoot()}${next}`);
+    const target = `${academyRoot()}#${hash}`;
+    if (`${window.location.pathname}${window.location.hash}` === target) return;
+    history.pushState({ academyTab: route }, '', target);
   }
 
   function activate(route) {
@@ -44,11 +65,11 @@
     return true;
   }
 
-  function activateWhenReady(route = currentHashRoute()) {
+  function activateWhenReady(route = currentHashRoute() || 'home') {
     let attempts = 0;
     const timer = setInterval(() => {
       attempts += 1;
-      if (activate(route) || attempts >= 100) clearInterval(timer);
+      if (activate(route) || attempts >= 120) clearInterval(timer);
     }, 100);
   }
 
@@ -74,18 +95,19 @@
     setHash(route);
   }, true);
 
-  window.addEventListener('popstate', () => activateWhenReady(currentHashRoute()));
-  window.addEventListener('hashchange', () => activateWhenReady(currentHashRoute()));
+  window.addEventListener('popstate', () => activateWhenReady(currentHashRoute() || 'home'));
+  window.addEventListener('hashchange', () => activateWhenReady(currentHashRoute() || 'home'));
 
+  const initialRoute = normalizeInitialLocation();
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => activateWhenReady(), { once: true });
+    document.addEventListener('DOMContentLoaded', () => activateWhenReady(initialRoute), { once: true });
   } else {
-    activateWhenReady();
+    activateWhenReady(initialRoute);
   }
 
   window.ACADEMIA_YAMILET_TABS_V41 = {
     release: RELEASE,
-    currentRoute: currentHashRoute,
+    currentRoute: () => currentHashRoute() || 'home',
     setHash
   };
 })();
