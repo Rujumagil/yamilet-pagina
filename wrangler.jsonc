@@ -12,6 +12,7 @@
     "binding": "STREAM"
   },
   "vars": {
-    "ACADEMY_WORKSPACE_SLUG": "yamilet-mes"
+    "ACADEMY_WORKSPACE_SLUG": "yamilet-mes",
+    "ACADEMY_WORKSPACE_ID": "0ed49bcb-a8fe-4d1c-87c3-a65fe43291bc"
   }
 }
