@@ -1,0 +1,49 @@
+/* Academia Yamilet · Header continuo y alineado · v46 */
+
+/* Cancelar únicamente el gap visual inmediatamente debajo del topbar. */
+body:has(.dashboard:not(.hidden)) .academy-topbar{
+  margin-bottom:-14px!important;
+  z-index:50!important;
+}
+
+/* El bloque de marca debe terminar exactamente donde termina el header blanco. */
+body:has(.dashboard:not(.hidden)) .side-brand{
+  margin-bottom:0!important;
+  border-bottom:1px solid rgba(255,255,255,.12)!important;
+}
+
+/* Recuperar el aire del menú sin volver a crear una banda en la cabecera. */
+body:has(.dashboard:not(.hidden)) .sidebar nav{
+  margin-top:14px!important;
+}
+
+/* Línea inferior continua y sin sombra/banda adicional. */
+body:has(.dashboard:not(.hidden)) .academy-topbar{
+  border-bottom:1px solid rgba(18,63,53,.11)!important;
+  box-shadow:none!important;
+}
+
+/* Alinear mejor la identidad textual con el centro vertical del header. */
+body:has(.dashboard:not(.hidden)) .academy-topbar-brand{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  min-height:64px!important;
+}
+
+body:has(.dashboard:not(.hidden)) .academy-topbar-brand small,
+body:has(.dashboard:not(.hidden)) .academy-topbar-brand strong{
+  transform:none!important;
+}
+
+@media(max-width:900px){
+  body:has(.dashboard:not(.hidden)) .academy-topbar{
+    margin-bottom:-14px!important;
+  }
+  body:has(.dashboard:not(.hidden)) .side-brand{
+    margin-bottom:0!important;
+  }
+  body:has(.dashboard:not(.hidden)) .sidebar nav{
+    margin-top:12px!important;
+  }
+}
