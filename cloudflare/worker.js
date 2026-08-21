@@ -8,6 +8,8 @@ const json = (body, status = 200, headers = {}) => new Response(JSON.stringify(b
 });
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const STREAM_UID_RE = /^[A-Za-z0-9_-]{16,128}$/;
+const STAFF_ROLES = new Set(['owner', 'admin', 'instructor']);
 
 function bearerToken(request) {
   const header = request.headers.get('authorization') || '';
@@ -41,6 +43,44 @@ async function readSingle(env, table, select, filters, token) {
   return Array.isArray(rows) ? rows[0] || null : null;
 }
 
+async function lessonContext(env, lessonId, token) {
+  const lesson = await readSingle(
+    env,
+    'lessons',
+    'id,module_id,stream_video_uid,stream_require_signed_urls,title',
+    { id: `eq.${lessonId}` },
+    token,
+  );
+  if (!lesson?.id) return null;
+
+  const module = await readSingle(env, 'modules', 'id,course_id', { id: `eq.${lesson.module_id}` }, token);
+  if (!module?.course_id) return null;
+
+  const course = await readSingle(env, 'courses', 'id,workspace_id,title', { id: `eq.${module.course_id}` }, token);
+  if (!course?.workspace_id) return null;
+
+  return { lesson, module, course };
+}
+
+async function requireStaffForLesson(env, user, context, token) {
+  const profile = await readSingle(env, 'profiles', 'id,role', { id: `eq.${user.id}` }, token);
+  if (profile?.role === 'admin') return true;
+
+  const member = await readSingle(
+    env,
+    'workspace_members',
+    'role,status',
+    {
+      workspace_id: `eq.${context.course.workspace_id}`,
+      user_id: `eq.${user.id}`,
+      status: 'eq.active',
+    },
+    token,
+  );
+
+  return !!member && STAFF_ROLES.has(member.role);
+}
+
 async function streamToken(request, env) {
   if (request.method !== 'GET') return json({ error: 'method_not_allowed' }, 405, { allow: 'GET' });
 
@@ -54,44 +94,101 @@ async function streamToken(request, env) {
   const user = await getAuthenticatedUser(env, token);
   if (!user?.id) return json({ error: 'invalid_session' }, 401);
 
-  const lesson = await readSingle(
-    env,
-    'lessons',
-    'id,module_id,stream_video_uid,stream_require_signed_urls',
-    { id: `eq.${lessonId}` },
-    token,
-  );
-  if (!lesson?.id || !lesson.stream_video_uid) return json({ error: 'video_not_available' }, 404);
-
-  const module = await readSingle(env, 'modules', 'id,course_id', { id: `eq.${lesson.module_id}` }, token);
-  if (!module?.course_id) return json({ error: 'course_not_found' }, 404);
+  const context = await lessonContext(env, lessonId, token);
+  if (!context?.lesson?.stream_video_uid) return json({ error: 'video_not_available' }, 404);
 
   const enrollment = await readSingle(
     env,
     'enrollments',
     'id,status',
     {
-      course_id: `eq.${module.course_id}`,
+      course_id: `eq.${context.course.id}`,
       user_id: `eq.${user.id}`,
       status: 'in.(active,completed)',
     },
     token,
   );
 
-  if (!enrollment?.id) return json({ error: 'course_access_required' }, 403);
+  const isStaff = await requireStaffForLesson(env, user, context, token);
+  if (!enrollment?.id && !isStaff) return json({ error: 'course_access_required' }, 403);
 
   if (!env.STREAM) return json({ error: 'stream_not_configured' }, 503);
-  const signedToken = await env.STREAM.video(lesson.stream_video_uid).generateToken();
+  const uid = String(context.lesson.stream_video_uid || '').trim();
+  if (!STREAM_UID_RE.test(uid)) return json({ error: 'invalid_stream_uid' }, 400);
+
+  const signedToken = await env.STREAM.video(uid).generateToken();
   if (!signedToken) return json({ error: 'token_generation_failed' }, 502);
 
   const customerCode = String(env.STREAM_CUSTOMER_CODE || '').trim();
   return json({
-    lesson_id: lesson.id,
+    lesson_id: context.lesson.id,
     token: signedToken,
     iframe_url: customerCode
       ? `https://customer-${customerCode}.cloudflarestream.com/${signedToken}/iframe`
       : null,
     expires_in: 3600,
+  });
+}
+
+async function streamUpload(request, env) {
+  if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405, { allow: 'POST' });
+
+  const token = bearerToken(request);
+  if (!token) return json({ error: 'authentication_required' }, 401);
+
+  const user = await getAuthenticatedUser(env, token);
+  if (!user?.id) return json({ error: 'invalid_session' }, 401);
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: 'invalid_json' }, 400);
+  }
+
+  const lessonId = String(body?.lesson_id || '').trim();
+  if (!UUID_RE.test(lessonId)) return json({ error: 'invalid_lesson_id' }, 400);
+
+  const context = await lessonContext(env, lessonId, token);
+  if (!context) return json({ error: 'lesson_not_found' }, 404);
+
+  if (!(await requireStaffForLesson(env, user, context, token))) {
+    return json({ error: 'staff_access_required' }, 403);
+  }
+
+  if (!env.STREAM) return json({ error: 'stream_not_configured' }, 503);
+
+  const requestedDuration = Number(body?.max_duration_seconds || 7200);
+  const maxDurationSeconds = Math.max(60, Math.min(21600, Number.isFinite(requestedDuration) ? requestedDuration : 7200));
+  const filename = String(body?.filename || 'video').trim().slice(0, 180);
+  const project = 'yamilet';
+  const courseId = context.course.id;
+
+  const directUpload = await env.STREAM.createDirectUpload({
+    maxDurationSeconds,
+    creator: `yamilet:${user.id}`,
+    requireSignedURLs: true,
+    meta: {
+      project,
+      academy: 'yamilet',
+      course_id: courseId,
+      lesson_id: lessonId,
+      course_title: String(context.course.title || '').slice(0, 120),
+      lesson_title: String(context.lesson.title || '').slice(0, 160),
+      source_filename: filename,
+    },
+  });
+
+  if (!directUpload?.uploadURL || !directUpload?.id) {
+    return json({ error: 'direct_upload_failed' }, 502);
+  }
+
+  return json({
+    lesson_id: lessonId,
+    video_uid: directUpload.id,
+    upload_url: directUpload.uploadURL,
+    max_file_size_bytes: 200 * 1024 * 1024,
+    require_signed_urls: true,
   });
 }
 
@@ -101,6 +198,7 @@ export default {
 
     try {
       if (url.pathname === '/api/stream-token') return await streamToken(request, env);
+      if (url.pathname === '/api/stream-upload') return await streamUpload(request, env);
       if (url.pathname === '/api/health') return json({ ok: true, service: 'academia-yamilet', version: 'v28' });
       return env.ASSETS.fetch(request);
     } catch (error) {
