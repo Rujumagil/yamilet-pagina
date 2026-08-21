@@ -16,6 +16,14 @@ function bearerToken(request) {
   return header.startsWith('Bearer ') ? header.slice(7).trim() : '';
 }
 
+function streamCustomerHost(value = '') {
+  const raw = String(value || '').trim().replace(/^https?:\/\//i, '').replace(/\/$/, '');
+  if (!raw) return '';
+  if (/^customer-[a-z0-9]+\.cloudflarestream\.com$/i.test(raw)) return raw;
+  if (/^[a-z0-9]+$/i.test(raw)) return `customer-${raw}.cloudflarestream.com`;
+  return '';
+}
+
 async function supabaseFetch(env, path, token, init = {}) {
   if (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY) throw new Error('supabase_not_configured');
   return fetch(`${env.SUPABASE_URL}${path}`, {
@@ -132,13 +140,11 @@ async function streamToken(request, env) {
   const signedToken = await env.STREAM.video(uid).generateToken();
   if (!signedToken) return json({ error: 'token_generation_failed' }, 502);
 
-  const customerCode = String(env.STREAM_CUSTOMER_CODE || '').trim();
+  const customerHost = streamCustomerHost(env.STREAM_CUSTOMER_CODE);
   return json({
     lesson_id: context.lesson.id,
     token: signedToken,
-    iframe_url: customerCode
-      ? `https://customer-${customerCode}.cloudflarestream.com/${signedToken}/iframe`
-      : null,
+    iframe_url: customerHost ? `https://${customerHost}/${signedToken}/iframe` : null,
     expires_in: 3600,
   });
 }
