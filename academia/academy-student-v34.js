@@ -50,6 +50,22 @@
     }
   }
 
+  function loadLayoutV43(){
+    if (!document.querySelector('link[data-yamilet-layout-v43]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-layout-v43.css?v=43';
+      link.dataset.yamiletLayoutV43 = '1';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-yamilet-layout-v43]')) {
+      const script = document.createElement('script');
+      script.src = './academy-layout-v43.js?v=43';
+      script.dataset.yamiletLayoutV43 = '1';
+      document.body.appendChild(script);
+    }
+  }
+
   function wireAdminLink(){
     const btn = document.querySelector('[data-shell-route="admin"]');
     if (!btn) return false;
@@ -65,6 +81,7 @@
     loadLanguageV39();
     loadTabsV41();
     loadLayoutV42();
+    loadLayoutV43();
     if (wireAdminLink()) return;
     const timer = setInterval(() => {
       tries += 1;
