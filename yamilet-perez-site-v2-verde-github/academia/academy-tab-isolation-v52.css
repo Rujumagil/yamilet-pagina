@@ -1,0 +1,50 @@
+/* Academia Yamilet · Tab isolation v52 */
+.ay52-suppressed{display:none!important}
+
+body[data-academy-section="home"] .dashboard-main{
+  align-content:start!important;
+}
+body[data-academy-section="home"] #continuar{
+  display:block!important;
+}
+
+body[data-academy-section="courses"] #mis-cursos,
+body[data-academy-section="course"] [data-course-view],
+body[data-academy-section="lesson"] [data-lesson-view]{
+  display:block!important;
+  grid-column:1/-1!important;
+}
+
+body[data-academy-section="course"] [data-course-view],
+body[data-academy-section="lesson"] [data-lesson-view]{
+  margin:0!important;
+  width:100%!important;
+  max-width:none!important;
+}
+
+body[data-academy-section="course"] .dashboard-main,
+body[data-academy-section="lesson"] .dashboard-main{
+  grid-template-columns:minmax(0,1fr)!important;
+  align-content:start!important;
+}
+
+body[data-academy-section="course"] [data-course-view] .course-detail-head,
+body[data-academy-section="lesson"] .mes-player-shell{
+  max-width:1540px;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+
+body[data-academy-section="course"] [data-back-courses],
+body[data-academy-section="lesson"] [data-back-course]{
+  position:relative;
+  z-index:3;
+}
+
+@media(max-width:900px){
+  body[data-academy-section="course"] [data-course-view],
+  body[data-academy-section="lesson"] [data-lesson-view]{
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+}
