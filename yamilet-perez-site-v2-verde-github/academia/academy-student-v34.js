@@ -1,190 +1,39 @@
 (() => {
   'use strict';
   let tries = 0;
+  let enhancementsLoaded = false;
 
-  function loadHomeV38(){
-    if (!document.querySelector('link[data-yamilet-home-v38]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-home-v38.css?v=38';
-      link.dataset.yamiletHomeV38 = '1';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-yamilet-home-v38]')) {
-      const script = document.createElement('script');
-      script.src = './academy-home-v38.js?v=38';
-      script.dataset.yamiletHomeV38 = '1';
-      document.body.appendChild(script);
-    }
-  }
-
-  function loadLanguageV39(){
-    if (document.querySelector('script[data-yamilet-language-v39]')) return;
-    const script = document.createElement('script');
-    script.src = './academy-language-v39.js?v=39';
-    script.dataset.yamiletLanguageV39 = '1';
-    document.body.appendChild(script);
-  }
-
-  function loadTabsV41(){
-    if (document.querySelector('script[data-yamilet-tabs-v41]')) return;
-    const script = document.createElement('script');
-    script.src = './academy-tabs-v41.js?v=41';
-    script.dataset.yamiletTabsV41 = '1';
-    document.body.appendChild(script);
-  }
-
-  function loadLayoutV42(){
-    if (!document.querySelector('link[data-yamilet-layout-v42]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-layout-v42.css?v=42';
-      link.dataset.yamiletLayoutV42 = '1';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-yamilet-layout-v42]')) {
-      const script = document.createElement('script');
-      script.src = './academy-layout-v42.js?v=42';
-      script.dataset.yamiletLayoutV42 = '1';
-      document.body.appendChild(script);
-    }
-  }
-
-  function loadLayoutV43(){
-    if (!document.querySelector('link[data-yamilet-layout-v43]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-layout-v43.css?v=43';
-      link.dataset.yamiletLayoutV43 = '1';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-yamilet-layout-v43]')) {
-      const script = document.createElement('script');
-      script.src = './academy-layout-v43.js?v=43';
-      script.dataset.yamiletLayoutV43 = '1';
-      document.body.appendChild(script);
-    }
-  }
-
-  function loadLayoutV44(){
-    if (!document.querySelector('link[data-yamilet-layout-v44]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-layout-v44.css?v=44';
-      link.dataset.yamiletLayoutV44 = '1';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-yamilet-layout-v44]')) {
-      const script = document.createElement('script');
-      script.src = './academy-layout-v44.js?v=44';
-      script.dataset.yamiletLayoutV44 = '1';
-      document.body.appendChild(script);
-    }
-  }
-
-  function loadHeaderV45(){
-    if (document.querySelector('link[data-yamilet-header-v45]')) return;
+  const addStyle = (key, href) => {
+    if (document.querySelector(`link[data-${key}]`)) return;
     const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = './academy-header-v45.css?v=45';
-    link.dataset.yamiletHeaderV45 = '1';
+    link.rel = 'stylesheet'; link.href = href; link.dataset[key.replace(/-/g,'')] = '1';
     document.head.appendChild(link);
-  }
+  };
+  const addScript = (key, src) => {
+    if (document.querySelector(`script[data-${key}]`)) return;
+    const script = document.createElement('script');
+    script.src = src; script.dataset[key.replace(/-/g,'')] = '1';
+    document.body.appendChild(script);
+  };
 
-  function loadHeaderV46(){
-    if (document.querySelector('link[data-yamilet-header-v46]')) return;
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = './academy-header-v46.css?v=46';
-    link.dataset.yamiletHeaderV46 = '1';
-    document.head.appendChild(link);
-  }
+  function loadEnhancements(){
+    if (enhancementsLoaded) return;
+    enhancementsLoaded = true;
 
-  function loadProfessionalV47(){
-    if (!document.querySelector('link[data-yamilet-professional-v47]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-professional-v47.css?v=47';
-      link.dataset.yamiletProfessionalV47 = '1';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-yamilet-professional-v47]')) {
-      const script = document.createElement('script');
-      script.src = './academy-professional-v47.js?v=47';
-      script.dataset.yamiletProfessionalV47 = '1';
-      document.body.appendChild(script);
-    }
-  }
-
-  function loadUpcomingV48(){
-    if (!document.querySelector('link[data-yamilet-upcoming-v48]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-upcoming-v48.css?v=48';
-      link.dataset.yamiletUpcomingV48 = '1';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-yamilet-upcoming-v48]')) {
-      const script = document.createElement('script');
-      script.src = './academy-upcoming-v48.js?v=48';
-      script.dataset.yamiletUpcomingV48 = '1';
-      document.body.appendChild(script);
-    }
-  }
-
-  function loadCinematicV49(){
-    if (!document.querySelector('link[data-yamilet-appletv-v49]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-appletv-v49.css?v=49';
-      link.dataset.yamiletAppletvV49 = '1';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('link[data-yamilet-appletv-sections-v49]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-appletv-sections-v49.css?v=49';
-      link.dataset.yamiletAppletvSectionsV49 = '1';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-yamilet-appletv-v49]')) {
-      const script = document.createElement('script');
-      script.src = './academy-appletv-v49.js?v=49';
-      script.dataset.yamiletAppletvV49 = '1';
-      document.body.appendChild(script);
-    }
-  }
-
-  function loadEnrollmentV50(){
-    if (!document.querySelector('link[data-yamilet-enrollment-v50]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-enrollment-v50.css?v=50';
-      link.dataset.yamiletEnrollmentV50 = '1';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-yamilet-enrollment-v50]')) {
-      const script = document.createElement('script');
-      script.src = './academy-enrollment-v50.js?v=50.1';
-      script.dataset.yamiletEnrollmentV50 = '1';
-      document.body.appendChild(script);
-    }
-  }
-
-  function loadIsolationV52(){
-    if (!document.querySelector('link[data-yamilet-isolation-v52]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-tab-isolation-v52.css?v=52';
-      link.dataset.yamiletIsolationV52 = '1';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-yamilet-isolation-v52]')) {
-      const script = document.createElement('script');
-      script.src = './academy-tab-isolation-v52.js?v=52';
-      script.dataset.yamiletIsolationV52 = '1';
-      document.body.appendChild(script);
-    }
+    addStyle('yamilet-home-v38','./academy-home-v38.css?v=38'); addScript('yamilet-home-v38','./academy-home-v38.js?v=38');
+    addScript('yamilet-language-v39','./academy-language-v39.js?v=39');
+    addScript('yamilet-tabs-v41','./academy-tabs-v41.js?v=41');
+    addStyle('yamilet-layout-v42','./academy-layout-v42.css?v=42'); addScript('yamilet-layout-v42','./academy-layout-v42.js?v=42');
+    addStyle('yamilet-layout-v43','./academy-layout-v43.css?v=43'); addScript('yamilet-layout-v43','./academy-layout-v43.js?v=43');
+    addStyle('yamilet-layout-v44','./academy-layout-v44.css?v=44'); addScript('yamilet-layout-v44','./academy-layout-v44.js?v=44');
+    addStyle('yamilet-header-v45','./academy-header-v45.css?v=45');
+    addStyle('yamilet-header-v46','./academy-header-v46.css?v=46');
+    addStyle('yamilet-professional-v47','./academy-professional-v47.css?v=47'); addScript('yamilet-professional-v47','./academy-professional-v47.js?v=47');
+    addStyle('yamilet-upcoming-v48','./academy-upcoming-v48.css?v=48'); addScript('yamilet-upcoming-v48','./academy-upcoming-v48.js?v=48');
+    addStyle('yamilet-appletv-v49','./academy-appletv-v49.css?v=49'); addStyle('yamilet-appletv-sections-v49','./academy-appletv-sections-v49.css?v=49'); addScript('yamilet-appletv-v49','./academy-appletv-v49.js?v=49');
+    addStyle('yamilet-enrollment-v50','./academy-enrollment-v50.css?v=50'); addScript('yamilet-enrollment-v50','./academy-enrollment-v50.js?v=50.1');
+    addStyle('yamilet-isolation-v53','./academy-tab-isolation-v53.css?v=53'); addScript('yamilet-isolation-v53','./academy-tab-isolation-v53.js?v=53');
+    wireAdminLink();
   }
 
   function wireAdminLink(){
@@ -197,27 +46,32 @@
     return true;
   }
 
-  function boot(){
-    loadHomeV38();
-    loadLanguageV39();
-    loadTabsV41();
-    loadLayoutV42();
-    loadLayoutV43();
-    loadLayoutV44();
-    loadHeaderV45();
-    loadHeaderV46();
-    loadProfessionalV47();
-    loadUpcomingV48();
-    loadCinematicV49();
-    loadEnrollmentV50();
-    loadIsolationV52();
-    if (wireAdminLink()) return;
-    const timer = setInterval(() => {
-      tries += 1;
-      if (wireAdminLink() || tries >= 24) clearInterval(timer);
-    }, 250);
+  function dashboardIsOpen(){
+    const dashboard = document.querySelector('[data-dashboard]');
+    return !!dashboard && !dashboard.classList.contains('hidden');
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
-  else boot();
+  function bootWhenAuthenticated(){
+    if (dashboardIsOpen()) { loadEnhancements(); return; }
+    const dashboard = document.querySelector('[data-dashboard]');
+    if (!dashboard) return;
+    const observer = new MutationObserver(() => {
+      if (!dashboardIsOpen()) return;
+      observer.disconnect();
+      loadEnhancements();
+    });
+    observer.observe(dashboard,{attributes:true,attributeFilter:['class']});
+  }
+
+  function boot(){
+    bootWhenAuthenticated();
+    const timer = setInterval(() => {
+      tries += 1;
+      if (enhancementsLoaded || dashboardIsOpen()) { loadEnhancements(); clearInterval(timer); }
+      else if (tries >= 80) clearInterval(timer);
+    },250);
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
+  window.ACADEMIA_YAMILET_SAFE_LOADER_V53 = { loadEnhancements };
 })();
