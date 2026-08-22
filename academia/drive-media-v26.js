@@ -39,11 +39,11 @@
     const input = adminRoot.querySelector('input[name="video_url"]');
     if (!input || input.dataset.driveHelp === 'true') return;
     input.dataset.driveHelp = 'true';
-    input.placeholder = 'YouTube, Vimeo o enlace de Google Drive';
+    input.placeholder = 'YouTube, Vimeo o enlace externo heredado';
 
     const note = document.createElement('span');
     note.className = 'upload-note';
-    note.textContent = 'Google Drive: pega el enlace Compartir del MP4. El archivo debe permitir acceso a quienes tengan el enlace para poder reproducirse dentro de la academia.';
+    note.textContent = 'Campo heredado. Para los nuevos videos de Método MES utiliza Cloudflare Stream en el bloque Video privado · Cloudflare Stream.';
     input.insertAdjacentElement('afterend', note);
   }
 
@@ -52,9 +52,19 @@
     enhanceAdminHelp();
   }
 
+  function loadV28Script(src) {
+    if (document.querySelector(`script[src*="${src}"]`)) return;
+    const script = document.createElement('script');
+    script.src = `./${src}?v=28`;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+
   const observer = new MutationObserver(() => window.requestAnimationFrame(enhance));
   if (lessonHost) observer.observe(lessonHost, { childList: true, subtree: true });
   if (adminRoot) observer.observe(adminRoot, { childList: true, subtree: true });
 
+  loadV28Script('cloudflare-stream-v28.js');
+  loadV28Script('cloudflare-stream-admin-v28.js');
   window.addEventListener('load', enhance, { once: true });
 })();

@@ -9,7 +9,9 @@
   let requestedLessonId = null;
   let loadingLessonId = null;
 
-  const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
   const normalize = (value = '') => String(value).replace(/\s+/g, ' ').trim().toLocaleLowerCase('es');
 
   async function client() {
@@ -47,6 +49,7 @@
     if (!lessonId || lessonId === loadingLessonId) return;
     if (lessonId === activeLessonId && document.querySelector('[data-cloudflare-stream-player]')) return;
     loadingLessonId = lessonId;
+
     try {
       const supabase = await client();
       const { data: lesson, error } = await supabase.from('lessons').select('id,stream_video_uid').eq('id', lessonId).maybeSingle();
@@ -54,11 +57,13 @@
       if (error || !lesson?.stream_video_uid) { activeLessonId = lessonId; return; }
       const uid = String(lesson.stream_video_uid || '').trim();
       if (!UID_RE.test(uid)) throw new Error('invalid_stream_uid');
+
       const host = document.querySelector('[data-lesson-detail]');
       const content = host?.querySelector('.lesson-content');
       if (!host || !content) return;
       host.querySelector('.video-shell:not([data-mes-video-pending])')?.remove();
       host.querySelector('.lesson-video')?.remove();
+
       const shell = document.createElement('div');
       shell.className = 'video-shell cloudflare-stream-shell';
       shell.dataset.cloudflareStreamPlayer = lessonId;
@@ -76,7 +81,9 @@
         note.textContent = 'El video no pudo cargarse desde Cloudflare Stream.';
         host.querySelector('.lesson-content')?.before(note);
       }
-    } finally { loadingLessonId = null; }
+    } finally {
+      loadingLessonId = null;
+    }
   }
 
   document.addEventListener('click', event => {
@@ -86,10 +93,12 @@
     activeLessonId = null;
     setTimeout(renderStreamForCurrentLesson, 100);
   }, true);
+
   window.addEventListener('pageshow', () => setTimeout(renderStreamForCurrentLesson, 250));
   setInterval(() => {
     const id = currentLessonId();
     if (id && (id !== activeLessonId || !document.querySelector('[data-cloudflare-stream-player]'))) renderStreamForCurrentLesson();
   }, 1000);
+
   window.ACADEMIA_YAMILET_STREAM_V37 = { render: renderStreamForCurrentLesson };
 })();

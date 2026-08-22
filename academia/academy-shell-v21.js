@@ -70,7 +70,6 @@
 
   async function route(name){
     state.route=name; const main=$('.dashboard-main'); if(!main)return; activeNav(name); allShellPages().forEach(p=>p.classList.add('hidden')); hideNativeFocus();
-    const reservations=$('#reservas'); if(reservations){reservations.style.removeProperty('grid-column');reservations.style.removeProperty('grid-row');}
     main.classList.remove('shell-route-mode','shell-courses-mode');
     if(name==='home'){ window.scrollTo({top:0,behavior:'smooth'}); return; }
     if(name==='courses'){main.classList.add('shell-courses-mode'); $('#mis-cursos')?.scrollIntoView({behavior:'smooth',block:'start'});return;}
