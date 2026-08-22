@@ -132,6 +132,29 @@
     }
   }
 
+  function loadCinematicV49(){
+    if (!document.querySelector('link[data-yamilet-appletv-v49]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-appletv-v49.css?v=49';
+      link.dataset.yamiletAppletvV49 = '1';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('link[data-yamilet-appletv-sections-v49]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-appletv-sections-v49.css?v=49';
+      link.dataset.yamiletAppletvSectionsV49 = '1';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-yamilet-appletv-v49]')) {
+      const script = document.createElement('script');
+      script.src = './academy-appletv-v49.js?v=49';
+      script.dataset.yamiletAppletvV49 = '1';
+      document.body.appendChild(script);
+    }
+  }
+
   function wireAdminLink(){
     const btn = document.querySelector('[data-shell-route="admin"]');
     if (!btn) return false;
@@ -153,6 +176,7 @@
     loadHeaderV46();
     loadProfessionalV47();
     loadUpcomingV48();
+    loadCinematicV49();
     if (wireAdminLink()) return;
     const timer = setInterval(() => {
       tries += 1;
