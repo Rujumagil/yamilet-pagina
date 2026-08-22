@@ -1,0 +1,15 @@
+/* Academia Yamilet · Tab isolation safe v53 */
+.ay53-suppressed{display:none!important}
+body:has([data-dashboard].hidden) .ay53-suppressed{display:revert!important}
+body[data-academy-section="home"] [data-dashboard]:not(.hidden) .dashboard-main{align-content:start!important}
+body[data-academy-section="home"] [data-dashboard]:not(.hidden) #continuar{display:block!important}
+body[data-academy-section="courses"] [data-dashboard]:not(.hidden) #mis-cursos,
+body[data-academy-section="course"] [data-dashboard]:not(.hidden) [data-course-view],
+body[data-academy-section="lesson"] [data-dashboard]:not(.hidden) [data-lesson-view]{display:block!important;grid-column:1/-1!important}
+body[data-academy-section="course"] [data-dashboard]:not(.hidden) [data-course-view],
+body[data-academy-section="lesson"] [data-dashboard]:not(.hidden) [data-lesson-view]{margin:0!important;width:100%!important;max-width:none!important}
+body[data-academy-section="course"] [data-dashboard]:not(.hidden) .dashboard-main,
+body[data-academy-section="lesson"] [data-dashboard]:not(.hidden) .dashboard-main{grid-template-columns:minmax(0,1fr)!important;align-content:start!important}
+body[data-academy-section="course"] [data-dashboard]:not(.hidden) [data-course-view] .course-detail-head,
+body[data-academy-section="lesson"] [data-dashboard]:not(.hidden) .mes-player-shell{max-width:1540px;margin-left:auto!important;margin-right:auto!important}
+@media(max-width:900px){body[data-academy-section="course"] [data-dashboard]:not(.hidden) [data-course-view],body[data-academy-section="lesson"] [data-dashboard]:not(.hidden) [data-lesson-view]{padding-left:14px!important;padding-right:14px!important}}
