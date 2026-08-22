@@ -155,6 +155,22 @@
     }
   }
 
+  function loadEnrollmentV50(){
+    if (!document.querySelector('link[data-yamilet-enrollment-v50]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-enrollment-v50.css?v=50';
+      link.dataset.yamiletEnrollmentV50 = '1';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-yamilet-enrollment-v50]')) {
+      const script = document.createElement('script');
+      script.src = './academy-enrollment-v50.js?v=50';
+      script.dataset.yamiletEnrollmentV50 = '1';
+      document.body.appendChild(script);
+    }
+  }
+
   function wireAdminLink(){
     const btn = document.querySelector('[data-shell-route="admin"]');
     if (!btn) return false;
@@ -177,6 +193,7 @@
     loadProfessionalV47();
     loadUpcomingV48();
     loadCinematicV49();
+    loadEnrollmentV50();
     if (wireAdminLink()) return;
     const timer = setInterval(() => {
       tries += 1;
