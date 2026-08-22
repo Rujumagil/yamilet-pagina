@@ -6,13 +6,13 @@
   const addStyle = (key, href) => {
     if (document.querySelector(`link[data-${key}]`)) return;
     const link = document.createElement('link');
-    link.rel = 'stylesheet'; link.href = href; link.dataset[key.replace(/-/g,'')] = '1';
+    link.rel = 'stylesheet'; link.href = href; link.setAttribute(`data-${key}`,'1');
     document.head.appendChild(link);
   };
   const addScript = (key, src) => {
     if (document.querySelector(`script[data-${key}]`)) return;
     const script = document.createElement('script');
-    script.src = src; script.dataset[key.replace(/-/g,'')] = '1';
+    script.src = src; script.setAttribute(`data-${key}`,'1');
     document.body.appendChild(script);
   };
 
