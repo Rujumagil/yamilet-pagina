@@ -116,6 +116,22 @@
     }
   }
 
+  function loadUpcomingV48(){
+    if (!document.querySelector('link[data-yamilet-upcoming-v48]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-upcoming-v48.css?v=48';
+      link.dataset.yamiletUpcomingV48 = '1';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-yamilet-upcoming-v48]')) {
+      const script = document.createElement('script');
+      script.src = './academy-upcoming-v48.js?v=48';
+      script.dataset.yamiletUpcomingV48 = '1';
+      document.body.appendChild(script);
+    }
+  }
+
   function wireAdminLink(){
     const btn = document.querySelector('[data-shell-route="admin"]');
     if (!btn) return false;
@@ -136,6 +152,7 @@
     loadHeaderV45();
     loadHeaderV46();
     loadProfessionalV47();
+    loadUpcomingV48();
     if (wireAdminLink()) return;
     const timer = setInterval(() => {
       tries += 1;
