@@ -1,13 +1,29 @@
 (() => {
   'use strict';
 
-  const RELEASE = '20260822.50';
+  const RELEASE = '20260822.50.1';
   const panel = document.querySelector('#mis-cursos');
   const list = panel?.querySelector('[data-course-list]');
   const continuePanel = document.querySelector('#continuar');
   let timer = null;
 
   const norm = value => String(value || '').replace(/\s+/g, ' ').trim().toLocaleLowerCase('es');
+
+  function loadDedicatedV51() {
+    if (!document.querySelector('link[data-yamilet-dedicated-v51]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-dedicated-view-v51.css?v=51';
+      link.dataset.yamiletDedicatedV51 = '1';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-yamilet-dedicated-v51]')) {
+      const script = document.createElement('script');
+      script.src = './academy-dedicated-view-v51.js?v=51';
+      script.dataset.yamiletDedicatedV51 = '1';
+      document.body.appendChild(script);
+    }
+  }
 
   function isEnrolledCard(card, totalCards) {
     if (totalCards === 1) return true;
@@ -112,6 +128,8 @@
   if (panel) new MutationObserver(() => schedule(25)).observe(panel, { childList: true, subtree: true });
   window.addEventListener('hashchange', () => schedule(40));
   window.addEventListener('pageshow', () => schedule(80));
+
+  loadDedicatedV51();
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => schedule(0), { once: true });
   else schedule(0);
