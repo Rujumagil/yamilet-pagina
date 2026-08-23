@@ -31,6 +31,9 @@ jobs:
           node --check yamilet-perez-site-v2-verde-github/academia/academy-courses.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-evaluations.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-library.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-calendar.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-certificates.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-profile.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-i18n-v27.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-i18n-preference-v27.js
           node --check yamilet-perez-site-v2-verde-github/academia/auth-email-p18.js
@@ -39,12 +42,12 @@ jobs:
           node --check yamilet-perez-site-v2-verde-github/academia/cloudflare-stream-v37.js
           node --check yamilet-perez-site-v2-verde-github/academia/recovery-p17.js
 
-      - name: Validate architecture step 7 wiring
+      - name: Validate architecture step 10 wiring
         run: |
           test -s yamilet-perez-site-v2-verde-github/academia/index.html
           test -s yamilet-perez-site-v2-verde-github/academia/styles.css
           test -s yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png
-          grep -q 'academia-yamilet-architecture-step-7' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q 'academia-yamilet-architecture-step-10' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './app.js?v=56' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-navigation.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-dashboard.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
@@ -52,6 +55,12 @@ jobs:
           grep -q './academy-evaluations.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-library.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-library.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-calendar.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-calendar.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-certificates.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-certificates.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-profile.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-profile.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-player-v37.js?v=38' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './auth-email-p18.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './private-media-p15.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
@@ -63,8 +72,7 @@ jobs:
 
       - name: Block obsolete runtime layers
         run: |
-          ! grep -qE 'academy-appletv-v49|academy-dedicated-view-v51|academy-enrollment-v50|academia-yamilet-multipage-v40|academy-ag-parity-v20' \
-            yamilet-perez-site-v2-verde-github/academia/index.html
+          ! grep -qE 'academy-appletv-v49|academy-dedicated-view-v51|academy-enrollment-v50|academia-yamilet-multipage-v40|academy-ag-parity-v20' yamilet-perez-site-v2-verde-github/academia/index.html
 
       - name: Validate linked local CSS and JavaScript assets
         shell: bash
@@ -72,18 +80,10 @@ jobs:
           set -euo pipefail
           base='yamilet-perez-site-v2-verde-github/academia'
           index="$base/index.html"
-          grep -oE '(src|href)="\./[^\"]+\.(js|css)(\?[^\"]*)?"' "$index" \
-            | sed -E 's/^(src|href)="\.\/([^"?]+).*/\2/' \
-            | sort -u \
-            | while IFS= read -r asset; do
-                test -s "$base/$asset" || {
-                  echo "Missing or empty local asset referenced by index.html: $asset" >&2
-                  exit 1
-                }
-              done
+          grep -oE '(src|href)="\./[^\"]+\.(js|css)(\?[^\"]*)?"' "$index" | sed -E 's/^(src|href)="\.\/([^"?]+).*/\2/' | sort -u | while IFS= read -r asset; do
+            test -s "$base/$asset" || { echo "Missing or empty local asset referenced by index.html: $asset" >&2; exit 1; }
+          done
 
       - name: Guard public client boundary
         run: |
-          ! grep -RniE 'service_role|SUPABASE_SERVICE_ROLE|serviceRoleKey' \
-            yamilet-perez-site-v2-verde-github/academia \
-            --include='*.html' --include='*.js'
+          ! grep -RniE 'service_role|SUPABASE_SERVICE_ROLE|serviceRoleKey' yamilet-perez-site-v2-verde-github/academia --include='*.html' --include='*.js'
