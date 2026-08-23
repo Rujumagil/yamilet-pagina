@@ -1,0 +1,116 @@
+/* Academia Yamilet · navegación profesional estable */
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding: 12px 8px 22px;
+  scrollbar-width: thin;
+}
+
+.academy-nav-group {
+  display: grid;
+  gap: 6px;
+}
+
+.academy-nav-group-label {
+  padding: 0 10px;
+  color: rgba(228, 238, 233, .55);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.academy-nav-group-items {
+  display: grid;
+  gap: 4px;
+}
+
+.sidebar .shell-nav-item {
+  min-height: 44px;
+  padding: 8px 10px !important;
+  border-radius: 12px !important;
+  color: rgba(240, 246, 243, .82) !important;
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.sidebar .shell-nav-item:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, .075) !important;
+  border-color: rgba(255, 255, 255, .09) !important;
+  transform: none;
+}
+
+.sidebar .shell-nav-item.active {
+  color: #173f34 !important;
+  background: #f7f4ec !important;
+  border-color: rgba(213, 178, 92, .42) !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .14);
+  transform: none;
+}
+
+.sidebar .shell-nav-item.active::after {
+  left: -8px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  background: #d3aa52;
+}
+
+.sidebar .shell-nav-icon {
+  width: 28px;
+  height: 28px;
+  flex-basis: 28px;
+  border-color: rgba(255, 255, 255, .08);
+  background: rgba(255, 255, 255, .045);
+  color: #a9cbbb;
+}
+
+.sidebar .shell-nav-item.active .shell-nav-icon {
+  color: #f6d879;
+  background: #164c3e;
+  border-color: #164c3e;
+  box-shadow: none;
+}
+
+.academy-nav-group:nth-of-type(3),
+.academy-nav-group:nth-of-type(4),
+.academy-nav-group-admin {
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, .075);
+}
+
+.academy-nav-group-admin .academy-nav-group-label {
+  color: rgba(246, 216, 121, .7);
+}
+
+.academy-nav-group-admin .shell-nav-item {
+  background: rgba(23, 83, 67, .55) !important;
+  border-color: rgba(246, 216, 121, .12) !important;
+}
+
+.academy-nav-group-admin .shell-nav-item.active,
+.academy-nav-group-admin .shell-nav-item:hover {
+  background: #175343 !important;
+  color: #fff !important;
+}
+
+@media (max-width: 900px) {
+  .sidebar nav {
+    padding-inline: 6px;
+    gap: 10px;
+  }
+
+  .academy-nav-group-label {
+    display: none;
+  }
+
+  .academy-nav-group:nth-of-type(3),
+  .academy-nav-group:nth-of-type(4),
+  .academy-nav-group-admin {
+    padding-top: 6px;
+  }
+}
