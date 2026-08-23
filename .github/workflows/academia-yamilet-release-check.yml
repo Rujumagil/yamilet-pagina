@@ -50,6 +50,22 @@ jobs:
           grep -q "https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config" yamilet-perez-site-v2-verde-github/academia/app.js
           grep -q "workspaceSlug = 'yamilet-mes'" yamilet-perez-site-v2-verde-github/academia/app.js
 
+      - name: Validate linked local CSS and JavaScript assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='yamilet-perez-site-v2-verde-github/academia'
+          index="$base/index.html"
+          grep -oE '(src|href)="\./[^\"]+\.(js|css)(\?[^\"]*)?"' "$index" \
+            | sed -E 's/^(src|href)="\.\/([^"?]+).*/\2/' \
+            | sort -u \
+            | while IFS= read -r asset; do
+                test -s "$base/$asset" || {
+                  echo "Missing or empty local asset referenced by index.html: $asset" >&2
+                  exit 1
+                }
+              done
+
       - name: Guard public client boundary
         run: |
           ! grep -RniE 'service_role|SUPABASE_SERVICE_ROLE|serviceRoleKey' \
