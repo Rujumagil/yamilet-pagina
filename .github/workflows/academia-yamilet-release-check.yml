@@ -50,6 +50,11 @@ jobs:
           grep -q "https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config" yamilet-perez-site-v2-verde-github/academia/app.js
           grep -q "workspaceSlug = 'yamilet-mes'" yamilet-perez-site-v2-verde-github/academia/app.js
 
+      - name: Block obsolete runtime layers
+        run: |
+          ! grep -qE 'academy-appletv-v49|academy-dedicated-view-v51|academy-enrollment-v50|academia-yamilet-multipage-v40|academy-ag-parity-v20' \
+            yamilet-perez-site-v2-verde-github/academia/index.html
+
       - name: Validate linked local CSS and JavaScript assets
         shell: bash
         run: |
