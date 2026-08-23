@@ -1,0 +1,42 @@
+/* Academia Yamilet · Mis cursos profesional · Paso 3 */
+.dashboard-main[data-academy-section="courses"]>#mis-cursos{padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.dashboard-main[data-academy-section="courses"]>#mis-cursos>.panel-head{display:flex!important;justify-content:space-between;align-items:flex-end;gap:20px;margin:0 0 22px!important;padding:0!important}
+.dashboard-main[data-academy-section="courses"]>#mis-cursos>.panel-head .kicker{color:#b18424;font-size:10px;font-weight:900;letter-spacing:.15em;text-transform:uppercase}
+.dashboard-main[data-academy-section="courses"]>#mis-cursos>.panel-head h2{margin:6px 0 7px!important;color:#23342d!important;font-size:clamp(40px,5vw,64px)!important;line-height:.95!important;letter-spacing:-.04em}
+.dashboard-main[data-academy-section="courses"]>#mis-cursos>.panel-head p{max-width:700px;margin:0;color:#738078;font-size:13px;line-height:1.55}
+.academy-courses-subhead{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:0 0 14px}
+.academy-courses-subhead h3{margin:0;color:#24352d;font:600 25px/1.05 Georgia,"Times New Roman",serif}
+.academy-courses-subhead span{color:#7c8780;font-size:11px}
+.dashboard-main[data-academy-section="courses"] .learning-course-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px!important;align-items:stretch!important;margin:0!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card{position:relative!important;display:grid!important;grid-template-columns:minmax(230px,.9fr) minmax(0,1.1fr)!important;min-height:310px!important;width:100%!important;max-width:none!important;border:1px solid rgba(18,63,53,.11)!important;border-radius:24px!important;background:#fff!important;box-shadow:0 16px 42px rgba(18,63,53,.07)!important;overflow:hidden!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card:first-child{grid-column:1/-1;min-height:360px;background:linear-gradient(120deg,#fff 0%,#fbfaf6 100%)!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card:first-child::before{content:"CURSO ACTUAL";position:absolute;left:18px;top:18px;z-index:3;padding:7px 11px;border-radius:999px;background:#123f35;color:#fff;font-size:9px;font-weight:900;letter-spacing:.11em}
+.dashboard-main[data-academy-section="courses"] .learning-course-card .course-cover{width:100%!important;height:100%!important;min-height:310px!important;object-fit:cover!important;border-radius:0!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card:first-child .course-cover{min-height:360px!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card .course-card-body{display:flex!important;flex-direction:column!important;justify-content:center!important;gap:12px!important;padding:26px!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card h3{margin:0!important;color:#24352d!important;font-size:clamp(27px,3vw,40px)!important;line-height:1.02!important;letter-spacing:-.03em}
+.dashboard-main[data-academy-section="courses"] .learning-course-card p{margin:0!important;color:#718078!important;font-size:13px!important;line-height:1.58!important}
+.dashboard-main[data-academy-section="courses"] .course-card-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.dashboard-main[data-academy-section="courses"] .course-card-top .tag{background:#eef5f0!important;color:#315a49!important;border:1px solid rgba(18,63,53,.09);font-size:9px!important;letter-spacing:.08em!important}
+.dashboard-main[data-academy-section="courses"] .course-percent{font:600 20px Georgia,serif;color:#123f35}
+.dashboard-main[data-academy-section="courses"] .progress-track{height:7px!important;background:#edf0eb!important;border-radius:99px!important;overflow:hidden}
+.dashboard-main[data-academy-section="courses"] .progress-track span{background:linear-gradient(90deg,#b88a2b,#e2bd5b)!important}
+.dashboard-main[data-academy-section="courses"] .course-meta{display:flex!important;justify-content:space-between!important;gap:10px!important;color:#7b867f!important;font-size:10px!important}
+.dashboard-main[data-academy-section="courses"] .course-action{align-self:flex-start;min-width:165px;min-height:44px;border-radius:13px!important}
+.academy-current-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:-2px}
+.academy-current-meta span{padding:7px 10px;border-radius:999px;background:#f4f6f2;color:#5d6b63;font-size:10px;font-weight:750}
+.academy-upcoming-section{margin-top:30px;padding-top:26px;border-top:1px solid rgba(18,63,53,.09)}
+.academy-upcoming-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:15px}
+.academy-upcoming-head h3{margin:5px 0 0;color:#24352d;font:600 29px/1.05 Georgia,"Times New Roman",serif}
+.academy-upcoming-head p{max-width:620px;margin:0;color:#7a867f;font-size:12px;line-height:1.5}
+.academy-upcoming-kicker{color:#b18424;font-size:9px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.academy-upcoming-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.academy-upcoming-card{overflow:hidden;border:1px solid rgba(18,63,53,.1);border-radius:21px;background:#fff;box-shadow:0 12px 30px rgba(18,63,53,.045)}
+.academy-upcoming-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#143d34}
+.academy-upcoming-body{padding:17px 18px 18px}
+.academy-upcoming-status{display:inline-flex;padding:6px 9px;border-radius:999px;background:#fff4d9;color:#8c6920;font-size:9px;font-weight:900;letter-spacing:.09em}
+.academy-upcoming-body h4{margin:10px 0 5px;color:#26372f;font:600 21px/1.05 Georgia,serif}
+.academy-upcoming-body p{min-height:38px;margin:0 0 15px;color:#7b857f;font-size:11px;line-height:1.45}
+.academy-upcoming-body button{width:100%;min-height:40px;border:1px solid rgba(18,63,53,.09);border-radius:12px;background:#eff2ed;color:#758079;font-size:11px;font-weight:800;cursor:not-allowed}
+@media(max-width:1080px){.dashboard-main[data-academy-section="courses"] .learning-course-list{grid-template-columns:1fr!important}.dashboard-main[data-academy-section="courses"] .learning-course-card{grid-template-columns:280px minmax(0,1fr)!important}.academy-upcoming-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.dashboard-main[data-academy-section="courses"]>#mis-cursos>.panel-head,.academy-upcoming-head{align-items:flex-start;flex-direction:column}.dashboard-main[data-academy-section="courses"] .learning-course-card,.dashboard-main[data-academy-section="courses"] .learning-course-card:first-child{grid-template-columns:1fr!important;min-height:auto!important}.dashboard-main[data-academy-section="courses"] .learning-course-card .course-cover,.dashboard-main[data-academy-section="courses"] .learning-course-card:first-child .course-cover{min-height:0!important;aspect-ratio:16/9}.academy-upcoming-grid{grid-template-columns:1fr}}
