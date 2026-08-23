@@ -88,6 +88,9 @@ jobs:
           index="$base/index.html"
           grep -oE '(src|href)="\./[^\"]+\.(js|css)(\?[^\"]*)?"' "$index" | sed -E 's/^(src|href)="\.\/([^"?]+).*/\2/' | sort -u | while IFS= read -r asset; do
             test -s "$base/$asset" || { echo "Missing or empty local asset referenced by index.html: $asset" >&2; exit 1; }
+            case "$asset" in
+              *.js) node --check "$base/$asset" ;;
+            esac
           done
 
       - name: Guard public client boundary
