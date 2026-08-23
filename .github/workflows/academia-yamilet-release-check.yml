@@ -1,0 +1,44 @@
+name: Academia Yamilet release checks
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+      - 'fix/**'
+      - 'ci/**'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-core:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate core JavaScript
+        run: |
+          node --check yamilet-perez-site-v2-verde-github/academia/app.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-shell-v21.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-player-v37.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-i18n-v27.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-i18n-preference-v27.js
+
+      - name: Validate stable V56 wiring
+        run: |
+          test -s yamilet-perez-site-v2-verde-github/academia/index.html
+          test -s yamilet-perez-site-v2-verde-github/academia/styles.css
+          test -s yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png
+          grep -q 'academia-yamilet-core-v56' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './app.js?v=56' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-player-v37.js?v=37' yamilet-perez-site-v2-verde-github/academia/index.html
+
+      - name: Guard public client boundary
+        run: |
+          ! grep -qi 'service_role' yamilet-perez-site-v2-verde-github/academia/index.html
+          ! grep -qi 'service_role' yamilet-perez-site-v2-verde-github/academia/app.js
