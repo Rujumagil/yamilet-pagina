@@ -59,11 +59,17 @@ jobs:
           grep -q './academy-courses.js?v=4' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-evaluations.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-library.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-library.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-calendar.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-calendar.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-certificates.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-certificates.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-profile.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-profile.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-support.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-support.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-explore.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-explore.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-admin.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-admin.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-player-v37.js?v=38' yamilet-perez-site-v2-verde-github/academia/index.html
@@ -72,6 +78,8 @@ jobs:
           grep -q './drive-media-v26.js?v=26' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './cloudflare-stream-v37.js?v=37' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './recovery-p17.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q "academy-public-config" yamilet-perez-site-v2-verde-github/academia/app.js
+          grep -q "workspaceSlug = 'yamilet-mes'" yamilet-perez-site-v2-verde-github/academia/app.js
 
       - name: Block obsolete runtime layers
         run: |
@@ -89,3 +97,8 @@ jobs:
               *.js) node --check "$base/$asset" ;;
             esac
           done
+
+      - name: Guard public client boundary
+        run: |
+          pattern='service[_-]?role|serviceRoleKey'
+          ! grep -RniE "$pattern" yamilet-perez-site-v2-verde-github/academia --include='*.html' --include='*.js'
