@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const $ = (selector, root = document) => root.querySelector(selector);
   let initialized = false;
@@ -38,10 +39,14 @@
       <button type="button" data-dashboard-open-courses>Ver mis cursos</button>
     `;
     continuePanel.insertAdjacentElement('afterend', card);
-    card.querySelector('[data-dashboard-open-courses]')?.addEventListener('click', () => $('[data-shell-route="courses"]')?.click());
+    card.querySelector('[data-dashboard-open-courses]')?.addEventListener('click', () => {
+      $('[data-shell-route="courses"]')?.click();
+    });
   }
 
-  function setSection(main, section) { main.dataset.academySection = section || 'home'; }
+  function setSection(main, section) {
+    main.dataset.academySection = section || 'home';
+  }
 
   function bindNavigation(main) {
     $$('[data-shell-route]').forEach(button => {
@@ -58,7 +63,9 @@
     if (!head || head.dataset.dashboardEnhanced) return;
     head.dataset.dashboardEnhanced = 'true';
     const paragraph = head.querySelector('p');
-    if (paragraph && !paragraph.textContent.trim()) paragraph.textContent = 'Continúa tu proceso, retoma Método MES® y encuentra tus recursos en un solo lugar, a tu propio ritmo.';
+    if (paragraph && !paragraph.textContent.trim()) {
+      paragraph.textContent = 'Continúa tu proceso, retoma Método MES® y encuentra tus recursos en un solo lugar, a tu propio ritmo.';
+    }
   }
 
   function init() {
