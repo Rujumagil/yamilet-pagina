@@ -77,6 +77,34 @@
     return `<section class="academy-calendar-strip-wrap"><div class="academy-calendar-strip-head"><div><span>PRÓXIMOS DÍAS</span><h3>Tu agenda de aprendizaje</h3></div><p>Las fechas se actualizan automáticamente.</p></div><div class="academy-calendar-days">${days.map((date,index)=>`<article class="academy-calendar-day ${index===0?'today':''} ${eventDays.has(dayKey(date))?'has-event':''}">${eventDays.has(dayKey(date))?'<i class="academy-calendar-dot" aria-hidden="true"></i>':''}<span class="weekday">${esc(fmtDay(date))}</span><strong>${date.getDate()}</strong><span class="month">${esc(fmtMonth(date))}</span></article>`).join('')}</div></section>`;
   }
 
+  function icsEscape(value=''){
+    return String(value).replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+  }
+
+  function icsDate(value){
+    const d = new Date(value);
+    if(Number.isNaN(d.getTime())) return '';
+    return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');
+  }
+
+  function downloadCalendarEvent(event){
+    const start = icsDate(event.starts_at);
+    const end = icsDate(event.ends_at || new Date(new Date(event.starts_at).getTime()+60*60*1000));
+    if(!start || !end) return;
+    const location = event.delivery_mode === 'online' ? (event.meeting_url || '') : (event.location_text || event.meeting_url || '');
+    const description = [event.description,event.meeting_url ? `Acceso: ${event.meeting_url}` : ''].filter(Boolean).join('\n\n');
+    const body = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Academia Yamilet//MES//ES','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',`UID:${event.id}@academia-yamilet`,`DTSTAMP:${icsDate(new Date())}`,`DTSTART:${start}`,`DTEND:${end}`,`SUMMARY:${icsEscape(event.title || 'Academia Yamilet')}`,`DESCRIPTION:${icsEscape(description)}`,`LOCATION:${icsEscape(location)}`,'END:VEVENT','END:VCALENDAR'].join('\r\n');
+    const blob = new Blob([body],{type:'text/calendar;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${String(event.title || 'academia-yamilet').toLowerCase().replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'') || 'academia-yamilet'}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(()=>URL.revokeObjectURL(url),500);
+  }
+
   function eventCard(event,courses){
     const start = new Date(event.starts_at);
     const end = event.ends_at ? new Date(event.ends_at) : null;
@@ -85,10 +113,10 @@
     const mode = event.delivery_mode || event.location_text || '';
     const time = `${fmtTime(start)}${end && !Number.isNaN(end.getTime()) ? ` – ${fmtTime(end)}` : ''}`;
     const status = event.status || 'programado';
-    return `<article class="academy-calendar-event" data-calendar-category="${esc(type)}">
+    return `<article class="academy-calendar-event ${event.is_featured?'featured':''}" data-calendar-category="${esc(type)}">
       <div class="academy-calendar-date"><span>${esc(fmtDay(start))}</span><strong>${start.getDate()}</strong><small>${esc(fmtMonth(start))}</small></div>
       <div class="academy-calendar-event-copy"><span class="academy-calendar-type">${esc((event.event_type||'Evento académico').replace(/_/g,' '))}</span><h4>${esc(event.title||'Evento académico')}</h4><p>${esc(event.description||'Actividad programada dentro de Academia Yamilet.')}</p><div class="academy-calendar-event-meta"><span>${esc(fmtLong(start))}</span><span>${esc(time)}</span>${course?`<span>${esc(course)}</span>`:''}${mode?`<span>${esc(mode)}</span>`:''}</div></div>
-      <div class="academy-calendar-event-actions"><span class="status">${esc(status)}</span>${event.meeting_url?`<a href="${esc(event.meeting_url)}" target="_blank" rel="noopener noreferrer">Entrar a sesión</a>`:''}</div>
+      <div class="academy-calendar-event-actions"><span class="status">${esc(status)}</span>${event.meeting_url?`<a href="${esc(event.meeting_url)}" target="_blank" rel="noopener noreferrer">Entrar a sesión</a>`:''}<button type="button" data-calendar-ics="${esc(event.id)}">Agregar a mi calendario</button></div>
     </article>`;
   }
 
@@ -122,6 +150,10 @@
         activeFilter = button.dataset.calendarFilter || 'all';
         $$('[data-calendar-filter]',page).forEach(item=>item.classList.toggle('active',item===button));
         applyFilter(page);
+      }));
+      $$('[data-calendar-ics]',page).forEach(button=>button.addEventListener('click',()=>{
+        const event = events.find(item=>item.id===button.dataset.calendarIcs);
+        if(event) downloadCalendarEvent(event);
       }));
       return true;
     }catch(error){
