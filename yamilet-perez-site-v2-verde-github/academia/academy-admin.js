@@ -1,20 +1,19 @@
 (() => {
   'use strict';
+
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const esc = (v = '') => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const esc = (v = '') => String(v).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
   let clientPromise;
 
-  async function getContext() {
+  async function context() {
     if (!clientPromise) {
       clientPromise = (async () => {
-        const response = await fetch(CONFIG_ENDPOINT, { headers: { Accept: 'application/json' } });
+        const response = await fetch(CONFIG_ENDPOINT, { headers: { Accept:'application/json' } });
         if (!response.ok) throw new Error('config');
         const cfg = await response.json();
-        const sb = window.supabase.createClient(cfg.url, cfg.anonKey, {
-          auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
-        });
+        const sb = window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:false } });
         return { sb, cfg };
       })();
     }
@@ -33,125 +32,131 @@
     return { sb, user, profile: profile || {}, workspace, role };
   }
 
+  const safe = async query => {
+    const result = await query;
+    if (result.error) {
+      console.warn('Academia Yamilet admin query', result.error);
+      return { data: [], error: result.error };
+    }
+    return { data: result.data || [], error: null };
+  };
+
   function fmt(value) {
-    if (!value) return '';
+    if (!value) return '—';
     try { return new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric' }).format(new Date(value)); }
-    catch { return ''; }
+    catch { return '—'; }
   }
 
-  async function loadAdminData() {
-    const ctx = await getContext();
+  async function loadData() {
+    const ctx = await context();
     const { sb, workspace } = ctx;
-    const { data: courses, error: coursesError } = await sb.from('courses').select('id,title,status,featured').eq('workspace_id', workspace.id).order('created_at', { ascending: true });
-    if (coursesError) throw coursesError;
-    const courseRows = courses || [];
-    const courseIds = courseRows.map(c => c.id);
+    const coursesResult = await safe(sb.from('courses').select('id,title,status,featured').eq('workspace_id', workspace.id).order('created_at', { ascending:true }));
+    const courses = coursesResult.data;
+    const courseIds = courses.map(c => c.id);
 
-    let enrollments = [], events = [], tickets = [], certificates = [];
-    const baseQueries = [
-      sb.from('academy_events').select('id,course_id,title,event_type,start_at,status,modality,is_featured').eq('workspace_id', workspace.id).order('start_at', { ascending: true }).limit(20),
-      sb.from('academy_support_tickets').select('id,user_id,course_id,subject,category,priority,status,created_at,last_message_at').eq('workspace_id', workspace.id).order('last_message_at', { ascending: false }).limit(20)
-    ];
+    const [eventsResult, ticketsResult] = await Promise.all([
+      safe(sb.from('academy_events').select('id,course_id,title,event_type,starts_at,status,delivery_mode,is_featured').eq('workspace_id', workspace.id).order('starts_at', { ascending:true }).limit(20)),
+      safe(sb.from('academy_support_tickets').select('id,user_id,course_id,subject,category,priority,status,created_at,last_message_at').eq('workspace_id', workspace.id).order('last_message_at', { ascending:false }).limit(20))
+    ]);
+
+    let enrollmentsResult = { data:[], error:null };
+    let certificatesResult = { data:[], error:null };
     if (courseIds.length) {
-      baseQueries.push(sb.from('enrollments').select('user_id,course_id,status,enrolled_at,completed_at').in('course_id', courseIds).order('enrolled_at', { ascending: false }));
-      baseQueries.push(sb.from('certificates').select('id,user_id,course_id,recipient_name,issued_at,verification_code,revoked_at').in('course_id', courseIds).order('issued_at', { ascending: false }).limit(20));
-    }
-    const results = await Promise.all(baseQueries);
-    if (results[0].error) throw results[0].error;
-    if (results[1].error) throw results[1].error;
-    events = results[0].data || [];
-    tickets = results[1].data || [];
-    if (courseIds.length) {
-      if (results[2].error) throw results[2].error;
-      if (results[3].error) throw results[3].error;
-      enrollments = results[2].data || [];
-      certificates = results[3].data || [];
+      [enrollmentsResult, certificatesResult] = await Promise.all([
+        safe(sb.from('enrollments').select('user_id,course_id,status,enrolled_at,completed_at').in('course_id', courseIds).order('enrolled_at', { ascending:false })),
+        safe(sb.from('certificates').select('id,user_id,course_id,recipient_name,issued_at,verification_code,revoked_at').in('course_id', courseIds).order('issued_at', { ascending:false }).limit(20))
+      ]);
     }
 
-    const userIds = [...new Set([...enrollments.map(e => e.user_id), ...tickets.map(t => t.user_id)].filter(Boolean))];
+    const userIds = [...new Set([...enrollmentsResult.data.map(e => e.user_id), ...ticketsResult.data.map(t => t.user_id)].filter(Boolean))];
     let profiles = [];
-    if (userIds.length) {
-      const { data, error } = await sb.from('profiles').select('id,full_name,email,status').in('id', userIds);
-      if (!error) profiles = data || [];
-    }
-    return { ...ctx, courses: courseRows, enrollments, events, tickets, certificates: certificates.filter(c => !c.revoked_at), profiles };
-  }
+    if (userIds.length) profiles = (await safe(sb.from('profiles').select('id,full_name,email,status').in('id', userIds))).data;
 
-  function statusLabel(v) {
-    return ({open:'Abierto',in_progress:'En proceso',waiting_user:'Espera alumna',resolved:'Resuelto',closed:'Cerrado',published:'Publicado',draft:'Borrador',active:'Activa',completed:'Completada'})[v] || v || '—';
+    return {
+      ...ctx,
+      courses,
+      events: eventsResult.data,
+      tickets: ticketsResult.data,
+      enrollments: enrollmentsResult.data,
+      certificates: certificatesResult.data.filter(c => !c.revoked_at),
+      profiles,
+      errors: {
+        courses: coursesResult.error,
+        events: eventsResult.error,
+        tickets: ticketsResult.error,
+        enrollments: enrollmentsResult.error,
+        certificates: certificatesResult.error
+      }
+    };
   }
 
   function profileName(data, id) {
-    const p = data.profiles.find(item => item.id === id);
+    const p = data.profiles.find(row => row.id === id);
     return p?.full_name || p?.email || 'Alumna';
   }
 
   function courseName(data, id) {
-    return data.courses.find(item => item.id === id)?.title || 'Academia Yamilet';
+    return data.courses.find(row => row.id === id)?.title || 'Academia Yamilet';
   }
 
-  function row(icon, title, subtitle, status, cls = '') {
-    return `<div class="academy-admin-row"><div class="academy-admin-row-icon">${icon}</div><div><strong>${esc(title)}</strong><small>${esc(subtitle)}</small></div><span class="academy-admin-row-status ${cls}">${esc(status)}</span></div>`;
+  function state(title, copy) {
+    return `<div class="academy-admin-empty"><strong>${esc(title)}</strong><span>${esc(copy)}</span></div>`;
   }
 
   function recentStudents(data) {
-    const active = data.enrollments.filter(e => ['active','completed'].includes(e.status)).slice(0,5);
-    if (!active.length) return '<div class="academy-admin-empty"><strong>No hay alumnas inscritas</strong><span>Las nuevas inscripciones aparecerán aquí automáticamente.</span></div>';
-    return `<div class="academy-admin-list">${active.map(e => row('A', profileName(data,e.user_id), `${courseName(data,e.course_id)} · ${fmt(e.enrolled_at)}`, statusLabel(e.status), e.status==='completed'?'':'')).join('')}</div>`;
-  }
-
-  function recentTickets(data) {
-    if (!data.tickets.length) return '<div class="academy-admin-empty"><strong>Sin solicitudes de soporte</strong><span>Los tickets creados por alumnas aparecerán aquí para seguimiento.</span></div>';
-    return `<div class="academy-admin-list">${data.tickets.slice(0,5).map(t => row('?', t.subject, `${profileName(data,t.user_id)} · ${courseName(data,t.course_id)}`, statusLabel(t.status), ['resolved','closed'].includes(t.status)?'closed':'warn')).join('')}</div>`;
+    if (data.errors.enrollments) return state('No fue posible consultar alumnas', 'Revisa permisos de inscripciones para este workspace.');
+    const rows = data.enrollments.filter(e => ['active','completed'].includes(e.status)).slice(0,5);
+    if (!rows.length) return state('No hay alumnas inscritas', 'Las nuevas inscripciones aparecerán aquí automáticamente.');
+    return `<div class="academy-admin-list">${rows.map(e => `<div class="academy-admin-row"><div class="academy-admin-row-icon">A</div><div><strong>${esc(profileName(data,e.user_id))}</strong><small>${esc(courseName(data,e.course_id))} · ${esc(fmt(e.enrolled_at))}</small></div><span class="academy-admin-row-status">${e.status === 'completed' ? 'Completada' : 'Activa'}</span></div>`).join('')}</div>`;
   }
 
   function upcomingEvents(data) {
+    if (data.errors.events) return state('Agenda no disponible', 'La consulta de eventos no pudo completarse.');
     const now = Date.now();
-    const upcoming = data.events.filter(e => e.start_at && new Date(e.start_at).getTime() >= now && e.status === 'published').slice(0,5);
-    if (!upcoming.length) return '<div class="academy-admin-empty"><strong>No hay eventos próximos</strong><span>Las sesiones publicadas aparecerán aquí cuando tengan fecha programada.</span></div>';
-    return `<div class="academy-admin-list">${upcoming.map(e => row('◷', e.title, `${fmt(e.start_at)} · ${courseName(data,e.course_id)}`, e.modality || e.event_type || 'Evento')).join('')}</div>`;
+    const rows = data.events.filter(e => e.starts_at && new Date(e.starts_at).getTime() >= now && e.status === 'published').slice(0,5);
+    if (!rows.length) return state('No hay eventos próximos', 'Las sesiones publicadas aparecerán aquí cuando tengan fecha programada.');
+    return `<div class="academy-admin-list">${rows.map(e => `<div class="academy-admin-row"><div class="academy-admin-row-icon">◷</div><div><strong>${esc(e.title)}</strong><small>${esc(fmt(e.starts_at))} · ${esc(courseName(data,e.course_id))}</small></div><span class="academy-admin-row-status">${esc(e.delivery_mode || e.event_type || 'Evento')}</span></div>`).join('')}</div>`;
   }
 
-  function certificatesList(data) {
-    if (!data.certificates.length) return '<div class="academy-admin-empty"><strong>Aún no hay certificados emitidos</strong><span>Los certificados válidos del workspace aparecerán aquí.</span></div>';
-    return `<div class="academy-admin-list">${data.certificates.slice(0,5).map(c => row('✓', c.recipient_name || profileName(data,c.user_id), `${courseName(data,c.course_id)} · ${fmt(c.issued_at)}`, 'Emitido')).join('')}</div>`;
+  function recentTickets(data) {
+    if (data.errors.tickets) return state('Soporte no disponible', 'La consulta de soporte no pudo completarse.');
+    if (!data.tickets.length) return state('Sin solicitudes de soporte', 'Los tickets creados por alumnas aparecerán aquí para seguimiento.');
+    return `<div class="academy-admin-list">${data.tickets.slice(0,5).map(t => `<div class="academy-admin-row"><div class="academy-admin-row-icon">?</div><div><strong>${esc(t.subject)}</strong><small>${esc(profileName(data,t.user_id))} · ${esc(courseName(data,t.course_id))}</small></div><span class="academy-admin-row-status">${esc(t.status || 'Abierto')}</span></div>`).join('')}</div>`;
   }
 
-  function renderMarkup(data) {
+  function certificates(data) {
+    if (data.errors.certificates) return state('Certificados no disponibles', 'La consulta de certificados no pudo completarse.');
+    if (!data.certificates.length) return state('Aún no hay certificados emitidos', 'Los certificados válidos aparecerán aquí.');
+    return `<div class="academy-admin-list">${data.certificates.slice(0,5).map(c => `<div class="academy-admin-row"><div class="academy-admin-row-icon">✓</div><div><strong>${esc(c.recipient_name || profileName(data,c.user_id))}</strong><small>${esc(courseName(data,c.course_id))} · ${esc(fmt(c.issued_at))}</small></div><span class="academy-admin-row-status">Emitido</span></div>`).join('')}</div>`;
+  }
+
+  function markup(data) {
     const activeEnrollments = data.enrollments.filter(e => e.status === 'active');
     const uniqueStudents = new Set(activeEnrollments.map(e => e.user_id)).size;
     const openTickets = data.tickets.filter(t => !['resolved','closed'].includes(t.status)).length;
-    const now = Date.now();
-    const upcomingCount = data.events.filter(e => e.start_at && new Date(e.start_at).getTime() >= now && e.status === 'published').length;
-    const publishedCourses = data.courses.filter(c => c.status === 'published').length;
+    const upcomingCount = data.events.filter(e => e.starts_at && new Date(e.starts_at).getTime() >= Date.now() && e.status === 'published').length;
+    const published = data.courses.filter(c => c.status === 'published').length;
     const roleLabel = data.role === 'owner' ? 'Propietaria del workspace' : data.role === 'admin' ? 'Administración' : 'Equipo académico';
 
-    return `<div class="academy-admin-hero"><div><span class="academy-admin-kicker">CENTRO ADMINISTRATIVO</span><h2>Opera la Academia desde un solo lugar</h2><p>Consulta el estado académico, entra a los editores existentes y revisa alumnas, eventos, soporte y certificación sin mezclar esta experiencia con el aula de las alumnas.</p><span class="academy-admin-role">${esc(roleLabel)}</span></div><div class="academy-admin-stats"><article><strong>${data.courses.length}</strong><span>programas</span></article><article><strong>${uniqueStudents}</strong><span>alumnas activas</span></article><article><strong>${upcomingCount}</strong><span>eventos próximos</span></article><article><strong>${openTickets}</strong><span>tickets abiertos</span></article></div></div>
-
-    <section class="academy-admin-section"><div class="academy-admin-section-head"><div><span>GESTIÓN PRINCIPAL</span><h3>Herramientas de operación</h3></div><p>Los accesos principales reutilizan los editores que ya funcionan dentro de la Academia.</p></div><div class="academy-admin-actions">
-      <article class="academy-admin-action featured"><div class="academy-admin-action-icon">✎</div><small>Contenido</small><h4>Cursos y lecciones</h4><p>Edita programas, módulos, lecciones, recursos y publicación desde el administrador nativo.</p><button type="button" data-admin-open-native="content">Gestionar contenido</button></article>
-      <article class="academy-admin-action featured"><div class="academy-admin-action-icon">A</div><small>Alumnas</small><h4>Accesos e inscripciones</h4><p>Invita alumnas, asigna cursos y consulta su progreso desde el administrador existente.</p><button type="button" data-admin-open-native="students">Gestionar alumnas</button></article>
-      <article class="academy-admin-action"><div class="academy-admin-action-icon">◷</div><small>Seguimiento</small><h4>Clase gratuita</h4><p>Consulta las solicitudes de clase gratuita y el seguimiento operativo vinculado.</p><button type="button" data-admin-open-native="bookings">Ver reservaciones</button></article>
-      <article class="academy-admin-action"><div class="academy-admin-action-icon">□</div><small>Agenda</small><h4>Eventos académicos</h4><p>Revisa las sesiones publicadas y próximas actividades del calendario académico.</p><button type="button" data-admin-route="calendar">Ver calendario</button></article>
-      <article class="academy-admin-action"><div class="academy-admin-action-icon">?</div><small>Soporte</small><h4>Solicitudes de alumnas</h4><p>Monitorea aquí los tickets del workspace. La respuesta administrativa se añadirá en una etapa funcional posterior.</p><button type="button" data-admin-scroll="support">Revisar tickets</button></article>
-      <article class="academy-admin-action"><div class="academy-admin-action-icon">✓</div><small>Certificación</small><h4>Certificados emitidos</h4><p>Consulta los certificados válidos del workspace y sus datos de emisión.</p><button type="button" data-admin-scroll="certificates">Ver certificados</button></article>
-    </div></section>
-
-    <section class="academy-admin-section"><div class="academy-admin-section-head"><div><span>OPERACIÓN EN VIVO</span><h3>Qué está pasando en la Academia</h3></div><p>Información consultada directamente desde Supabase para este workspace.</p></div><div class="academy-admin-ops-grid">
-      <article class="academy-admin-panel"><div class="academy-admin-panel-head"><div><span>ALUMNAS</span><h4>Inscripciones recientes</h4></div><button type="button" data-admin-open-native="students">Abrir</button></div>${recentStudents(data)}</article>
-      <article class="academy-admin-panel" data-admin-anchor="support"><div class="academy-admin-panel-head"><div><span>SOPORTE</span><h4>Tickets recientes</h4></div><span></span></div>${recentTickets(data)}</article>
-      <article class="academy-admin-panel"><div class="academy-admin-panel-head"><div><span>AGENDA</span><h4>Próximos eventos</h4></div><button type="button" data-admin-route="calendar">Ver</button></div>${upcomingEvents(data)}</article>
-    </div></section>
-
-    <section class="academy-admin-section" data-admin-anchor="certificates"><div class="academy-admin-section-head"><div><span>CERTIFICACIÓN</span><h3>Estado de certificados</h3></div><p>Este bloque solo muestra certificados reales no revocados.</p></div><article class="academy-admin-panel">${certificatesList(data)}</article></section>
-
-    <div class="academy-admin-health"><article><span>Cursos publicados</span><strong>${publishedCourses}</strong><small>de ${data.courses.length}</small></article><article><span>Inscripciones activas</span><strong>${activeEnrollments.length}</strong><small>accesos vigentes</small></article><article><span>Eventos próximos</span><strong>${upcomingCount}</strong><small>publicados</small></article><article><span>Soporte abierto</span><strong>${openTickets}</strong><small>requieren seguimiento</small></article><article><span>Certificados</span><strong>${data.certificates.length}</strong><small>emitidos y vigentes</small></article></div>`;
+    return `<div class="academy-admin-hero"><div><span class="academy-admin-kicker">CENTRO ADMINISTRATIVO</span><h2>Opera la Academia desde un solo lugar</h2><p>Consulta cursos, alumnas, agenda, soporte y certificación con información real del workspace.</p><span class="academy-admin-role">${esc(roleLabel)}</span></div><div class="academy-admin-stats"><article><strong>${data.courses.length}</strong><span>programas</span></article><article><strong>${uniqueStudents}</strong><span>alumnas activas</span></article><article><strong>${upcomingCount}</strong><span>eventos próximos</span></article><article><strong>${openTickets}</strong><span>tickets abiertos</span></article></div></div>
+      <section class="academy-admin-section"><div class="academy-admin-section-head"><div><span>GESTIÓN PRINCIPAL</span><h3>Herramientas de operación</h3></div><p>Accesos administrativos del workspace Academia Yamilet.</p></div><div class="academy-admin-actions">
+        <article class="academy-admin-action featured"><div class="academy-admin-action-icon">✎</div><small>Contenido</small><h4>Cursos y lecciones</h4><p>Edita programas, módulos y lecciones.</p><button type="button" data-admin-open-native="content">Gestionar contenido</button></article>
+        <article class="academy-admin-action featured"><div class="academy-admin-action-icon">A</div><small>Alumnas</small><h4>Inscripciones</h4><p>Gestiona alumnas y cursos asignados.</p><button type="button" data-admin-open-native="students">Gestionar alumnas</button></article>
+        <article class="academy-admin-action"><div class="academy-admin-action-icon">□</div><small>Agenda</small><h4>Eventos académicos</h4><p>Consulta sesiones y actividades.</p><button type="button" data-admin-route="calendar">Ver calendario</button></article>
+        <article class="academy-admin-action"><div class="academy-admin-action-icon">?</div><small>Soporte</small><h4>Solicitudes de alumnas</h4><p>Consulta y responde tickets desde Operación y Control.</p><button type="button" data-admin-scroll="support">Revisar soporte</button></article>
+      </div></section>
+      <section class="academy-admin-section"><div class="academy-admin-section-head"><div><span>OPERACIÓN EN VIVO</span><h3>Qué está pasando en la Academia</h3></div><p>Información consultada directamente desde Supabase.</p></div><div class="academy-admin-ops-grid">
+        <article class="academy-admin-panel"><div class="academy-admin-panel-head"><div><span>ALUMNAS</span><h4>Inscripciones recientes</h4></div><button type="button" data-admin-open-native="students">Abrir</button></div>${recentStudents(data)}</article>
+        <article class="academy-admin-panel" data-admin-anchor="support"><div class="academy-admin-panel-head"><div><span>SOPORTE</span><h4>Tickets recientes</h4></div></div>${recentTickets(data)}</article>
+        <article class="academy-admin-panel"><div class="academy-admin-panel-head"><div><span>AGENDA</span><h4>Próximos eventos</h4></div><button type="button" data-admin-route="calendar">Ver</button></div>${upcomingEvents(data)}</article>
+      </div></section>
+      <section class="academy-admin-section" data-admin-anchor="certificates"><div class="academy-admin-section-head"><div><span>CERTIFICACIÓN</span><h3>Estado de certificados</h3></div></div><article class="academy-admin-panel">${certificates(data)}</article></section>
+      <div class="academy-admin-health"><article><span>Cursos publicados</span><strong>${published}</strong><small>de ${data.courses.length}</small></article><article><span>Inscripciones activas</span><strong>${activeEnrollments.length}</strong><small>accesos vigentes</small></article><article><span>Eventos próximos</span><strong>${upcomingCount}</strong><small>publicados</small></article><article><span>Soporte abierto</span><strong>${openTickets}</strong><small>requieren seguimiento</small></article><article><span>Certificados</span><strong>${data.certificates.length}</strong><small>emitidos y vigentes</small></article></div>`;
   }
 
   function openNative(target) {
     if (target === 'content') { $('[data-content-admin-nav]')?.click(); setTimeout(() => $('[data-content-admin]')?.classList.remove('hidden'), 30); }
     if (target === 'students') { $('[data-students-admin-nav]')?.click(); setTimeout(() => $('[data-students-admin]')?.classList.remove('hidden'), 30); }
-    if (target === 'bookings') { $('[data-scroll-bookings]')?.click(); }
   }
 
   function bind(page) {
@@ -166,20 +171,23 @@
     page.classList.add('academy-admin-page');
     page.innerHTML = '<div class="academy-admin-loading"><strong>Cargando centro administrativo…</strong><span>Consultando operación académica y permisos del workspace.</span></div>';
     try {
-      const data = await loadAdminData();
+      const data = await loadData();
       if (page.classList.contains('hidden')) return false;
-      page.innerHTML = renderMarkup(data);
+      page.innerHTML = markup(data);
       bind(page);
+      window.setTimeout(() => window.ACADEMIA_YAMILET_ADMIN_OPERATIONS?.render?.(), 40);
     } catch (error) {
-      console.error('Academia Yamilet admin', error);
-      page.innerHTML = error?.message === 'forbidden' ? '<div class="academy-admin-denied"><strong>Acceso restringido</strong><span>Este centro está disponible únicamente para owner, admin o instructor del workspace.</span></div>' : '<div class="academy-admin-denied"><strong>No fue posible cargar el centro administrativo</strong><span>Vuelve a abrir Administrar o recarga la Academia.</span></div>';
+      console.error('Academia Yamilet admin v2', error);
+      page.innerHTML = error?.message === 'forbidden'
+        ? '<div class="academy-admin-denied"><strong>Acceso restringido</strong><span>Este centro está disponible únicamente para owner, admin o instructor del workspace.</span></div>'
+        : '<div class="academy-admin-denied"><strong>No fue posible cargar el centro administrativo</strong><span>Recarga la Academia. Si el problema continúa, revisa la sesión de esta cuenta.</span></div>';
     }
     return true;
   }
 
   document.addEventListener('click', event => {
-    if (event.target.closest('[data-shell-route="admin"]')) setTimeout(render, 120);
+    if (event.target.closest('[data-shell-route="admin"]')) window.setTimeout(render, 120);
   });
-  window.addEventListener('pageshow', () => setTimeout(render, 320));
+  window.addEventListener('pageshow', () => window.setTimeout(render, 320));
   window.ACADEMIA_YAMILET_ADMIN = { render };
 })();
