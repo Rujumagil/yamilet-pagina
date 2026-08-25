@@ -1,0 +1,25 @@
+{
+  "id": "./",
+  "name": "Academia Yamilet · Método MES",
+  "short_name": "Academia Yamilet",
+  "description": "Espacio privado de aprendizaje de Academia Yamilet y Método MES.",
+  "lang": "es-MX",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#050a08",
+  "theme_color": "#123f35",
+  "categories": ["education", "lifestyle"],
+  "icons": [
+    {
+      "src": "../assets/logo-yamilet.png",
+      "sizes": "1254x1254",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "prefer_related_applications": false
+}
