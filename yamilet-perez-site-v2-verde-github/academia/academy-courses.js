@@ -26,19 +26,44 @@
     list.insertAdjacentElement('beforebegin', sub);
   }
 
+  function parseCourseCardMeta(card) {
+    const metaItems = $$('.course-meta span', card)
+      .map(item => item.textContent.trim())
+      .filter(Boolean);
+    const progressText = metaItems[0] || '';
+    const durationLabel = metaItems.slice(1).join(' · ');
+    const lessonMatch = progressText.match(/(?:de\s+)?(\d+)\s+lecci(?:ón|ones)/i);
+    const totalLessons = Number(lessonMatch?.[1] || 0);
+    const progress = $('.course-percent', card)?.textContent.trim() || '';
+    const status = $('.tag', card)?.textContent.trim() || '';
+    return { durationLabel, totalLessons, progress, status };
+  }
+
   function decorateCards(list) {
     const cards = $$('.learning-course-card', list);
     if (!cards.length) return false;
+
     cards.forEach((card, index) => {
       card.dataset.academyCourseCard = index === 0 ? 'current' : 'enrolled';
-      if (index === 0 && !$('.academy-current-meta', card)) {
-        const meta = document.createElement('div');
+      const { durationLabel, totalLessons, progress, status } = parseCourseCardMeta(card);
+      let meta = $('.academy-current-meta', card);
+
+      if (!meta) {
+        meta = document.createElement('div');
         meta.className = 'academy-current-meta';
-        meta.innerHTML = '<span>4 semanas</span><span>24 lecciones</span><span>Programa guiado</span>';
         const action = $('.course-action', card);
         if (action) action.insertAdjacentElement('beforebegin', meta);
         else $('.course-card-body', card)?.appendChild(meta);
       }
+
+      const badges = [];
+      if (durationLabel) badges.push(durationLabel);
+      if (totalLessons) badges.push(`${totalLessons} ${totalLessons === 1 ? 'lección' : 'lecciones'}`);
+      if (progress) badges.push(`${progress} completado`);
+      else if (status) badges.push(status);
+
+      meta.innerHTML = badges.map(value => `<span>${value}</span>`).join('');
+      meta.hidden = badges.length === 0;
     });
     return true;
   }
@@ -94,8 +119,6 @@
     modules.forEach((module, index) => {
       module.classList.add('academy-week-card');
       module.dataset.week = String(index + 1);
-      const label = $('.module-label', module);
-      if (label) label.textContent = `Semana ${String(index + 1).padStart(2, '0')}`;
 
       const head = $('.module-head', module);
       const originalCount = $('.module-head > span', module);
@@ -118,14 +141,14 @@
     return modules;
   }
 
-  function addProgramHeading(host, moduleCount, lessonCount, completedCount) {
+  function addProgramHeading(host, title, moduleCount, lessonCount, completedCount) {
     let heading = $('.academy-program-heading', host);
     if (!heading) {
       heading = document.createElement('div');
       heading.className = 'academy-program-heading';
       $('.syllabus', host)?.insertAdjacentElement('beforebegin', heading);
     }
-    heading.innerHTML = `<div><div class="academy-course-kicker">Contenido del programa</div><h3>Tu recorrido en Método MES®</h3><p>Avanza semana por semana. Tu progreso se registra automáticamente en cada lección.</p></div><div class="academy-program-summary"><span><b>${moduleCount}</b> semanas</span><span><b>${lessonCount}</b> lecciones</span><span><b>${completedCount}</b> completadas</span></div>`;
+    heading.innerHTML = `<div><div class="academy-course-kicker">Contenido del programa</div><h3>Tu recorrido en ${title}</h3><p>Avanza módulo por módulo. Tu progreso se registra automáticamente en cada lección.</p></div><div class="academy-program-summary"><span><b>${moduleCount}</b> ${moduleCount === 1 ? 'módulo' : 'módulos'}</span><span><b>${lessonCount}</b> ${lessonCount === 1 ? 'lección' : 'lecciones'}</span><span><b>${completedCount}</b> completadas</span></div>`;
   }
 
   function buildCourseHero(host, title, description, status, percent, moduleCount, lessonCount) {
@@ -137,13 +160,13 @@
     }
     const cover = activeCourseCover || findCoverByTitle(title);
     hero.innerHTML = `
-      <div class="academy-course-hero-media">${cover ? `<img src="${cover}" alt="Portada de ${title}">` : '<div class="academy-course-cover-fallback"><span>YP</span><strong>Método MES®</strong></div>'}</div>
+      <div class="academy-course-hero-media">${cover ? `<img src="${cover}" alt="Portada de ${title}">` : `<div class="academy-course-cover-fallback"><span>YP</span><strong>${title}</strong></div>`}</div>
       <div class="academy-course-hero-copy">
         <span class="academy-course-status">${status || 'Curso activo'}</span>
         <div class="academy-course-kicker">Academia Yamilet · Programa formativo</div>
         <h1>${title}</h1>
         <p>${description || 'Programa de Academia Yamilet.'}</p>
-        <div class="academy-course-facts"><span><b>${moduleCount}</b> semanas</span><span><b>${lessonCount}</b> lecciones</span><span><b>${percent}</b> de avance</span></div>
+        <div class="academy-course-facts"><span><b>${moduleCount}</b> ${moduleCount === 1 ? 'módulo' : 'módulos'}</span><span><b>${lessonCount}</b> ${lessonCount === 1 ? 'lección' : 'lecciones'}</span><span><b>${percent}</b> de avance</span></div>
         <div class="academy-course-progress"><div><span>Progreso del programa</span><strong>${percent}</strong></div><div class="academy-course-progress-track"><span style="width:${percent}"></span></div></div>
         <button class="academy-course-primary" type="button" data-course-primary-action>Continuar aprendizaje</button>
       </div>`;
@@ -162,7 +185,7 @@
     const syllabus = $('.syllabus', host);
     if (!detailHead || !syllabus) return false;
 
-    const title = $('h2', detailHead)?.textContent.trim() || 'Método MES®';
+    const title = $('h2', detailHead)?.textContent.trim() || 'Curso';
     const description = $('p', detailHead)?.textContent.trim() || '';
     const status = $('.eyebrow', detailHead)?.textContent.trim() || 'Disponible';
     const percent = $('.progress-orb strong', detailHead)?.textContent.trim() || '0%';
@@ -174,7 +197,7 @@
     const originalProgress = $('.progress-track.large', host);
     originalProgress?.classList.add('academy-course-original-progress');
     buildCourseHero(host, title, description, status, percent, modules.length, lessons.length);
-    addProgramHeading(host, modules.length, lessons.length, completed);
+    addProgramHeading(host, title, modules.length, lessons.length, completed);
 
     view.classList.add('academy-course-page');
     document.body.dataset.academyLearningView = 'course';
