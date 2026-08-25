@@ -1,0 +1,1 @@
+create index if not exists academy_events_created_by_idx on public.academy_events(created_by) where created_by is not null;
