@@ -33,6 +33,7 @@ jobs:
           node --check yamilet-perez-site-v2-verde-github/academia/academy-library.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-calendar.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-certificates.js
+          node --check yamilet-perez-site-v2-verde-github/academia/verificar-certificado.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-profile.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-support.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-explore.js
@@ -52,6 +53,9 @@ jobs:
           test -s yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png
           test -s yamilet-perez-site-v2-verde-github/academia/academy-admin.js
           test -s yamilet-perez-site-v2-verde-github/academia/academy-admin.css
+          test -s yamilet-perez-site-v2-verde-github/academia/verificar.html
+          test -s yamilet-perez-site-v2-verde-github/academia/verificar-certificado.js
+          test -s yamilet-perez-site-v2-verde-github/academia/verificar-certificado.css
           grep -q 'academia-yamilet-architecture-step-13' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './app.js?v=56' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-navigation.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
@@ -62,8 +66,8 @@ jobs:
           grep -q './academy-library.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-calendar.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-calendar.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-certificates.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-certificates.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-certificates.js?v=2' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-certificates.css?v=2' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-profile.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-profile.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-support.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
@@ -78,6 +82,8 @@ jobs:
           grep -q './drive-media-v26.js?v=26' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './cloudflare-stream-v37.js?v=37' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './recovery-p17.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './verificar-certificado.js?v=1' yamilet-perez-site-v2-verde-github/academia/verificar.html
+          grep -q './verificar-certificado.css?v=1' yamilet-perez-site-v2-verde-github/academia/verificar.html
           grep -q "academy-public-config" yamilet-perez-site-v2-verde-github/academia/app.js
           grep -q "workspaceSlug = 'yamilet-mes'" yamilet-perez-site-v2-verde-github/academia/app.js
 
