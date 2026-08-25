@@ -10,6 +10,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -26,6 +27,9 @@ jobs:
           node --check yamilet-perez-site-v2-verde-github/academia/app.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-shell-v21.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-player-v37.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-progress-v58.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-pwa-v57.js
+          node --check yamilet-perez-site-v2-verde-github/academia/sw.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-navigation.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-dashboard.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-courses.js
@@ -53,6 +57,13 @@ jobs:
           test -s yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png
           test -s yamilet-perez-site-v2-verde-github/academia/academy-admin.js
           test -s yamilet-perez-site-v2-verde-github/academia/academy-admin.css
+          test -s yamilet-perez-site-v2-verde-github/academia/academy-progress-v58.js
+          test -s yamilet-perez-site-v2-verde-github/academia/academy-progress-v58.css
+          test -s yamilet-perez-site-v2-verde-github/academia/academy-pwa-v57.js
+          test -s yamilet-perez-site-v2-verde-github/academia/academy-pwa-v57.css
+          test -s yamilet-perez-site-v2-verde-github/academia/manifest.webmanifest
+          test -s yamilet-perez-site-v2-verde-github/academia/offline.html
+          test -s yamilet-perez-site-v2-verde-github/academia/sw.js
           test -s yamilet-perez-site-v2-verde-github/academia/verificar.html
           test -s yamilet-perez-site-v2-verde-github/academia/verificar-certificado.js
           test -s yamilet-perez-site-v2-verde-github/academia/verificar-certificado.css
@@ -77,6 +88,13 @@ jobs:
           grep -q './academy-admin.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-admin.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './academy-player-v37.js?v=38' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-progress-v58.js?v=58' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-progress-v58.css?v=58' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-pwa-v57.js?v=57' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './academy-pwa-v57.css?v=57' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q './manifest.webmanifest?v=57' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q 'academia-yamilet-pwa-' yamilet-perez-site-v2-verde-github/academia/sw.js
+          grep -q 'v58' yamilet-perez-site-v2-verde-github/academia/sw.js
           grep -q './auth-email-p18.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './private-media-p15.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
           grep -q './drive-media-v26.js?v=26' yamilet-perez-site-v2-verde-github/academia/index.html
@@ -108,3 +126,96 @@ jobs:
         run: |
           pattern='service[_-]?role|serviceRoleKey'
           ! grep -RniE "$pattern" yamilet-perez-site-v2-verde-github/academia --include='*.html' --include='*.js'
+
+  deploy-academia:
+    name: Deploy Academia to gh-pages
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: validate-core
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: academia-yamilet-production
+      cancel-in-progress: true
+    steps:
+      - name: Checkout validated main
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: source
+          fetch-depth: 1
+
+      - name: Checkout public gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: public
+          fetch-depth: 1
+
+      - name: Sync only Academia public files
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_dir='source/yamilet-perez-site-v2-verde-github/academia/'
+          public_dir='public/academia/'
+          test -d "$source_dir"
+          mkdir -p "$public_dir"
+          rsync -a --delete --exclude='.git/' "$source_dir" "$public_dir"
+
+          # Academia references this shared logo one level above /academia/.
+          install -D -m 0644 \
+            source/yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png \
+            public/assets/logo-yamilet.png
+
+      - name: Verify synchronized snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          diff -qr \
+            source/yamilet-perez-site-v2-verde-github/academia \
+            public/academia
+
+          test -s public/academia/index.html
+          test -s public/academia/sw.js
+          test -s public/academia/manifest.webmanifest
+          test -s public/assets/logo-yamilet.png
+
+          grep -q 'academia-yamilet-architecture-step-13' public/academia/index.html
+          grep -q './academy-progress-v58.js?v=58' public/academia/index.html
+          grep -q './academy-pwa-v57.js?v=57' public/academia/index.html
+          grep -q 'v58' public/academia/sw.js
+
+      - name: Guard deployment scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd public
+          unexpected="$(
+            git status --porcelain | awk '{print $2}' |
+            grep -Ev '^(academia/|assets/logo-yamilet\.png$)' || true
+          )"
+          if [ -n "$unexpected" ]; then
+            echo "Deployment attempted to change files outside the Academy scope:" >&2
+            echo "$unexpected" >&2
+            exit 1
+          fi
+
+      - name: Publish gh-pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd public
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A academia assets/logo-yamilet.png
+
+          if git diff --cached --quiet; then
+            echo "gh-pages already matches validated main; nothing to publish."
+            exit 0
+          fi
+
+          short_sha="${GITHUB_SHA::7}"
+          git commit \
+            -m "deploy(academia): sync ${short_sha}" \
+            -m "Validated source: ${GITHUB_SHA}"
+          git push origin HEAD:gh-pages
