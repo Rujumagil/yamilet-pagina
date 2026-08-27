@@ -10,7 +10,7 @@
   let loadingLessonId = null;
 
   const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[c]));
   const normalize = (value = '') => String(value).replace(/\s+/g, ' ').trim().toLocaleLowerCase('es');
 
