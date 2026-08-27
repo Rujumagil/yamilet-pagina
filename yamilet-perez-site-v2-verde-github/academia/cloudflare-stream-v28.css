@@ -53,6 +53,220 @@
   border:0;
 }
 
+.academy-video-uploader-v62{
+  display:grid;
+  gap:14px;
+}
+
+.academy-video-uploader-v62 .academy-video-current{
+  display:flex;
+  align-items:center;
+  min-height:44px;
+  padding:10px 13px;
+  border:1px solid rgba(18,63,53,.12);
+  border-radius:12px;
+  background:rgba(18,63,53,.055);
+  color:#244f46;
+  font-size:.9rem;
+  font-weight:650;
+}
+
+.academy-video-uploader-v62 input[type="file"]{
+  display:block;
+  width:100%;
+  margin-top:8px;
+  padding:10px;
+  border:1px dashed rgba(18,63,53,.3);
+  border-radius:12px;
+  background:#fff;
+}
+
+.academy-video-uploader-v62 .admin-status{
+  min-height:1.4em;
+  margin:0;
+}
+
+.academy-video-uploader-v62 .admin-status.ok{
+  color:#17633f;
+  font-weight:700;
+}
+
+.academy-video-manager-v62{
+  scroll-margin-top:24px;
+}
+
+.academy-video-manager-summary{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:12px;
+  align-items:center;
+  margin:16px 0 20px;
+  padding:16px 18px;
+  border:1px solid rgba(18,63,53,.12);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(18,63,53,.08),rgba(255,255,255,.72));
+}
+
+.academy-video-manager-summary strong{
+  font-size:1.55rem;
+  color:#123f35;
+}
+
+.academy-video-manager-summary span{
+  font-weight:750;
+  color:#244f46;
+}
+
+.academy-video-manager-summary small{
+  color:#687b76;
+}
+
+.academy-video-module-list{
+  display:grid;
+  gap:16px;
+}
+
+.academy-video-module{
+  overflow:hidden;
+  border:1px solid rgba(18,63,53,.12);
+  border-radius:18px;
+  background:rgba(255,255,255,.72);
+}
+
+.academy-video-module-head{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  align-items:center;
+  padding:15px 18px;
+  background:rgba(18,63,53,.065);
+  border-bottom:1px solid rgba(18,63,53,.1);
+}
+
+.academy-video-module-head strong{
+  color:#123f35;
+}
+
+.academy-video-module-head span{
+  padding:5px 9px;
+  border-radius:999px;
+  background:#fff;
+  color:#527069;
+  font-size:.78rem;
+  font-weight:750;
+}
+
+.academy-video-lessons{
+  display:grid;
+}
+
+.academy-video-row{
+  display:grid;
+  gap:10px;
+  padding:16px 18px;
+  border-bottom:1px solid rgba(18,63,53,.08);
+}
+
+.academy-video-row:last-child{
+  border-bottom:0;
+}
+
+.academy-video-row-main{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+}
+
+.academy-video-row-main>div{
+  min-width:0;
+  display:grid;
+  gap:4px;
+}
+
+.academy-video-row-main strong{
+  color:#163f36;
+  line-height:1.35;
+}
+
+.academy-video-row-main small{
+  color:#75847f;
+  overflow-wrap:anywhere;
+}
+
+.academy-video-state{
+  flex:0 0 auto;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#f3ece8;
+  color:#8a5947;
+  font-size:.76rem;
+  font-weight:800;
+}
+
+.academy-video-state.ready{
+  background:#e5f3eb;
+  color:#17633f;
+}
+
+.academy-video-row-actions{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  align-items:center;
+}
+
+.academy-video-row-actions input[type="file"]{
+  min-width:0;
+  width:100%;
+  padding:9px 10px;
+  border:1px dashed rgba(18,63,53,.24);
+  border-radius:11px;
+  background:#fff;
+}
+
+.academy-video-row-actions button{
+  min-height:42px;
+  padding:0 15px;
+  border:0;
+  border-radius:11px;
+  background:#123f35;
+  color:#fff;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.academy-video-row-actions button:disabled{
+  opacity:.55;
+  cursor:wait;
+}
+
+.academy-video-row .admin-status{
+  min-height:1.25em;
+  margin:0;
+  color:#875745;
+  font-size:.84rem;
+}
+
+.academy-video-row .admin-status.ok{
+  color:#17633f;
+  font-weight:700;
+}
+
+.academy-video-manager-loading{
+  display:grid;
+  gap:5px;
+  padding:20px;
+  border:1px solid rgba(18,63,53,.12);
+  border-radius:16px;
+  background:rgba(255,255,255,.7);
+}
+
+.academy-video-manager-loading strong{color:#123f35}
+.academy-video-manager-loading span{color:#71817c}
+.academy-video-manager-loading.error strong{color:#8a4436}
+
 @media (max-width:720px){
   .cloudflare-stream-admin{
     padding:14px;
@@ -60,5 +274,27 @@
   }
   .cloudflare-stream-shell{
     min-height:190px;
+  }
+  .academy-video-uploader-v62 .admin-actions.end{
+    justify-content:stretch;
+  }
+  .academy-video-uploader-v62 .admin-actions.end button{
+    width:100%;
+  }
+  .academy-video-manager-summary{
+    grid-template-columns:auto 1fr;
+  }
+  .academy-video-manager-summary small{
+    grid-column:1/-1;
+  }
+  .academy-video-module-head,
+  .academy-video-row-main{
+    align-items:flex-start;
+  }
+  .academy-video-row-actions{
+    grid-template-columns:1fr;
+  }
+  .academy-video-row-actions button{
+    width:100%;
   }
 }

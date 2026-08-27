@@ -186,7 +186,7 @@ async function streamUpload(request, env) {
   const directUpload = await env.STREAM.createDirectUpload({
     maxDurationSeconds,
     creator: `yamilet:${user.id}`,
-    requireSignedURLs: true,
+    requireSignedURLs: false,
     meta: {
       name: `YAMILET · ${courseTitle || 'Curso'} · ${lessonTitle || 'Lección'}`.slice(0, 240),
       project: 'yamilet',
@@ -209,7 +209,7 @@ async function streamUpload(request, env) {
     video_uid: directUpload.id,
     upload_url: directUpload.uploadURL,
     max_file_size_bytes: 200 * 1024 * 1024,
-    require_signed_urls: true,
+    require_signed_urls: false,
   });
 }
 
@@ -220,7 +220,7 @@ export default {
     try {
       if (url.pathname === '/api/stream-token') return await streamToken(request, env);
       if (url.pathname === '/api/stream-upload') return await streamUpload(request, env);
-      if (url.pathname === '/api/health') return json({ ok: true, service: 'academia-yamilet', version: 'v28' });
+      if (url.pathname === '/api/health') return json({ ok: true, service: 'academia-yamilet', version: 'v62' });
       return env.ASSETS.fetch(request);
     } catch (error) {
       console.error('Academia Yamilet Worker', error);

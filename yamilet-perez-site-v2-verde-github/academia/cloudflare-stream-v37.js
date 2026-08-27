@@ -16,11 +16,27 @@
 
   async function client() {
     if (sb) return sb;
-    const response = await fetch(CONFIG_ENDPOINT, { headers: { Accept: 'application/json' } });
+    const response = await fetch(CONFIG_ENDPOINT, { headers: { Accept: 'application/json' }, cache: 'no-store' });
     if (!response.ok) throw new Error('config_unavailable');
     const cfg = await response.json();
     sb = window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false } });
     return sb;
+  }
+
+  async function signedIframeUrl(lessonId) {
+    if (/\.github\.io$/i.test(location.hostname)) throw new Error('signed_stream_requires_worker');
+    const supabase = await client();
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token || '';
+    if (!token) throw new Error('session_required');
+
+    const response = await fetch(`/api/stream-token?lesson_id=${encodeURIComponent(lessonId)}`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
+      cache: 'no-store'
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || !payload.token) throw new Error(payload.error || `stream_token_http_${response.status}`);
+    return payload.iframe_url || `${STREAM_ORIGIN}/${encodeURIComponent(payload.token)}/iframe`;
   }
 
   function inferLessonIdFromVisibleTitle() {
@@ -52,7 +68,9 @@
 
     try {
       const supabase = await client();
-      const { data: lesson, error } = await supabase.from('lessons').select('id,stream_video_uid').eq('id', lessonId).maybeSingle();
+      const { data: lesson, error } = await supabase.from('lessons')
+        .select('id,stream_video_uid,stream_require_signed_urls')
+        .eq('id', lessonId).maybeSingle();
       clearPlayer();
       if (error || !lesson?.stream_video_uid) { activeLessonId = lessonId; return; }
       const uid = String(lesson.stream_video_uid || '').trim();
@@ -64,10 +82,14 @@
       host.querySelector('.video-shell:not([data-mes-video-pending])')?.remove();
       host.querySelector('.lesson-video')?.remove();
 
+      const iframeUrl = lesson.stream_require_signed_urls
+        ? await signedIframeUrl(lessonId)
+        : `${STREAM_ORIGIN}/${encodeURIComponent(uid)}/iframe`;
+
       const shell = document.createElement('div');
       shell.className = 'video-shell cloudflare-stream-shell';
       shell.dataset.cloudflareStreamPlayer = lessonId;
-      shell.innerHTML = `<iframe src="${escapeHtml(`${STREAM_ORIGIN}/${encodeURIComponent(uid)}/iframe`)}" title="Video de la lección" loading="eager" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+      shell.innerHTML = `<iframe src="${escapeHtml(iframeUrl)}" title="Video de la lección" loading="eager" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
       content.before(shell);
       activeLessonId = lessonId;
       document.dispatchEvent(new CustomEvent('yamilet:stream-ready', { detail: { lessonId } }));
@@ -78,7 +100,9 @@
         const note = document.createElement('p');
         note.className = 'muted';
         note.dataset.cloudflareStreamError = '1';
-        note.textContent = 'El video no pudo cargarse desde Cloudflare Stream.';
+        note.textContent = error?.message === 'signed_stream_requires_worker'
+          ? 'Este video protegido debe reproducirse desde la versión segura de Academia Yamilet.'
+          : 'El video no pudo cargarse desde Cloudflare Stream.';
         host.querySelector('.lesson-content')?.before(note);
       }
     } finally {
