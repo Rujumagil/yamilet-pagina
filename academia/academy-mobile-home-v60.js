@@ -4,6 +4,23 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   let timer = null;
 
+  function loadSecondaryV61() {
+    if (!document.querySelector('link[data-mobile-secondary-v61]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-mobile-secondary-v61.css?v=61';
+      link.dataset.mobileSecondaryV61 = '1';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-mobile-secondary-v61]')) {
+      const script = document.createElement('script');
+      script.src = './academy-mobile-secondary-v61.js?v=61';
+      script.defer = true;
+      script.dataset.mobileSecondaryV61 = '1';
+      document.body.appendChild(script);
+    }
+  }
+
   function staffRole() {
     const text = $('[data-user-role]')?.textContent?.toLowerCase() || '';
     return ['owner', 'admin', 'instructor'].some(role => text.includes(role));
@@ -61,6 +78,7 @@
   window.addEventListener('resize', () => schedule(100));
   window.addEventListener('pageshow', () => schedule(160));
 
+  loadSecondaryV61();
   let attempts = 0;
   const interval = window.setInterval(() => {
     attempts += 1;
