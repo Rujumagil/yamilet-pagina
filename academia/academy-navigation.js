@@ -84,3 +84,86 @@
     organizeNavigation();
   });
 })();
+
+(() => {
+  'use strict';
+
+  const EXCLUDED_VIDEO_LESSON = 'evaluacion y cierre de la semana 1';
+  let exclusionScheduled = false;
+
+  const normalizeLessonTitle = (value = '') => String(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLocaleLowerCase('es');
+
+  const isExcludedVideoLesson = value => normalizeLessonTitle(value) === EXCLUDED_VIDEO_LESSON;
+
+  function removeExcludedAdminRow() {
+    let changed = false;
+    document.querySelectorAll('[data-video-row]').forEach(row => {
+      const title = row.querySelector('.academy-video-row-main strong')?.textContent || '';
+      if (isExcludedVideoLesson(title)) {
+        row.remove();
+        changed = true;
+      }
+    });
+
+    if (!changed) return;
+
+    document.querySelectorAll('.academy-video-module').forEach(module => {
+      const rows = [...module.querySelectorAll('[data-video-row]')];
+      const ready = rows.filter(row => row.querySelector('[data-video-state]')?.classList.contains('ready')).length;
+      const counter = module.querySelector('.academy-video-module-head span');
+      if (counter) counter.textContent = `${ready}/${rows.length} listos`;
+    });
+
+    const manager = document.querySelector('[data-video-manager-v62]');
+    if (!manager) return;
+    const rows = [...manager.querySelectorAll('[data-video-row]')];
+    const ready = rows.filter(row => row.querySelector('[data-video-state]')?.classList.contains('ready')).length;
+    const summary = manager.querySelector('.academy-video-manager-summary strong');
+    if (summary) summary.textContent = `${ready}/${rows.length}`;
+    const intro = manager.querySelector('.academy-admin-section-head p');
+    if (intro) intro.textContent = `${ready} de ${rows.length} lecciones requieren y tienen video. Las evaluaciones sin video no se incluyen en este control.`;
+  }
+
+  function removeExcludedEditorUploader() {
+    const form = document.querySelector('[data-lesson-form]');
+    if (!form) return;
+    const title = form.elements?.title?.value || form.querySelector('input[name="title"]')?.value || '';
+    if (isExcludedVideoLesson(title)) form.querySelector('.academy-video-uploader-v62')?.remove();
+  }
+
+  function removeExcludedStudentVideoArea() {
+    const view = document.querySelector('[data-lesson-view]:not(.hidden)');
+    if (!view) return;
+    const title = view.querySelector('.lesson-title h2')?.textContent || '';
+    if (!isExcludedVideoLesson(title)) return;
+    view.querySelectorAll('.video-shell, .lesson-video, [data-mes-video-pending], [data-cloudflare-stream-player], [data-cloudflare-stream-error]').forEach(el => el.remove());
+  }
+
+  function applyVideoExclusion() {
+    exclusionScheduled = false;
+    removeExcludedAdminRow();
+    removeExcludedEditorUploader();
+    removeExcludedStudentVideoArea();
+  }
+
+  function scheduleVideoExclusion() {
+    if (exclusionScheduled) return;
+    exclusionScheduled = true;
+    requestAnimationFrame(applyVideoExclusion);
+  }
+
+  function bootVideoExclusion() {
+    const observer = new MutationObserver(scheduleVideoExclusion);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    document.addEventListener('click', () => window.setTimeout(scheduleVideoExclusion, 50), true);
+    scheduleVideoExclusion();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootVideoExclusion, { once: true });
+  else bootVideoExclusion();
+})();
