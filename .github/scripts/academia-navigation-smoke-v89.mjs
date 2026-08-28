@@ -40,8 +40,8 @@ for (const section of adminSections) {
 }
 
 assert(admin.includes("id === 'operations' && currentRole === 'instructor'"), 'Instructor operations navigation guard is missing');
-assert(admin.includes("section === 'operations' && data.role === 'instructor'"), 'Instructor direct operations route guard is missing');
-assert(admin.includes("location.hash = '#admin'"), 'Restricted admin route redirect is missing');
+assert(admin.includes("section === 'operations' && ctx.role === 'instructor'"), 'Instructor direct operations route guard is missing');
+assert(admin.includes("go('overview')"), 'Restricted admin route redirect is missing');
 
 assert(index.includes('name="academy-build" content="v89-hardening"'), 'v89 build marker is missing');
 assert(!index.includes('academy-sales-admin.js'), 'Retired sales runtime is still loaded');
