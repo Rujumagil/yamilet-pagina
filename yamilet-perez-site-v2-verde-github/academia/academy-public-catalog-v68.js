@@ -37,7 +37,7 @@
         <h3>${esc(course.title)}</h3>
         <p>${esc(course.subtitle || course.description || 'Programa de Academia Yamilet.')}</p>
         <div class="catalog-card-facts">${course.duration_label ? `<span>${esc(course.duration_label)}</span>` : ''}${price ? `<span>${esc(price)}</span>` : ''}</div>
-        <div class="catalog-card-actions">${state === 'upcoming' ? '<button type="button" disabled>Disponible próximamente</button>' : `<button class="primary" type="button" data-open-public-course="${esc(course.id)}">Ver programa</button><a class="secondary" href="./">Ya estoy inscrita</a>`}</div>
+        <div class="catalog-card-actions">${state === 'upcoming' ? '<button type="button" disabled>Disponible próximamente</button>' : `<button class="primary" type="button" data-open-public-course="${esc(course.id)}">Ver programa</button><a class="secondary" href="./">Ya tengo acceso</a>`}</div>
       </div>
     </article>`;
   }
@@ -70,7 +70,7 @@
         return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
       } catch { return ''; }
     })();
-    dialogContent.innerHTML = `${cover ? `<div class="catalog-dialog-media"><img src="${esc(cover)}" alt="Portada de ${esc(course.title)}"></div>` : ''}<div class="catalog-dialog-copy"><span>${esc(course.category || 'Academia Yamilet')}</span><h2>${esc(course.title)}</h2><p>${esc(course.description || course.subtitle || 'Programa de Academia Yamilet.')}</p><div class="catalog-dialog-details">${course.instructor_name ? `<span>Imparte: ${esc(course.instructor_name)}</span>` : ''}${course.duration_label ? `<span>${esc(course.duration_label)}</span>` : ''}${price ? `<span>${esc(price)}</span>` : ''}</div><div class="catalog-dialog-actions">${paymentUrl ? `<a class="primary" href="${esc(paymentUrl)}" target="_blank" rel="noopener">Inscribirme</a>` : '<a class="primary" href="../es/">Solicitar información</a>'}<a class="secondary" href="./">Ya estoy inscrita</a></div></div>`;
+    dialogContent.innerHTML = `${cover ? `<div class="catalog-dialog-media"><img src="${esc(cover)}" alt="Portada de ${esc(course.title)}"></div>` : ''}<div class="catalog-dialog-copy"><span>${esc(course.category || 'Academia Yamilet')}</span><h2>${esc(course.title)}</h2><p>${esc(course.description || course.subtitle || 'Programa de Academia Yamilet.')}</p><div class="catalog-dialog-details">${course.instructor_name ? `<span>Imparte: ${esc(course.instructor_name)}</span>` : ''}${course.duration_label ? `<span>${esc(course.duration_label)}</span>` : ''}${price ? `<span>${esc(price)}</span>` : ''}</div><div class="catalog-dialog-actions">${paymentUrl ? `<a class="primary" href="${esc(paymentUrl)}" target="_blank" rel="noopener">Inscribirme</a>` : '<a class="primary" href="../es/">Solicitar información</a>'}<a class="secondary" href="./">Ya tengo acceso</a></div></div>`;
     dialog.showModal();
   }
 
