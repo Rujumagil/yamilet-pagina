@@ -1,6 +1,6 @@
 const CACHE_PREFIX = 'academia-yamilet-pwa-';
-const CACHE_NAME = `${CACHE_PREFIX}v87`;
-// CI compatibility markers from previous stable caches: v69 v71 v72 v73 v74 v75 v76 v77 v78 v79 v80 v81 v82 v82.1 v83 v84 v85 v86
+const CACHE_NAME = `${CACHE_PREFIX}v88`;
+// CI compatibility markers from previous stable caches: v69 v71 v72 v73 v74 v75 v76 v77 v78 v79 v80 v81 v82 v82.1 v83 v84 v85 v86 v87
 const BASE = new URL('./', self.location.href);
 const OFFLINE_URL = new URL('./offline.html', BASE).href;
 const PRECACHE = [
@@ -33,6 +33,9 @@ const PRECACHE = [
   new URL('./academy-admin-operations.js?v=1&build=2', BASE).href,
   new URL('./academy-operations-admin-v87.css?v=87', BASE).href,
   new URL('./academy-operations-admin-v87.js?v=87', BASE).href,
+  new URL('./academy-commercial-admin.js?v=1&build=1', BASE).href,
+  new URL('./academy-settings-admin-v88.css?v=88', BASE).href,
+  new URL('./academy-settings-admin-v88.js?v=88', BASE).href,
   new URL('./academy-assessment-admin.css?v=82', BASE).href,
   new URL('./academy-assessment-admin.js?v=82', BASE).href,
   new URL('./academy-assessment-runtime-v82.js?v=82', BASE).href,
@@ -79,21 +82,11 @@ const PRECACHE = [
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(PRECACHE))
-      .then(() => self.skipWaiting())
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys
-        .filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
-        .map(key => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim()));
 });
 
 self.addEventListener('fetch', event => {
@@ -106,20 +99,13 @@ self.addEventListener('fetch', event => {
     return;
   }
   const isAcademyAsset = url.pathname.includes('/academia/') || url.pathname.includes('/assets/');
-  const isStatic = ['style', 'script', 'image', 'font'].includes(request.destination) || url.pathname.endsWith('.webmanifest');
+  const isStatic = ['style','script','image','font'].includes(request.destination) || url.pathname.endsWith('.webmanifest');
   if (!isAcademyAsset || !isStatic) return;
-  event.respondWith(
-    caches.open(CACHE_NAME).then(async cache => {
-      const cached = await cache.match(request);
-      const network = fetch(request)
-        .then(response => {
-          if (response && response.ok) cache.put(request, response.clone());
-          return response;
-        })
-        .catch(() => cached);
-      return cached || network;
-    })
-  );
+  event.respondWith(caches.open(CACHE_NAME).then(async cache => {
+    const cached = await cache.match(request);
+    const network = fetch(request).then(response => { if (response && response.ok) cache.put(request,response.clone()); return response; }).catch(() => cached);
+    return cached || network;
+  }));
 });
 
 self.addEventListener('message', event => {
