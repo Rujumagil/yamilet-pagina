@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = '74.0.0';
+  const VERSION = '75.0.0';
   const TOP_LEVEL = new Set(['home','courses','resources','agenda','certificates']);
   let scheduled = false;
 
@@ -29,6 +29,7 @@
     ensureStylesheet('link[data-academy-v72]', './academy-v72-refinement.css?v=72', 'academyV72');
     ensureStylesheet('link[data-academy-courses-v73]', './academy-courses-refinement-v73.css?v=73', 'academyCoursesV73');
     ensureStylesheet('link[data-academy-library-v74]', './academy-library-refinement-v74.css?v=74', 'academyLibraryV74');
+    ensureStylesheet('link[data-academy-agenda-v75]', './academy-agenda-refinement-v75.css?v=75', 'academyAgendaV75');
   }
 
   function enhanceBrand() {
@@ -202,6 +203,71 @@
     if (securityText) securityText.textContent = 'Tus archivos se abren únicamente con los permisos de tu cuenta de Academia Yamilet.';
   }
 
+  function enhanceAgendaPage() {
+    const page = document.querySelector('.v71-agenda-page');
+    if (!page) return;
+
+    const rows = Array.from(page.querySelectorAll('.v71-event-row'));
+    const nextCard = page.querySelector('.v71-next-event');
+    const nextTitle = nextCard?.querySelector('h2')?.textContent?.trim().toLowerCase() || '';
+    const signature = `${rows.length}:${nextTitle}:${rows.map(row => row.querySelector('h3')?.textContent?.trim() || '').join('|')}`;
+    if (page.dataset.v75Enhanced === signature) return;
+    page.dataset.v75Enhanced = signature;
+    page.dataset.v75EventCount = String(rows.length);
+
+    const header = page.querySelector(':scope > .v71-page-heading');
+    const eyebrow = header?.querySelector('.v71-eyebrow');
+    const description = header?.querySelector('p');
+    if (eyebrow) eyebrow.textContent = 'Tu agenda';
+    if (description) description.textContent = 'Consulta tus próximas sesiones, encuentros y actividades de Academia Yamilet desde un solo lugar.';
+
+    const monthHead = page.querySelector('.v71-month-head strong');
+    const monthText = monthHead?.textContent?.trim().toLowerCase() || '';
+    const now = new Date();
+    const currentMonth = new Intl.DateTimeFormat('es-MX', { month: 'long' }).format(now).toLowerCase();
+    const currentYear = String(now.getFullYear());
+    if (monthText.includes(currentMonth) && monthText.includes(currentYear)) {
+      Array.from(page.querySelectorAll('.v71-month-grid > span')).forEach(cell => {
+        delete cell.dataset.v75Today;
+        if (cell.textContent?.trim() === String(now.getDate())) cell.dataset.v75Today = 'true';
+      });
+    }
+
+    rows.forEach(row => delete row.dataset.v75NextDuplicate);
+    if (nextTitle) {
+      const duplicate = rows.find(row => (row.querySelector('h3')?.textContent?.trim().toLowerCase() || '') === nextTitle);
+      if (duplicate) duplicate.dataset.v75NextDuplicate = 'true';
+    }
+
+    const visibleRows = rows.filter(row => row.dataset.v75NextDuplicate !== 'true');
+    const originalHeading = page.querySelector(':scope > .v71-section-heading');
+    if (originalHeading) originalHeading.dataset.v75OriginalEventsHeading = 'true';
+
+    let heading = page.querySelector(':scope > .v75-events-heading');
+    if (!heading) {
+      heading = document.createElement('div');
+      heading.className = 'v75-events-heading';
+      const list = page.querySelector(':scope > .v71-event-list');
+      list?.insertAdjacentElement('beforebegin', heading);
+    }
+    if (heading) {
+      const countLabel = visibleRows.length === 1 ? '1 encuentro adicional' : `${visibleRows.length} encuentros adicionales`;
+      heading.innerHTML = `<div><span>Próximas actividades</span><h2>${nextTitle ? 'Siguientes encuentros' : 'Eventos programados'}</h2></div><small>${nextTitle ? countLabel : `${rows.length} ${rows.length === 1 ? 'evento próximo' : 'eventos próximos'}`}</small>`;
+    }
+
+    const empty = page.querySelector('.v71-event-list .v71-empty');
+    if (empty && !empty.querySelector('.v75-empty-agenda-action')) {
+      empty.insertAdjacentHTML('beforeend', '<a class="v75-empty-agenda-action" href="#courses">Volver a mis cursos</a>');
+    }
+
+    page.querySelectorAll('.v71-event-row-actions button').forEach(button => {
+      if (/agregar/i.test(button.textContent || '')) button.textContent = 'Agregar al calendario';
+    });
+    page.querySelectorAll('.v71-event-row-actions a').forEach(link => {
+      if (/entrar/i.test(link.textContent || '')) link.textContent = 'Entrar a sesión';
+    });
+  }
+
   function enhanceTopbar() {
     const topbar = document.querySelector('.academy-topbar');
     if (!topbar) return;
@@ -234,6 +300,7 @@
     enhanceCourseCards();
     enhanceCoursesPage();
     enhanceResourcesPage();
+    enhanceAgendaPage();
     cleanRouteLayers();
   }
 
@@ -256,6 +323,7 @@
     window.ACADEMIA_YAMILET_REFINEMENT_V72 = Object.freeze({ version: VERSION, refresh: schedule });
     window.ACADEMIA_YAMILET_COURSES_V73 = Object.freeze({ version: VERSION, refresh: schedule });
     window.ACADEMIA_YAMILET_LIBRARY_V74 = Object.freeze({ version: VERSION, refresh: schedule });
+    window.ACADEMIA_YAMILET_AGENDA_V75 = Object.freeze({ version: VERSION, refresh: schedule });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
