@@ -235,6 +235,12 @@
     renderTimer = setTimeout(() => render(force), delay);
   }
 
+  function routeBurst() {
+    scheduleRender(90);
+    setTimeout(() => render(), 260);
+    setTimeout(() => render(), 520);
+  }
+
   function neutralizeText(value = '') {
     return String(value)
       .replace(/\bAlumnas\b/g, 'Estudiantes')
@@ -286,11 +292,11 @@
     });
     observer.observe(document.body, {childList:true,subtree:true});
     document.addEventListener('click', event => {
-      if (event.target.closest('[data-shell-route="profile"],[data-avatar-button],a[href="#profile"]')) scheduleRender(100);
+      if (event.target.closest('[data-shell-route="profile"],[data-avatar-button],a[href="#profile"]')) routeBurst();
     }, true);
-    window.addEventListener('hashchange', () => scheduleRender(90));
-    window.addEventListener('popstate', () => scheduleRender(90));
-    window.addEventListener('pageshow', () => { scheduleNeutralize(); scheduleRender(180); });
+    window.addEventListener('hashchange', routeBurst);
+    window.addEventListener('popstate', routeBurst);
+    window.addEventListener('pageshow', () => { scheduleNeutralize(); routeBurst(); });
     [260,700,1400,2400].forEach(delay => setTimeout(() => render(), delay));
   }
 
