@@ -135,7 +135,6 @@
     }
     const course = selectedCourse();
     const courseLessons = lessons.length;
-    const moduleOptions = modules.map(m => `<option value="${m.id}">${escapeHtml(m.title)}</option>`).join('');
     const resourceLessonOptions = lessons.map(l => `<option value="${l.id}">${escapeHtml(modules.find(m => m.id===l.module_id)?.title || 'Módulo')} · ${escapeHtml(l.title)}</option>`).join('');
 
     root.innerHTML = `
@@ -157,14 +156,14 @@
           <div class="kicker">Curso</div><h3>Información de ${escapeHtml(course.title)}</h3>
           <form class="admin-form two" data-course-admin-form>
             <label>Título<input name="title" required maxlength="160" value="${escapeHtml(course.title)}"></label>
-            <label>Instructora<input name="instructor_name" maxlength="120" value="${escapeHtml(course.instructor_name || '')}"></label>
+            <label>Quién imparte<input name="instructor_name" maxlength="120" value="${escapeHtml(course.instructor_name || '')}"></label>
             <label class="admin-span-2">Subtítulo<input name="subtitle" maxlength="220" value="${escapeHtml(course.subtitle || '')}"></label>
             <label class="admin-span-2">Descripción<textarea name="description" maxlength="3000">${escapeHtml(course.description || '')}</textarea></label>
             <label>Duración visible<input name="duration_label" maxlength="80" placeholder="Ej. 8 semanas" value="${escapeHtml(course.duration_label || '')}"></label>
             <label class="check-line" style="align-content:end"><span><input type="checkbox" name="featured" ${course.featured?'checked':''}> Curso destacado</span></label>
             <div class="admin-span-2 cover-admin">
               ${course.cover_url ? `<img src="${escapeHtml(course.cover_url)}" alt="Portada actual">` : '<div class="empty">Sin portada</div>'}
-              <label>Nueva portada (JPG/PNG/WebP, máx. 5 MB)<input type="file" name="cover_file" accept="image/jpeg,image/png,image/webp"><span class="upload-note">La portada se guarda en el bucket público `course-media` bajo el curso actual.</span></label>
+              <label>Nueva portada (JPG/PNG/WebP, máx. 5 MB)<input type="file" name="cover_file" accept="image/jpeg,image/png,image/webp"><span class="upload-note">La portada se guarda en el bucket público course-media bajo el curso actual.</span></label>
             </div>
             <div class="admin-actions end admin-span-2"><button class="btn primary" type="submit">Guardar curso</button></div>
           </form>
@@ -197,7 +196,7 @@
           <label class="admin-span-2">Descripción<textarea name="description" maxlength="1200"></textarea></label>
           <label>Vincular a lección<select name="lesson_id"><option value="">Recurso general del curso</option>${resourceLessonOptions}</select></label>
           <label>Enlace externo<input name="external_url" type="url" placeholder="https://..."></label>
-          <label class="admin-span-2">Archivo<input name="resource_file" type="file" accept="application/pdf,audio/*,video/mp4,video/webm,image/jpeg,image/png,image/webp,.zip,.epub"><span class="upload-note">Los archivos privados se guardan en `digital-products`. Puedes usar archivo o enlace externo.</span></label>
+          <label class="admin-span-2">Archivo<input name="resource_file" type="file" accept="application/pdf,audio/*,video/mp4,video/webm,image/jpeg,image/png,image/webp,.zip,.epub"><span class="upload-note">Los archivos privados se guardan en digital-products. Puedes usar archivo o enlace externo.</span></label>
           <div class="admin-actions end admin-span-2"><button class="btn primary" type="submit">Agregar recurso</button></div>
         </form>
         <div class="resource-admin-list">${renderResources()}</div>
@@ -236,7 +235,7 @@
         <label class="admin-span-2">Transcripción<textarea name="transcript_text">${escapeHtml(lesson?.transcript_text || '')}</textarea></label>
         <label>Subtítulos / captions URL<input name="captions_url" type="url" value="${escapeHtml(lesson?.captions_url || '')}"></label>
         <label>Notas de accesibilidad<input name="accessibility_notes" value="${escapeHtml(lesson?.accessibility_notes || '')}"></label>
-        <label class="admin-span-2">Archivo de la lección<input name="lesson_media" type="file" accept="video/mp4,video/webm,video/quicktime,audio/*,application/pdf,image/jpeg,image/png,image/webp"><span class="upload-note">Video/audio/PDF privado, máximo 250 MB. Se entrega al alumno mediante URL firmada temporal.</span>${lesson?.media_filename?`<span class="upload-note">Actual: ${escapeHtml(lesson.media_filename)}</span>`:''}</label>
+        <label class="admin-span-2">Archivo de la lección<input name="lesson_media" type="file" accept="video/mp4,video/webm,video/quicktime,audio/*,application/pdf,image/jpeg,image/png,image/webp"><span class="upload-note">Video/audio/PDF privado, máximo 250 MB. Se entrega al estudiante mediante URL firmada temporal.</span>${lesson?.media_filename?`<span class="upload-note">Actual: ${escapeHtml(lesson.media_filename)}</span>`:''}</label>
         <label class="admin-span-2"><span><input type="checkbox" name="is_preview" ${lesson?.is_preview?'checked':''}> Permitir vista previa cuando aplique</span></label>
         <div class="admin-actions end admin-span-2">${lesson?.media_path?'<button class="mini-btn" type="button" data-preview-media>Previsualizar archivo</button>':''}<button class="btn primary" type="submit">${lesson?'Guardar cambios':'Crear lección'}</button></div>
       </form>`;
@@ -487,7 +486,9 @@
     window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
   }
 
-  window.addEventListener('load', () => {
+  if (document.readyState === 'loading') {
+    window.addEventListener('load', bootstrap, { once:true });
+  } else {
     bootstrap();
-  }, { once:true });
+  }
 })();
