@@ -18,14 +18,22 @@
     return !!dashboard && !dashboard.classList.contains('hidden') && !!$('[data-content-admin-root]');
   }
 
+  function remount() {
+    if (!isContentRoute()) return;
+    [40,180,520,980].forEach(delay => setTimeout(() => {
+      window.ACADEMIA_YAMILET_ADMIN?.render?.();
+      window.ACADEMIA_YAMILET_CONTENT_CMS?.enhance?.();
+    }, delay));
+  }
+
   function loadLegacy() {
     if (loaded) return Promise.resolve(true);
     if (loading) return loading;
     loading = new Promise(resolve => {
       const existing = $('script[data-content-admin-runtime-v80]');
       if (existing) {
-        if (existing.dataset.loaded === 'true') { loaded = true; resolve(true); return; }
-        existing.addEventListener('load', () => { loaded = true; existing.dataset.loaded = 'true'; resolve(true); }, {once:true});
+        if (existing.dataset.loaded === 'true') { loaded = true; remount(); resolve(true); return; }
+        existing.addEventListener('load', () => { loaded = true; existing.dataset.loaded = 'true'; remount(); resolve(true); }, {once:true});
         existing.addEventListener('error', () => resolve(false), {once:true});
         return;
       }
@@ -38,8 +46,8 @@
       script.addEventListener('load', () => {
         loaded = true;
         script.dataset.loaded = 'true';
+        remount();
         resolve(true);
-        [350,850,1500].forEach(delay => setTimeout(() => window.ACADEMIA_YAMILET_CONTENT_CMS?.enhance?.(), delay));
       }, {once:true});
       script.addEventListener('error', () => {
         const rootNode = $('[data-content-admin-root]');
