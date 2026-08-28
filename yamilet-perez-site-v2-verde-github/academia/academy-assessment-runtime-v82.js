@@ -1,8 +1,10 @@
 (() => {
   'use strict';
-  const VERSION = '82.0.1';
+  const VERSION = '83.0.0';
   let loading = null;
   let loaded = false;
+  let reviewLoading = null;
+  let reviewLoaded = false;
   let timer = null;
   const $ = (selector, root = document) => root.querySelector(selector);
 
@@ -22,6 +24,33 @@
       window.ACADEMIA_YAMILET_ADMIN?.render?.();
       window.ACADEMIA_YAMILET_ASSESSMENT_ADMIN?.render?.();
     },delay));
+  }
+
+  function loadReviewIntegration(){
+    if(reviewLoaded){ window.ACADEMIA_YAMILET_ASSESSMENT_REVIEW_V83?.refresh?.(); return Promise.resolve(true); }
+    if(reviewLoading) return reviewLoading;
+    reviewLoading = new Promise(resolve => {
+      const existing = $('script[data-assessment-review-runtime-v83]');
+      if(existing){
+        if(existing.dataset.loaded === 'true'){ reviewLoaded = true; resolve(true); return; }
+        existing.addEventListener('load',() => { reviewLoaded = true; existing.dataset.loaded = 'true'; resolve(true); },{once:true});
+        existing.addEventListener('error',() => resolve(false),{once:true});
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = './academy-assessment-review-v83.js?v=83';
+      script.async = true;
+      script.dataset.assessmentReviewRuntimeV83 = 'true';
+      script.addEventListener('load',() => {
+        reviewLoaded = true;
+        script.dataset.loaded = 'true';
+        window.ACADEMIA_YAMILET_ASSESSMENT_REVIEW_V83?.refresh?.();
+        resolve(true);
+      },{once:true});
+      script.addEventListener('error',() => resolve(false),{once:true});
+      document.body.appendChild(script);
+    }).finally(() => { reviewLoading = null; });
+    return reviewLoading;
   }
 
   function loadBuilder(){
@@ -61,7 +90,8 @@
     clearTimeout(timer);
     timer = setTimeout(async () => {
       if(!isRoute() || !dashboardReady()) return;
-      await loadBuilder();
+      const ready = await loadBuilder();
+      if(ready) await loadReviewIntegration();
     },delay);
   }
 
@@ -86,7 +116,7 @@
     window.addEventListener('popstate',() => schedule(100));
     window.addEventListener('pageshow',() => schedule(180));
     const observer = new MutationObserver(() => {
-      if(isRoute() && dashboardReady() && !loaded) schedule(80);
+      if(isRoute() && dashboardReady() && (!loaded || !reviewLoaded)) schedule(80);
     });
     observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
     [300,800,1500].forEach(delay => setTimeout(() => schedule(0),delay));
@@ -95,5 +125,5 @@
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start,{once:true});
   else start();
 
-  window.ACADEMIA_YAMILET_ASSESSMENT_RUNTIME = {version:VERSION,load:loadBuilder};
+  window.ACADEMIA_YAMILET_ASSESSMENT_RUNTIME = {version:VERSION,load:async () => { const ready = await loadBuilder(); if(ready) await loadReviewIntegration(); return ready; }};
 })();
