@@ -52,7 +52,7 @@
             <div>
               <span class="v60-staff-kicker">Vista de staff</span>
               <h3>Revisar Método MES®</h3>
-              <p>Abre el programa completo para revisar módulos, lecciones, videos, evaluaciones y progreso sin alterar el recorrido de las alumnas.</p>
+              <p>Abre el programa completo para revisar módulos, lecciones, videos, evaluaciones y progreso sin alterar el recorrido de estudiantes.</p>
               <div class="v60-staff-meta"><span>4 módulos</span><span>24 lecciones</span><span>Acceso completo</span></div>
             </div>
             <button class="btn primary" type="button" data-v60-open-course>Revisar curso</button>

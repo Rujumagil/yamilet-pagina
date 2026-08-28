@@ -1,12 +1,13 @@
 (() => {
   'use strict';
 
-  const VERSION = '79.0.0';
+  const VERSION = '89.0.0';
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const esc = (value = '') => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const SECTIONS = new Set(['overview','courses','content','students','agenda','evaluations','certificates','support','operations','settings']);
+  const DYNAMIC_SECTIONS = new Set(['agenda','evaluations','certificates','support','operations','settings']);
   const LABELS = {
     overview:'Resumen', courses:'Cursos', content:'Contenido', students:'Estudiantes', agenda:'Agenda',
     evaluations:'Evaluaciones', certificates:'Certificados', support:'Soporte', operations:'Operación', settings:'Configuración'
@@ -16,6 +17,7 @@
   let renderTimer = null;
   let lastRoute = '';
   let observer = null;
+  let currentRole = null;
 
   function routeParts() {
     return String(location.hash || '#home').replace(/^#/, '').split('/').filter(Boolean).map(part => decodeURIComponent(part));
@@ -63,13 +65,14 @@
     const {data:membership} = await sb.from('workspace_members').select('role,status').eq('workspace_id',workspace.id).eq('user_id',user.id).maybeSingle();
     const role = membership?.status === 'active' ? membership.role : profile?.role;
     if (!['owner','admin','instructor'].includes(role) && profile?.role !== 'admin') throw new Error('forbidden');
+    currentRole = role;
     return {sb,config,user,profile:profile||{},workspace,role};
   }
 
   async function safe(query) {
     const result = await query;
     if (result.error) {
-      console.warn('Academia Yamilet admin v79 query', result.error);
+      console.warn('Academia Yamilet admin v89 query', result.error);
       return [];
     }
     return result.data || [];
@@ -85,17 +88,16 @@
       safe(sb.from('academy_support_tickets').select('id,user_id,course_id,subject,category,priority,status,created_at,last_message_at').eq('workspace_id',workspace.id).order('last_message_at',{ascending:false}).limit(80))
     ]);
     const courseIds = courses.map(course => course.id);
-    let enrollments = [], certificates = [], assessments = [];
+    let enrollments = [], certificates = [];
     if (courseIds.length) {
-      [enrollments,certificates,assessments] = await Promise.all([
+      [enrollments,certificates] = await Promise.all([
         safe(sb.from('enrollments').select('user_id,course_id,status,enrolled_at,completed_at').in('course_id',courseIds).order('enrolled_at',{ascending:false})),
-        safe(sb.from('certificates').select('id,user_id,course_id,recipient_name,issued_at,verification_code,revoked_at').in('course_id',courseIds).order('issued_at',{ascending:false}).limit(80)),
-        safe(sb.from('assessments').select('id,course_id,title,status,assessment_type,updated_at').in('course_id',courseIds).order('position',{ascending:true}))
+        safe(sb.from('certificates').select('id,user_id,course_id,recipient_name,issued_at,verification_code,revoked_at').in('course_id',courseIds).order('issued_at',{ascending:false}).limit(80))
       ]);
     }
     const userIds = [...new Set([...enrollments.map(item=>item.user_id),...tickets.map(item=>item.user_id),...certificates.map(item=>item.user_id)].filter(Boolean))];
     const profiles = userIds.length ? await safe(sb.from('profiles').select('id,full_name,email,status').in('id',userIds)) : [];
-    dataCache = {...ctx,courses,events,tickets,enrollments,certificates:certificates.filter(item=>!item.revoked_at),assessments,profiles};
+    dataCache = {...ctx,courses,events,tickets,enrollments,certificates:certificates.filter(item=>!item.revoked_at),profiles};
     return dataCache;
   }
 
@@ -113,12 +115,6 @@
     try {
       return new Intl.DateTimeFormat('es-MX', time ? {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'} : {day:'2-digit',month:'short',year:'numeric'}).format(new Date(value));
     } catch { return 'Sin fecha'; }
-  }
-
-  function roleLabel(role) {
-    if (role === 'owner') return 'Propietario';
-    if (role === 'admin') return 'Administrador';
-    return 'Instructor';
   }
 
   function page() {
@@ -141,16 +137,21 @@
 
   function updateChrome(section) {
     document.body.dataset.adminV79Section = section;
+    document.body.dataset.academyAdminRole = currentRole || '';
     const breadcrumb = $('[data-shell-breadcrumb]');
     if (breadcrumb) breadcrumb.textContent = section === 'overview' ? 'Administración' : `Administración · ${LABELS[section]}`;
     document.title = `${section === 'overview' ? 'Administración' : LABELS[section]} | Academia Yamilet`;
   }
 
-  function nav(section) {
+  function allowedNavItems() {
     const items = [
       ['overview','⌂'],['courses','▤'],['content','✎'],['students','◎'],['agenda','◷'],['evaluations','✓'],['certificates','◇'],['support','?'],['operations','⌁'],['settings','⚙']
     ];
-    return `<nav class="admin-v79-nav" aria-label="Módulos administrativos">${items.map(([id,icon]) => `<button type="button" class="${id===section?'active':''}" data-admin-v79-go="${id}"><span>${icon}</span><b>${LABELS[id]}</b></button>`).join('')}</nav>`;
+    return items.filter(([id]) => !(id === 'operations' && currentRole === 'instructor'));
+  }
+
+  function nav(section) {
+    return `<nav class="admin-v79-nav" aria-label="Módulos administrativos">${allowedNavItems().map(([id,icon]) => `<button type="button" class="${id===section?'active':''}" data-admin-v79-go="${id}"><span>${icon}</span><b>${LABELS[id]}</b></button>`).join('')}</nav>`;
   }
 
   function shell(section, body, options = {}) {
@@ -181,7 +182,6 @@
     const now = Date.now();
     const upcoming = data.events.filter(item=>item.status==='published' && item.starts_at && new Date(item.starts_at).getTime()>=now);
     const published = data.courses.filter(item=>item.status==='published').length;
-    const certificates = data.certificates.length;
     const recent = activeEnrollments.slice(0,5);
     const nextEvents = upcoming.slice(0,4);
     const tickets = data.tickets.filter(item=>!['resolved','closed'].includes(item.status)).slice(0,4);
@@ -190,10 +190,10 @@
         ${statCard(uniqueStudents,'Estudiantes','con acceso activo')}
         ${statCard(upcoming.length,'Eventos próximos','publicados')}
         ${statCard(openTickets,'Tickets abiertos','requieren seguimiento')}
-        ${statCard(certificates,'Certificados','vigentes')}
+        ${statCard(data.certificates.length,'Certificados','vigentes')}
       </section>
       <section class="admin-v79-quick-grid">
-        <article class="featured" data-admin-v79-go-card="content"><span>CONTENIDO</span><h2>Cursos y lecciones</h2><p>Edita programas, semanas, lecciones, recursos y videos desde el editor académico existente.</p><b>Gestionar contenido →</b></article>
+        <article class="featured" data-admin-v79-go-card="content"><span>CONTENIDO</span><h2>Cursos y lecciones</h2><p>Edita programas, semanas, lecciones, recursos y videos desde el editor académico.</p><b>Gestionar contenido →</b></article>
         <article data-admin-v79-go-card="students"><span>ACCESOS</span><h2>Estudiantes</h2><p>Gestiona inscripciones, cursos asignados y seguimiento de acceso.</p><b>Gestionar estudiantes →</b></article>
         <article data-admin-v79-go-card="agenda"><span>AGENDA</span><h2>Sesiones y eventos</h2><p>Programa clases, talleres, webinars y encuentros.</p><b>Abrir agenda →</b></article>
         <article data-admin-v79-go-card="evaluations"><span>EVALUACIONES</span><h2>Constructor académico</h2><p>Crea evaluaciones, preguntas, puntajes e intentos.</p><b>Gestionar evaluaciones →</b></article>
@@ -211,28 +211,12 @@
       <section class="admin-v79-course-grid">${data.courses.length?data.courses.map(course=>`<article><div class="admin-v79-course-state ${esc(course.status||'draft')}">${course.status==='published'?'PUBLICADO':'BORRADOR'}</div><span>${esc(course.category||'Academia Yamilet')}</span><h3>${esc(course.title)}</h3><p>${esc(course.subtitle||course.duration_label||'Programa académico')}</p><div><small>${course.featured?'Destacado · ':''}${esc(course.duration_label||'')}</small><button type="button" data-admin-v79-go="content">Editar →</button></div></article>`).join(''):'<div class="admin-v79-empty large">No hay cursos creados en este workspace.</div>'}</section>`,{title:'Cursos',copy:'Vista administrativa de los programas del workspace Academia Yamilet.'});
   }
 
-  function certificatesView(data) {
-    const rows = data.certificates;
-    shell('certificates',`<section class="admin-v79-summary compact">${statCard(rows.length,'Emitidos','vigentes')}${statCard(new Set(rows.map(item=>item.user_id)).size,'Personas certificadas')}${statCard(new Set(rows.map(item=>item.course_id)).size,'Programas con certificados')}</section>
-      <section class="admin-v79-section-head"><div><span>CERTIFICACIÓN</span><h2>Certificados emitidos</h2><p>Consulta los reconocimientos vigentes y sus códigos de verificación.</p></div></section>
-      ${rows.length?`<div class="admin-v79-table"><div class="head"><span>Estudiante</span><span>Programa</span><span>Fecha</span><span>Código</span></div>${rows.map(item=>`<div><span data-label="Estudiante"><strong>${esc(item.recipient_name||profileName(data,item.user_id))}</strong></span><span data-label="Programa">${esc(courseName(data,item.course_id))}</span><span data-label="Fecha">${esc(fmt(item.issued_at))}</span><span data-label="Código"><code>${esc(item.verification_code||'—')}</code></span></div>`).join('')}</div>`:'<div class="admin-v79-empty large">Aún no hay certificados emitidos.</div>'}`,{title:'Certificados',copy:'Seguimiento administrativo de certificados emitidos y vigentes.'});
-  }
-
-  function settings(data) {
-    shell('settings',`<section class="admin-v79-settings-grid">
-      <article><span>WORKSPACE</span><h2>${esc(data.workspace.name||'Academia Yamilet')}</h2><p>Identificador: <code>${esc(data.workspace.slug||'')}</code></p><div><b>Estado</b><strong>Activo</strong></div></article>
-      <article><span>TU ACCESO</span><h2>${esc(roleLabel(data.role))}</h2><p>${esc(data.profile.full_name||data.user.email||'Equipo Academia Yamilet')}</p><div><b>Permisos</b><strong>${data.role==='instructor'?'Académicos':'Administrativos'}</strong></div></article>
-      <article><span>SEGURIDAD</span><h2>Acceso protegido</h2><p>Los datos administrativos siguen sujetos a autenticación y políticas RLS del workspace.</p><div><b>Cliente</b><strong>Clave pública</strong></div></article>
-      <article><span>PUBLICACIÓN</span><h2>Catálogo y Academia</h2><p>Los cursos publicados se exponen según las reglas del catálogo; las lecciones privadas requieren inscripción.</p><div><b>Cursos publicados</b><strong>${data.courses.filter(item=>item.status==='published').length}</strong></div></article>
-    </section>`,{title:'Configuración',copy:'Resumen operativo del workspace y de tu nivel de acceso.'});
-  }
-
   function loading(section) {
-    shell(section,'<div class="admin-v79-loading"><span></span><strong>Preparando módulo administrativo…</strong><small>Consultando datos y permisos del workspace.</small></div>',{title:LABELS[section],copy:'Cargando información administrativa.'});
+    shell(section,'<div class="admin-v79-loading"><span></span><strong>Preparando módulo administrativo…</strong><small>Cargando la herramienta de esta sección.</small></div>',{title:LABELS[section],copy:'Esta herramienta se carga únicamente cuando entras a su subruta.'});
   }
 
   function mountNative(section, selector, triggerSelector) {
-    const mount = shell(section,'<div class="admin-v79-loading"><span></span><strong>Abriendo herramienta…</strong><small>Conectando el editor existente con esta ruta administrativa.</small></div>',{
+    const mount = shell(section,'<div class="admin-v79-loading"><span></span><strong>Abriendo herramienta…</strong><small>Conectando el editor con esta ruta administrativa.</small></div>',{
       title:LABELS[section],
       copy:section==='content'?'Gestiona cursos, módulos, lecciones, recursos y videos.':'Gestiona cuentas, inscripciones y acceso académico.'
     });
@@ -249,27 +233,6 @@
     [60,180,420,900,1600].forEach(delay=>setTimeout(attach,delay));
   }
 
-  function legacyModule(section) {
-    const details = {
-      agenda:['[data-event-admin-host]','Agenda','Programa sesiones, talleres, webinars y encuentros para estudiantes.'],
-      evaluations:['[data-assessment-admin-host]','Evaluaciones','Construye evaluaciones, preguntas y reglas de aprobación.'],
-      operations:['[data-academy-ops]','Operación','Consulta compras, accesos, registros y soporte.'],
-      support:['[data-academy-ops]','Soporte','Atiende solicitudes y conversaciones de soporte.']
-    }[section];
-    const mount = shell(section,'<div class="admin-v79-loading"><span></span><strong>Preparando herramienta…</strong><small>Conectando el módulo administrativo.</small></div>',{title:details[1],copy:details[2]});
-    if (section==='operations' || section==='support') window.ACADEMIA_YAMILET_ADMIN_OPERATIONS?.render?.();
-    const attach = () => {
-      const target = $(details[0],page());
-      if (!target || !mount) return false;
-      mount.innerHTML='';
-      mount.appendChild(target);
-      target.classList.add('admin-v79-legacy-panel');
-      if (section==='support') setTimeout(()=> $('[data-ops-tab="support"]',target)?.click(),40);
-      return true;
-    };
-    [80,220,500,900,1500,2400].forEach(delay=>setTimeout(attach,delay));
-  }
-
   function hideNativeOutside(section) {
     if (!['content','students'].includes(section)) {
       $('[data-content-admin]')?.classList.add('hidden');
@@ -281,27 +244,34 @@
     const section = adminSection();
     if (!section) {
       delete document.body.dataset.adminV79Section;
+      delete document.body.dataset.academyAdminRole;
       return false;
     }
     const target = page();
     if (!target || target.classList.contains('hidden')) return false;
     lastRoute = location.hash;
-    updateChrome(section);
-    hideNativeOutside(section);
-    if (section==='content') { mountNative('content','[data-content-admin]','[data-content-admin-nav]'); return true; }
-    if (section==='students') { mountNative('students','[data-students-admin]','[data-students-admin-nav]'); return true; }
-    if (['agenda','evaluations','operations','support'].includes(section)) { legacyModule(section); return true; }
-    loading(section);
+
     try {
+      const ctx = await context();
+      if (section === 'operations' && ctx.role === 'instructor') {
+        go('overview');
+        return false;
+      }
+      updateChrome(section);
+      hideNativeOutside(section);
+
+      if (section==='content') { mountNative('content','[data-content-admin]','[data-content-admin-nav]'); return true; }
+      if (section==='students') { mountNative('students','[data-students-admin]','[data-students-admin-nav]'); return true; }
+      if (DYNAMIC_SECTIONS.has(section)) { loading(section); return true; }
+
+      loading(section);
       const data = await loadData(force);
       if (location.hash !== lastRoute && adminSection() !== section) return false;
       if (section==='courses') courses(data);
-      else if (section==='certificates') certificatesView(data);
-      else if (section==='settings') settings(data);
       else overview(data);
       return true;
     } catch (error) {
-      console.error('Academia Yamilet admin v79',error);
+      console.error('Academia Yamilet admin v89',error);
       const root = ensureRoot();
       if (!root) return false;
       root.innerHTML = error?.message==='forbidden'

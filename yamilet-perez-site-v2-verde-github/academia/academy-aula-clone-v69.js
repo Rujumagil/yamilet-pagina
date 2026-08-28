@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = '75.0.0';
+  const VERSION = '89.0.0';
   const TOP_LEVEL = new Set(['home','courses','resources','agenda','certificates']);
   let scheduled = false;
 
@@ -55,7 +55,7 @@
     }
 
     const name = text('[data-user-name]', 'Academia Yamilet');
-    const role = text('[data-user-role]', 'Alumna');
+    const role = text('[data-user-role]', 'Estudiante');
     card.innerHTML = `<span class="academy-aula-user-avatar">${initials(name)}</span><span class="academy-aula-user-copy"><strong>${name}</strong><small>${role}</small></span><span class="academy-aula-user-arrow">›</span>`;
   }
 
@@ -312,8 +312,9 @@
 
   function start() {
     ensureRefinementStyles();
+    const target = document.querySelector('[data-dashboard]') || document.body;
     const observer = new MutationObserver(schedule);
-    observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['class','hidden'] });
+    observer.observe(target, { childList: true, subtree: true });
     document.addEventListener('click', () => setTimeout(schedule, 60), true);
     window.addEventListener('hashchange', () => setTimeout(schedule, 80));
     window.addEventListener('popstate', () => setTimeout(schedule, 80));
