@@ -23,7 +23,6 @@
     [40,180,420,900].forEach(delay => setTimeout(() => {
       window.ACADEMIA_YAMILET_ADMIN?.render?.();
       window.ACADEMIA_YAMILET_ASSESSMENT_ADMIN?.render?.();
-      window.ACADEMIA_YAMILET_ASSESSMENT_REVIEW_V83?.refresh?.();
     },delay));
   }
 
