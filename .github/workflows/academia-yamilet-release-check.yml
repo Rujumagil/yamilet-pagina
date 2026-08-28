@@ -60,6 +60,9 @@ jobs:
           grep -q "academy-public-config" "$base/app.js"
           grep -q "workspaceSlug = 'yamilet-mes'" "$base/app.js"
 
+      - name: Smoke test hash navigation and admin guards
+        run: node .github/scripts/academia-navigation-smoke-v89.mjs
+
       - name: Block retired and obsolete runtime layers
         shell: bash
         run: |
