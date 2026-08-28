@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'academia-yamilet-pwa-';
-const CACHE_NAME = `${CACHE_PREFIX}v65`;
+const CACHE_NAME = `${CACHE_PREFIX}v66`;
 const BASE = new URL('./', self.location.href);
 const OFFLINE_URL = new URL('./offline.html', BASE).href;
 const PRECACHE = [
@@ -7,6 +7,10 @@ const PRECACHE = [
   new URL('./index.html', BASE).href,
   OFFLINE_URL,
   new URL('./manifest.webmanifest', BASE).href,
+  new URL('./app.js?v=66', BASE).href,
+  new URL('./academy-courses.js?v=66', BASE).href,
+  new URL('./academy-module-navigation-v66.js?v=66', BASE).href,
+  new URL('./academy-module-navigation-v66.css?v=66', BASE).href,
   new URL('./academy-pwa-v57.css', BASE).href,
   new URL('./academy-pwa-v57.js', BASE).href,
   new URL('./academy-progress-v58.css', BASE).href,
@@ -18,9 +22,6 @@ const PRECACHE = [
   new URL('./academy-mobile-secondary-v61.js', BASE).href,
   new URL('./cloudflare-stream-v28.css', BASE).href,
   new URL('./academy-video-admin-v62.js', BASE).href,
-  new URL('./academy-video-cloudflare-manual-v64.js', BASE).href,
-  new URL('./academy-module-navigation-v65.css', BASE).href,
-  new URL('./academy-module-navigation-v65.js', BASE).href,
   new URL('../assets/logo-yamilet.png', BASE).href
 ];
 
