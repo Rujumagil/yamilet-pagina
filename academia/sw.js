@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'academia-yamilet-pwa-';
-const CACHE_NAME = `${CACHE_PREFIX}v68`;
+const CACHE_NAME = `${CACHE_PREFIX}v69`;
 const BASE = new URL('./', self.location.href);
 const OFFLINE_URL = new URL('./offline.html', BASE).href;
 const PRECACHE = [
@@ -15,6 +15,9 @@ const PRECACHE = [
   new URL('./academy-course-hub-v68.css?v=68', BASE).href,
   new URL('./academy-public-catalog-v68.css?v=68', BASE).href,
   new URL('./academy-public-catalog-v68.js?v=68', BASE).href,
+  new URL('./academy-aula-clone-v69.css?v=69', BASE).href,
+  new URL('./academy-aula-clone-v69-user.css?v=69', BASE).href,
+  new URL('./academy-aula-clone-v69.js?v=69', BASE).href,
   new URL('./academy-module-navigation-v66.js?v=66', BASE).href,
   new URL('./academy-module-navigation-v66.css?v=66', BASE).href,
   new URL('./academy-pwa-v57.css', BASE).href,

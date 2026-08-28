@@ -1,0 +1,794 @@
+/* Academia Yamilet · Aula Compás visual clone v69
+   Replica estructura, densidad y jerarquía visual de aula.proyectocompas.com
+   conservando identidad Yamilet (verde + dorado). */
+:root{
+  --ay-primary:#123f35;
+  --ay-primary-2:#1d594b;
+  --ay-primary-3:#327264;
+  --ay-gold:#d8a43a;
+  --ay-ice:#f7f9f8;
+  --ay-white:#fff;
+  --ay-graphite:#17211d;
+  --ay-copy:#46564f;
+  --ay-muted:#78857f;
+  --ay-line:rgba(18,63,53,.10);
+  --ay-line-strong:rgba(18,63,53,.17);
+  --ay-soft:#eef4f1;
+  --ay-soft-green:#e8f1ed;
+  --ay-shadow-xs:0 4px 14px rgba(18,63,53,.045);
+  --ay-shadow-sm:0 10px 26px rgba(18,63,53,.065);
+  --ay-shadow-md:0 18px 44px rgba(18,63,53,.085);
+  --ay-shadow-lg:0 28px 70px rgba(18,63,53,.12);
+  --ay-ease:cubic-bezier(.2,.8,.2,1);
+}
+
+/* ===== Aplicación ===== */
+body:has(.dashboard:not(.hidden)){
+  background:
+    radial-gradient(circle at 84% 3%,rgba(50,114,100,.065),transparent 24%),
+    radial-gradient(circle at 10% 96%,rgba(216,164,58,.04),transparent 21%),
+    linear-gradient(180deg,#fbfcfb 0%,#f5f8f7 54%,#f7f9f8 100%)!important;
+  color:var(--ay-graphite)!important;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+}
+body:has(.dashboard:not(.hidden))::before{display:none!important}
+body:has(.dashboard:not(.hidden)) h1,
+body:has(.dashboard:not(.hidden)) h2,
+body:has(.dashboard:not(.hidden)) h3,
+body:has(.dashboard:not(.hidden)) h4,
+body:has(.dashboard:not(.hidden)) h5,
+body:has(.dashboard:not(.hidden)) h6{
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  color:var(--ay-graphite)!important;
+  font-weight:700!important;
+}
+body:has(.dashboard:not(.hidden)) .dashboard{
+  min-height:100vh!important;
+  grid-template-columns:264px minmax(0,1fr)!important;
+  background:transparent!important;
+}
+body:has(.dashboard:not(.hidden)) .dashboard-main{
+  min-width:0!important;
+  padding:0 clamp(24px,3vw,46px) 80px!important;
+  gap:22px!important;
+  background:transparent!important;
+}
+
+/* Oculta barra pública cuando el aula está abierta, igual que Aula Compás */
+body:has(.dashboard:not(.hidden))>.topbar{display:none!important}
+body:has(.dashboard:not(.hidden)) main{min-height:100vh!important}
+
+/* ===== Sidebar estilo Aula Compás ===== */
+body:has(.dashboard:not(.hidden)) .sidebar{
+  position:sticky!important;
+  top:0!important;
+  height:100vh!important;
+  overflow:auto!important;
+  padding:24px 16px 18px!important;
+  gap:0!important;
+  background:linear-gradient(180deg,#17483d 0%,#123f35 50%,#0b3028 100%)!important;
+  border-right:1px solid rgba(255,255,255,.07)!important;
+  box-shadow:16px 0 42px rgba(10,42,35,.10)!important;
+  color:#fff!important;
+}
+body:has(.dashboard:not(.hidden)) .sidebar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 12% 7%,rgba(255,255,255,.08),transparent 24%),
+    radial-gradient(circle at 100% 78%,rgba(50,114,100,.22),transparent 30%);
+}
+body:has(.dashboard:not(.hidden)) .sidebar>*{position:relative;z-index:1}
+body:has(.dashboard:not(.hidden)) .side-brand{
+  min-height:72px!important;
+  margin:0 4px 22px!important;
+  padding:0 4px 18px!important;
+  gap:13px!important;
+  border-bottom:1px solid rgba(255,255,255,.10)!important;
+}
+body:has(.dashboard:not(.hidden)) .side-brand img{
+  width:54px!important;height:54px!important;
+  padding:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;
+  object-fit:contain!important;
+}
+body:has(.dashboard:not(.hidden)) .side-brand strong{
+  color:#fff!important;
+  font-size:.94rem!important;
+  line-height:1.05!important;
+  letter-spacing:.06em!important;
+  font-weight:750!important;
+}
+body:has(.dashboard:not(.hidden)) .side-brand small{
+  margin-top:5px!important;
+  color:rgba(247,251,249,.66)!important;
+  font-size:.59rem!important;
+  letter-spacing:.19em!important;
+  font-weight:600!important;
+}
+body:has(.dashboard:not(.hidden)) .sidebar nav{gap:5px!important}
+body:has(.dashboard:not(.hidden)) .academy-nav-group{margin-bottom:9px!important}
+body:has(.dashboard:not(.hidden)) .academy-nav-group-label,
+body:has(.dashboard:not(.hidden)) .shell-sidebar-label{
+  display:block!important;
+  margin:5px 12px 8px!important;
+  color:rgba(247,251,249,.47)!important;
+  font-size:.55rem!important;
+  letter-spacing:.18em!important;
+  font-weight:800!important;
+}
+body:has(.dashboard:not(.hidden)) .shell-nav-item{
+  min-height:48px!important;
+  padding:7px 10px!important;
+  gap:11px!important;
+  border-radius:14px!important;
+  border:1px solid transparent!important;
+  background:transparent!important;
+  color:rgba(247,251,249,.80)!important;
+  font-size:.83rem!important;
+  font-weight:550!important;
+  transform:none!important;
+  box-shadow:none!important;
+  transition:background .18s var(--ay-ease),border-color .18s var(--ay-ease),color .18s var(--ay-ease)!important;
+}
+body:has(.dashboard:not(.hidden)) .shell-nav-icon{
+  width:34px!important;height:34px!important;flex:0 0 34px!important;
+  border-radius:11px!important;
+  background:rgba(255,255,255,.055)!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  color:var(--ay-gold)!important;
+  box-shadow:none!important;
+}
+body:has(.dashboard:not(.hidden)) .shell-nav-item:hover{
+  background:rgba(255,255,255,.075)!important;
+  border-color:rgba(255,255,255,.08)!important;
+  color:#fff!important;
+}
+body:has(.dashboard:not(.hidden)) .shell-nav-item.active{
+  background:rgba(255,255,255,.12)!important;
+  border-color:rgba(255,255,255,.15)!important;
+  box-shadow:inset 3px 0 0 var(--ay-gold)!important;
+  color:#fff!important;
+}
+body:has(.dashboard:not(.hidden)) .shell-nav-item.active::after{display:none!important}
+body:has(.dashboard:not(.hidden)) .shell-nav-item.active .shell-nav-icon{
+  background:rgba(216,164,58,.12)!important;
+  border-color:rgba(216,164,58,.24)!important;
+  color:#f3cf72!important;
+}
+body:has(.dashboard:not(.hidden)) .shell-nav-secondary,
+body:has(.dashboard:not(.hidden)) .shell-nav-admin{
+  margin-top:6px!important;
+  background:transparent!important;
+  border-color:transparent!important;
+}
+body:has(.dashboard:not(.hidden)) .signout{
+  margin-top:auto!important;
+  min-height:42px!important;
+  padding:0 14px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  border-radius:13px!important;
+  background:rgba(255,255,255,.055)!important;
+  color:rgba(255,255,255,.76)!important;
+  font-size:.74rem!important;
+  text-align:center!important;
+}
+body:has(.dashboard:not(.hidden)) .signout:hover{background:rgba(255,255,255,.10)!important;color:#fff!important}
+
+/* ===== Topbar ===== */
+body:has(.dashboard:not(.hidden)) .academy-topbar{
+  grid-column:1/-1!important;
+  min-height:74px!important;
+  margin:0 calc(clamp(24px,3vw,46px)*-1) 4px!important;
+  padding:11px clamp(24px,3vw,46px)!important;
+  grid-template-columns:minmax(160px,.65fr) minmax(320px,1.25fr) minmax(150px,.55fr)!important;
+  background:rgba(251,252,251,.92)!important;
+  border-bottom:1px solid rgba(18,63,53,.08)!important;
+  box-shadow:0 6px 20px rgba(18,63,53,.022)!important;
+  backdrop-filter:blur(18px)!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-topbar-brand small{
+  color:#668477!important;
+  font-size:.54rem!important;
+  letter-spacing:.16em!important;
+  font-weight:800!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-topbar-brand strong{
+  margin-top:3px!important;
+  color:var(--ay-graphite)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:.9rem!important;
+  font-weight:550!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-search{
+  height:46px!important;
+  padding:0 46px 0 42px!important;
+  border:1px solid var(--ay-line)!important;
+  border-radius:15px!important;
+  background:#fff!important;
+  color:var(--ay-graphite)!important;
+  font-size:.82rem!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-search-wrap::before{color:#7d8a84!important}
+body:has(.dashboard:not(.hidden)) .academy-icon-btn,
+body:has(.dashboard:not(.hidden)) .academy-avatar{
+  width:40px!important;height:40px!important;
+  border-radius:12px!important;
+  border:1px solid var(--ay-line)!important;
+  background:#fff!important;
+  color:var(--ay-primary)!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-avatar{
+  background:linear-gradient(145deg,#315f52,#17483d)!important;
+  color:#fff!important;
+}
+
+/* ===== Botones y superficies ===== */
+body:has(.dashboard:not(.hidden)) .btn,
+body:has(.dashboard:not(.hidden)) .shell-action,
+body:has(.dashboard:not(.hidden)) .academy-course-primary{
+  min-height:42px!important;
+  padding:0 16px!important;
+  border-radius:12px!important;
+  font-size:.76rem!important;
+  font-weight:700!important;
+  letter-spacing:0!important;
+}
+body:has(.dashboard:not(.hidden)) .btn.primary,
+body:has(.dashboard:not(.hidden)) .shell-action.primary,
+body:has(.dashboard:not(.hidden)) .academy-course-primary{
+  background:linear-gradient(135deg,var(--ay-primary),var(--ay-primary-2))!important;
+  color:#fff!important;
+  border-color:transparent!important;
+  box-shadow:0 9px 22px rgba(18,63,53,.17)!important;
+}
+body:has(.dashboard:not(.hidden)) .btn.outline,
+body:has(.dashboard:not(.hidden)) .shell-action:not(.primary){
+  background:#fff!important;
+  color:var(--ay-primary)!important;
+  border:1px solid var(--ay-line-strong)!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+}
+body:has(.dashboard:not(.hidden)) .eyebrow,
+body:has(.dashboard:not(.hidden)) .kicker,
+body:has(.dashboard:not(.hidden)) .academy-course-kicker,
+body:has(.dashboard:not(.hidden)) .academy-upcoming-kicker{
+  color:#668477!important;
+  font-size:.57rem!important;
+  letter-spacing:.17em!important;
+  font-weight:800!important;
+}
+
+/* ===== Inicio: copia la jerarquía de Aula Compás ===== */
+.dashboard-main[data-academy-section="home"]>.dash-head{
+  grid-column:1/-1!important;
+  position:relative!important;
+  min-height:228px!important;
+  padding:32px 36px!important;
+  border:1px solid var(--ay-line)!important;
+  border-radius:26px!important;
+  background:
+    linear-gradient(110deg,rgba(255,255,255,.98) 0%,rgba(248,251,250,.98) 57%,rgba(235,244,240,.98) 100%)!important;
+  box-shadow:var(--ay-shadow-md)!important;
+  overflow:hidden!important;
+}
+.dashboard-main[data-academy-section="home"]>.dash-head::before{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;top:0!important;bottom:0!important;width:4px!important;
+  background:linear-gradient(180deg,var(--ay-gold),rgba(216,164,58,.18))!important;
+}
+.dashboard-main[data-academy-section="home"]>.dash-head::after{
+  content:"";
+  position:absolute;
+  width:380px;height:380px;
+  right:-120px;top:-180px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(50,114,100,.11),transparent 66%);
+}
+.dashboard-main[data-academy-section="home"]>.dash-head>div,
+.dashboard-main[data-academy-section="home"]>.dash-head>a{position:relative;z-index:1}
+.dashboard-main[data-academy-section="home"]>.dash-head .kicker{color:#668477!important}
+.dashboard-main[data-academy-section="home"]>.dash-head h1{
+  margin:8px 0 8px!important;
+  color:var(--ay-graphite)!important;
+  font-size:clamp(2.35rem,4vw,3.7rem)!important;
+  line-height:1.02!important;
+  letter-spacing:-.045em!important;
+  font-weight:750!important;
+}
+.dashboard-main[data-academy-section="home"]>.dash-head p{
+  max-width:720px!important;
+  color:#65746d!important;
+  font-size:.9rem!important;
+  line-height:1.65!important;
+}
+.dashboard-main[data-academy-section="home"]>.dash-head .btn.outline{align-self:center!important}
+
+.dashboard-main[data-academy-section="home"]>.stats{
+  grid-column:1/-1!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:13px!important;
+  margin:0!important;
+}
+.dashboard-main[data-academy-section="home"]>.stats article{
+  min-height:96px!important;
+  padding:18px 20px!important;
+  border:1px solid var(--ay-line)!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+}
+.dashboard-main[data-academy-section="home"]>.stats article::before{display:none!important}
+.dashboard-main[data-academy-section="home"]>.stats article>span{
+  color:#84918b!important;
+  font-size:.61rem!important;
+  letter-spacing:.08em!important;
+}
+.dashboard-main[data-academy-section="home"]>.stats article>strong{
+  margin-top:7px!important;
+  color:var(--ay-graphite)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:1.28rem!important;
+  font-weight:750!important;
+}
+
+.dashboard-main[data-academy-section="home"]>#continuar,
+body:has(.dashboard:not(.hidden)) .academy-home-roadmap{
+  min-height:330px!important;
+  padding:25px 27px!important;
+  border:1px solid var(--ay-line)!important;
+  border-radius:22px!important;
+  background:#fff!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+}
+.dashboard-main[data-academy-section="home"]>#continuar .panel-head h2,
+body:has(.dashboard:not(.hidden)) .academy-home-roadmap h3{
+  margin-top:5px!important;
+  color:var(--ay-graphite)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:clamp(1.5rem,2.3vw,2.15rem)!important;
+  letter-spacing:-.035em!important;
+  font-weight:750!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-roadmap-list li{
+  min-height:48px!important;
+  border:1px solid rgba(18,63,53,.07)!important;
+  border-radius:13px!important;
+  background:#f8faf9!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-roadmap-list b{
+  background:var(--ay-soft-green)!important;
+  color:var(--ay-primary)!important;
+}
+
+body:has(.dashboard:not(.hidden)) .continue-card{
+  min-height:215px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:end!important;
+  gap:22px!important;
+  padding:24px!important;
+  border:1px solid var(--ay-line)!important;
+  border-radius:18px!important;
+  background:linear-gradient(135deg,#fff,#f8fbfa)!important;
+  box-shadow:none!important;
+}
+body:has(.dashboard:not(.hidden)) .continue-card h3{
+  margin:7px 0 8px!important;
+  font-size:clamp(1.55rem,2.4vw,2.3rem)!important;
+  letter-spacing:-.035em!important;
+}
+body:has(.dashboard:not(.hidden)) .continue-card p{color:#718079!important}
+body:has(.dashboard:not(.hidden)) .progress-track{height:6px!important;background:#e8efec!important;border-radius:999px!important}
+body:has(.dashboard:not(.hidden)) .progress-track span{background:linear-gradient(90deg,var(--ay-primary),var(--ay-primary-3))!important}
+
+/* ===== Mis cursos: densidad y tarjetas como Aula Compás ===== */
+.dashboard-main[data-academy-section="courses"]>#mis-cursos>.panel-head h2,
+body:has(.dashboard:not(.hidden)) .shell-page-heading h2{
+  margin-top:5px!important;
+  color:var(--ay-graphite)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:clamp(2rem,3.6vw,3.35rem)!important;
+  line-height:1!important;
+  letter-spacing:-.045em!important;
+  font-weight:750!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-courses-subhead h3,
+body:has(.dashboard:not(.hidden)) .academy-upcoming-head h3{
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:1.45rem!important;
+  letter-spacing:-.025em!important;
+  font-weight:700!important;
+}
+.dashboard-main[data-academy-section="courses"] .learning-course-list{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr))!important;
+  gap:16px!important;
+}
+.dashboard-main[data-academy-section="courses"] .learning-course-card,
+body:has(.dashboard:not(.hidden)) .academy-upcoming-card,
+body:has(.dashboard:not(.hidden)) .shell-card{
+  border:1px solid var(--ay-line)!important;
+  border-radius:20px!important;
+  background:#fff!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+  transition:transform .18s var(--ay-ease),box-shadow .18s var(--ay-ease),border-color .18s var(--ay-ease)!important;
+}
+.dashboard-main[data-academy-section="courses"] .learning-course-card:hover,
+body:has(.dashboard:not(.hidden)) .academy-upcoming-card:hover,
+body:has(.dashboard:not(.hidden)) .shell-card:hover{
+  transform:translateY(-3px)!important;
+  box-shadow:var(--ay-shadow-md)!important;
+  border-color:var(--ay-line-strong)!important;
+}
+.dashboard-main[data-academy-section="courses"] .learning-course-card{
+  display:block!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+.dashboard-main[data-academy-section="courses"] .learning-course-card:first-child{
+  grid-column:auto!important;
+  min-height:0!important;
+  background:#fff!important;
+}
+.dashboard-main[data-academy-section="courses"] .learning-course-card:first-child::before{
+  left:14px!important;top:14px!important;
+  padding:6px 9px!important;
+  background:rgba(255,255,255,.93)!important;
+  color:var(--ay-primary)!important;
+  border:1px solid rgba(255,255,255,.75)!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+  font-size:.56rem!important;
+}
+.dashboard-main[data-academy-section="courses"] .learning-course-card .course-cover,
+.dashboard-main[data-academy-section="courses"] .learning-course-card:first-child .course-cover{
+  width:100%!important;
+  height:172px!important;
+  min-height:172px!important;
+  object-fit:cover!important;
+}
+.dashboard-main[data-academy-section="courses"] .learning-course-card .course-card-body{
+  display:flex!important;
+  min-height:245px!important;
+  padding:18px!important;
+  justify-content:flex-start!important;
+  gap:10px!important;
+}
+.dashboard-main[data-academy-section="courses"] .learning-course-card h3{
+  color:var(--ay-graphite)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:1.08rem!important;
+  line-height:1.2!important;
+  letter-spacing:-.02em!important;
+  font-weight:700!important;
+}
+.dashboard-main[data-academy-section="courses"] .learning-course-card p{
+  color:#74817b!important;
+  font-size:.72rem!important;
+  line-height:1.55!important;
+}
+.dashboard-main[data-academy-section="courses"] .course-card-top .tag{
+  background:var(--ay-soft)!important;
+  color:#536960!important;
+  border:1px solid rgba(18,63,53,.07)!important;
+  font-size:.57rem!important;
+}
+.dashboard-main[data-academy-section="courses"] .course-percent{
+  font-family:Inter,system-ui,sans-serif!important;
+  color:var(--ay-primary)!important;
+  font-size:.85rem!important;
+  font-weight:750!important;
+}
+.dashboard-main[data-academy-section="courses"] .course-meta{font-size:.61rem!important;color:#87938d!important}
+.dashboard-main[data-academy-section="courses"] .course-action{margin-top:auto!important;min-width:0!important;width:100%!important}
+
+body:has(.dashboard:not(.hidden)) .academy-upcoming-grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))!important;gap:16px!important}
+body:has(.dashboard:not(.hidden)) .academy-upcoming-card img{height:150px!important;aspect-ratio:auto!important}
+body:has(.dashboard:not(.hidden)) .academy-upcoming-body h4{
+  font-family:Inter,system-ui,sans-serif!important;
+  color:var(--ay-graphite)!important;
+  font-size:1rem!important;
+  font-weight:700!important;
+}
+
+/* ===== Vista del curso ===== */
+body[data-academy-learning-view="course"] .dashboard-main,
+body[data-academy-learning-view="lesson"] .dashboard-main{grid-template-columns:minmax(0,1fr)!important}
+body:has(.dashboard:not(.hidden)) .academy-course-page>.back-learning,
+body:has(.dashboard:not(.hidden)) .lesson-view>.back-learning{
+  min-height:40px!important;
+  margin:4px 0 16px!important;
+  padding:0 14px!important;
+  border:1px solid var(--ay-line)!important;
+  border-radius:12px!important;
+  background:#fff!important;
+  color:var(--ay-primary)!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+  font-size:.7rem!important;
+  font-weight:700!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-course-hero{
+  min-height:380px!important;
+  grid-template-columns:minmax(300px,.9fr) minmax(0,1.1fr)!important;
+  margin-bottom:22px!important;
+  border:1px solid var(--ay-line)!important;
+  border-radius:24px!important;
+  background:#fff!important;
+  box-shadow:var(--ay-shadow-md)!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-course-hero-media{min-height:380px!important;background:#eaf1ee!important}
+body:has(.dashboard:not(.hidden)) .academy-course-hero-copy{
+  padding:32px 34px!important;
+  background:#fff!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-course-status{
+  background:var(--ay-soft)!important;
+  color:#536960!important;
+  font-size:.57rem!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-course-hero-copy h1{
+  margin:7px 0 10px!important;
+  color:var(--ay-graphite)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:clamp(2rem,3.5vw,3.25rem)!important;
+  line-height:1.02!important;
+  letter-spacing:-.045em!important;
+  font-weight:750!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-course-hero-copy>p{color:#68766f!important;font-size:.86rem!important}
+body:has(.dashboard:not(.hidden)) .academy-course-facts span,
+body:has(.dashboard:not(.hidden)) .academy-program-summary span{
+  background:#f5f8f6!important;
+  border:1px solid rgba(18,63,53,.07)!important;
+  border-radius:10px!important;
+  color:#6f7d76!important;
+  font-size:.61rem!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-course-facts b,
+body:has(.dashboard:not(.hidden)) .academy-program-summary b{
+  color:var(--ay-primary)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:.82rem!important;
+  font-weight:750!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-program-heading h3{
+  font-family:Inter,system-ui,sans-serif!important;
+  color:var(--ay-graphite)!important;
+  font-size:1.65rem!important;
+  letter-spacing:-.035em!important;
+  font-weight:750!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-course-page .module-block.academy-week-card,
+body:has(.dashboard:not(.hidden)) .module-block{
+  border:1px solid var(--ay-line)!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-course-page .module-head,
+body:has(.dashboard:not(.hidden)) .module-head{
+  padding:18px 20px 14px!important;
+  background:#fbfcfb!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-week-number{
+  width:44px!important;height:44px!important;
+  border-radius:12px!important;
+  background:var(--ay-primary)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:.75rem!important;
+  font-weight:750!important;
+}
+body:has(.dashboard:not(.hidden)) .module-head h3{
+  color:var(--ay-graphite)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:1rem!important;
+  font-weight:700!important;
+}
+body:has(.dashboard:not(.hidden)) .lesson-row{
+  min-height:58px!important;
+  border-top:1px solid rgba(18,63,53,.065)!important;
+  background:#fff!important;
+  transition:background .14s ease!important;
+}
+body:has(.dashboard:not(.hidden)) .lesson-row:hover{background:#f5f8f6!important}
+body:has(.dashboard:not(.hidden)) .lesson-type{
+  background:var(--ay-soft)!important;
+  color:var(--ay-primary)!important;
+}
+body:has(.dashboard:not(.hidden)) .lesson-row.is-complete .lesson-type{background:#4e796d!important;color:#fff!important}
+
+/* ===== Lección ===== */
+body:has(.dashboard:not(.hidden)) .lesson-view{
+  max-width:1180px!important;
+  margin:0 auto!important;
+}
+body:has(.dashboard:not(.hidden)) .lesson-breadcrumb{color:#839089!important;font-size:.64rem!important}
+body:has(.dashboard:not(.hidden)) .lesson-title{
+  align-items:flex-end!important;
+  margin:4px 0 18px!important;
+}
+body:has(.dashboard:not(.hidden)) .lesson-title h2{
+  margin:6px 0 7px!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  color:var(--ay-graphite)!important;
+  font-size:clamp(2rem,4vw,3.4rem)!important;
+  letter-spacing:-.045em!important;
+  font-weight:750!important;
+}
+body:has(.dashboard:not(.hidden)) .lesson-complete-badge{
+  padding:7px 10px!important;
+  border-radius:999px!important;
+  background:#eef2f0!important;
+  color:#718079!important;
+  font-size:.62rem!important;
+  font-weight:750!important;
+}
+body:has(.dashboard:not(.hidden)) .lesson-complete-badge.done{background:#e8f2ee!important;color:#316c5e!important}
+body:has(.dashboard:not(.hidden)) .video-shell,
+body:has(.dashboard:not(.hidden)) .lesson-video{
+  border:1px solid var(--ay-line)!important;
+  border-radius:20px!important;
+  background:#0d1915!important;
+  box-shadow:var(--ay-shadow-md)!important;
+  overflow:hidden!important;
+}
+body:has(.dashboard:not(.hidden)) .lesson-content{
+  margin-top:18px!important;
+  padding:28px 30px!important;
+  border:1px solid var(--ay-line)!important;
+  border-radius:20px!important;
+  background:#fff!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+  color:#46564f!important;
+  line-height:1.75!important;
+}
+body:has(.dashboard:not(.hidden)) .transcript{
+  margin-top:14px!important;
+  border:1px solid var(--ay-line)!important;
+  border-radius:15px!important;
+  background:#fff!important;
+}
+body:has(.dashboard:not(.hidden)) .lesson-actions,
+body:has(.dashboard:not(.hidden)) .lesson-nav{
+  margin-top:16px!important;
+  padding:16px 0!important;
+}
+
+/* ===== Páginas secundarias ===== */
+body:has(.dashboard:not(.hidden)) .shell-page-heading{margin:8px 0 20px!important}
+body:has(.dashboard:not(.hidden)) .shell-page-heading p{color:#6d7b74!important;font-size:.84rem!important}
+body:has(.dashboard:not(.hidden)) .shell-summary article{
+  padding:14px 17px!important;
+  border:1px solid var(--ay-line)!important;
+  border-radius:16px!important;
+  background:#fff!important;
+  box-shadow:var(--ay-shadow-xs)!important;
+}
+body:has(.dashboard:not(.hidden)) .shell-summary strong{
+  color:var(--ay-primary)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:1.25rem!important;
+  font-weight:750!important;
+}
+body:has(.dashboard:not(.hidden)) .shell-card h3{
+  color:var(--ay-graphite)!important;
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:1rem!important;
+  font-weight:700!important;
+}
+body:has(.dashboard:not(.hidden)) .shell-card p{color:#75817b!important;font-size:.75rem!important}
+body:has(.dashboard:not(.hidden)) .profile-big-avatar{border-radius:18px!important;background:var(--ay-primary)!important}
+body:has(.dashboard:not(.hidden)) input,
+body:has(.dashboard:not(.hidden)) textarea,
+body:has(.dashboard:not(.hidden)) select{
+  border-radius:12px!important;
+  background:#fff!important;
+  border:1px solid var(--ay-line-strong)!important;
+}
+body:has(.dashboard:not(.hidden)) input:focus,
+body:has(.dashboard:not(.hidden)) textarea:focus,
+body:has(.dashboard:not(.hidden)) select:focus{
+  border-color:rgba(18,63,53,.34)!important;
+  box-shadow:0 0 0 3px rgba(18,63,53,.07)!important;
+}
+
+/* ===== Login también adopta el lenguaje de Aula Compás ===== */
+body:not(:has(.dashboard:not(.hidden))){background:#f7f9f8!important}
+body:not(:has(.dashboard:not(.hidden))) .topbar{
+  background:rgba(251,252,251,.94)!important;
+  border-bottom:1px solid var(--ay-line)!important;
+}
+body:not(:has(.dashboard:not(.hidden))) .auth-shell{
+  width:min(1100px,calc(100% - 32px))!important;
+  grid-template-columns:1fr .78fr!important;
+  gap:46px!important;
+}
+body:not(:has(.dashboard:not(.hidden))) .welcome-card h1{
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:clamp(3rem,6vw,5rem)!important;
+  font-weight:750!important;
+  letter-spacing:-.05em!important;
+}
+body:not(:has(.dashboard:not(.hidden))) .welcome-card p{font-size:1rem!important;color:#66756e!important}
+body:not(:has(.dashboard:not(.hidden))) .login-card{
+  border-radius:24px!important;
+  padding:34px!important;
+  background:#fff!important;
+  border:1px solid var(--ay-line)!important;
+  box-shadow:var(--ay-shadow-md)!important;
+  backdrop-filter:none!important;
+}
+body:not(:has(.dashboard:not(.hidden))) .login-logo{
+  width:78px!important;height:78px!important;
+  padding:0!important;border-radius:0!important;background:transparent!important;
+}
+body:not(:has(.dashboard:not(.hidden))) .login-card h2{
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:2rem!important;
+  font-weight:750!important;
+  letter-spacing:-.035em!important;
+}
+body:not(:has(.dashboard:not(.hidden))) .btn{border-radius:12px!important}
+
+/* ===== Responsive como Aula Compás ===== */
+@media(max-width:1180px){
+  body:has(.dashboard:not(.hidden)) .dashboard{grid-template-columns:238px minmax(0,1fr)!important}
+  .dashboard-main[data-academy-section="home"]>.stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:900px){
+  body:has(.dashboard:not(.hidden)) .dashboard{grid-template-columns:1fr!important;padding-bottom:72px!important}
+  body:has(.dashboard:not(.hidden)) .dashboard-main{padding:0 18px 88px!important}
+  body:has(.dashboard:not(.hidden)) .sidebar{
+    position:fixed!important;
+    left:0!important;right:0!important;bottom:0!important;top:auto!important;
+    z-index:100!important;
+    width:100%!important;height:68px!important;
+    padding:7px 10px!important;
+    display:block!important;
+    overflow-x:auto!important;overflow-y:hidden!important;
+    background:rgba(14,48,40,.97)!important;
+    border-top:1px solid rgba(255,255,255,.10)!important;
+    box-shadow:0 -12px 34px rgba(10,42,35,.15)!important;
+    backdrop-filter:blur(16px)!important;
+  }
+  body:has(.dashboard:not(.hidden)) .side-brand,
+  body:has(.dashboard:not(.hidden)) .academy-nav-group-label,
+  body:has(.dashboard:not(.hidden)) .shell-sidebar-label,
+  body:has(.dashboard:not(.hidden)) .signout{display:none!important}
+  body:has(.dashboard:not(.hidden)) .sidebar nav{display:flex!important;gap:5px!important;min-width:max-content!important}
+  body:has(.dashboard:not(.hidden)) .academy-nav-group{display:contents!important}
+  body:has(.dashboard:not(.hidden)) .academy-nav-group-items{display:contents!important}
+  body:has(.dashboard:not(.hidden)) .shell-nav-item{
+    width:auto!important;min-width:66px!important;height:54px!important;min-height:54px!important;
+    display:grid!important;grid-template-columns:1fr!important;place-items:center!important;
+    gap:2px!important;padding:4px 8px!important;border-radius:12px!important;
+    font-size:.54rem!important;text-align:center!important;
+  }
+  body:has(.dashboard:not(.hidden)) .shell-nav-icon{width:28px!important;height:28px!important;flex:0 0 28px!important;border-radius:9px!important}
+  body:has(.dashboard:not(.hidden)) .academy-topbar{
+    margin:0 -18px 4px!important;padding:10px 18px!important;grid-template-columns:1fr!important;min-height:66px!important;
+  }
+  body:has(.dashboard:not(.hidden)) .academy-topbar-brand,
+  body:has(.dashboard:not(.hidden)) .academy-topbar-actions{display:none!important}
+  .dashboard-main[data-academy-section="home"]>.dash-head{min-height:auto!important;padding:26px 24px!important}
+  .dashboard-main[data-academy-section="courses"] .learning-course-list{grid-template-columns:1fr!important}
+  body:has(.dashboard:not(.hidden)) .academy-course-hero{grid-template-columns:1fr!important}
+  body:has(.dashboard:not(.hidden)) .academy-course-hero-media{min-height:260px!important;max-height:320px!important}
+  body:has(.dashboard:not(.hidden)) .academy-course-hero-copy{padding:26px 24px!important}
+  body:has(.dashboard:not(.hidden)) .continue-card{grid-template-columns:1fr!important;align-items:start!important}
+}
+@media(max-width:580px){
+  body:has(.dashboard:not(.hidden)) .dashboard-main{padding:0 14px 86px!important}
+  body:has(.dashboard:not(.hidden)) .academy-topbar{margin:0 -14px 4px!important;padding:10px 14px!important}
+  .dashboard-main[data-academy-section="home"]>.stats{grid-template-columns:1fr!important}
+  .dashboard-main[data-academy-section="home"]>.dash-head{padding:22px 20px!important;border-radius:20px!important}
+  .dashboard-main[data-academy-section="home"]>.dash-head h1{font-size:2.35rem!important}
+  body:has(.dashboard:not(.hidden)) .academy-course-hero{border-radius:18px!important}
+  body:has(.dashboard:not(.hidden)) .lesson-content{padding:22px 18px!important}
+}
