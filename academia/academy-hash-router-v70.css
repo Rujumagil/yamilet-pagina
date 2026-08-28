@@ -1,0 +1,120 @@
+/* Academia Yamilet · Navegación por pantallas independientes · v70
+   Replica el comportamiento de rutas de Aula Compás: una ruta = una vista. */
+
+body[data-academy-route] .dashboard-main{
+  grid-template-columns:minmax(0,1fr)!important;
+  align-content:start!important;
+}
+
+body[data-academy-route] .dashboard-main>.academy-topbar{
+  display:grid!important;
+  grid-column:1/-1!important;
+}
+
+/* Por defecto, al existir una ruta lógica ocultamos todo el contenido principal.
+   Cada ruta vuelve a habilitar exclusivamente su pantalla. */
+body[data-academy-route] .dashboard-main>.dash-head,
+body[data-academy-route] .dashboard-main>.stats,
+body[data-academy-route] .dashboard-main>#continuar,
+body[data-academy-route] .dashboard-main>#mis-cursos,
+body[data-academy-route] .dashboard-main>.academy-home-roadmap,
+body[data-academy-route] .dashboard-main>#reservas,
+body[data-academy-route] .dashboard-main>.shell-page,
+body[data-academy-route] .dashboard-main>[data-course-view],
+body[data-academy-route] .dashboard-main>[data-lesson-view],
+body[data-academy-route] .dashboard-main>.content-admin,
+body[data-academy-route] .dashboard-main>.students-admin{
+  display:none!important;
+}
+
+/* #home */
+body[data-academy-route="home"] .dashboard-main>.dash-head{display:flex!important;grid-column:1/-1!important}
+body[data-academy-route="home"] .dashboard-main>.stats{display:grid!important;grid-column:1/-1!important}
+body[data-academy-route="home"] .dashboard-main>#continuar{display:block!important;grid-column:1!important}
+body[data-academy-route="home"] .dashboard-main>.academy-home-roadmap{display:block!important;grid-column:2!important}
+body[data-academy-route="home"] .dashboard-main{grid-template-columns:minmax(0,1.2fr) minmax(310px,.8fr)!important}
+
+/* #courses */
+body[data-academy-route="courses"] .dashboard-main>#mis-cursos{
+  display:block!important;
+  grid-column:1/-1!important;
+  margin:0!important;
+}
+
+/* #resources */
+body[data-academy-route="resources"] .dashboard-main>[data-shell-page="library"]{
+  display:block!important;
+  grid-column:1/-1!important;
+}
+
+/* #agenda */
+body[data-academy-route="agenda"] .dashboard-main>[data-shell-page="calendar"]{
+  display:block!important;
+  grid-column:1/-1!important;
+}
+
+/* #certificates */
+body[data-academy-route="certificates"] .dashboard-main>[data-shell-page="certificates"]{
+  display:block!important;
+  grid-column:1/-1!important;
+}
+
+/* Rutas complementarias */
+body[data-academy-route="evaluations"] .dashboard-main>[data-shell-page="evaluations"],
+body[data-academy-route="help"] .dashboard-main>[data-shell-page="help"],
+body[data-academy-route="profile"] .dashboard-main>[data-shell-page="profile"],
+body[data-academy-route="catalog"] .dashboard-main>[data-shell-page="explore"],
+body[data-academy-route="admin"] .dashboard-main>[data-shell-page="admin"]{
+  display:block!important;
+  grid-column:1/-1!important;
+}
+
+/* #course/<id> */
+body[data-academy-route="course"] .dashboard-main>[data-course-view]{
+  display:block!important;
+  grid-column:1/-1!important;
+  margin:0!important;
+}
+
+/* #lesson/<courseId>/<lessonId> */
+body[data-academy-route="lesson"] .dashboard-main>[data-lesson-view]{
+  display:block!important;
+  grid-column:1/-1!important;
+  margin:0!important;
+}
+
+/* Evita el antiguo comportamiento de scroll a bloques del mismo dashboard. */
+body[data-academy-route] .shell-page,
+body[data-academy-route] #mis-cursos,
+body[data-academy-route] [data-course-view],
+body[data-academy-route] [data-lesson-view]{
+  scroll-margin-top:0!important;
+}
+
+/* La pantalla activa siempre inicia inmediatamente debajo de la topbar. */
+body[data-academy-route] .dashboard-main>.shell-page:not(.hidden),
+body[data-academy-route] .dashboard-main>#mis-cursos,
+body[data-academy-route] .dashboard-main>[data-course-view],
+body[data-academy-route] .dashboard-main>[data-lesson-view]{
+  animation:academy-route-enter .18s ease both;
+}
+
+@keyframes academy-route-enter{
+  from{opacity:.45;transform:translateY(5px)}
+  to{opacity:1;transform:none}
+}
+
+/* Navegación: aspecto de enlace/ruta, aunque siga siendo button por compatibilidad. */
+.sidebar [data-shell-route]{position:relative}
+.sidebar [data-shell-route][aria-current="page"]{color:#fff!important}
+
+@media(max-width:1180px){
+  body[data-academy-route="home"] .dashboard-main{grid-template-columns:1fr!important}
+  body[data-academy-route="home"] .dashboard-main>#continuar,
+  body[data-academy-route="home"] .dashboard-main>.academy-home-roadmap{grid-column:1/-1!important}
+}
+
+@media(max-width:900px){
+  body[data-academy-route] .dashboard-main{grid-template-columns:1fr!important}
+  body[data-academy-route] .dashboard-main>.academy-topbar{display:grid!important}
+}
