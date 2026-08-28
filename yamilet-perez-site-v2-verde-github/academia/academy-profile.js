@@ -5,7 +5,7 @@
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-  const esc = (value = '') => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[char]));
+  const esc = (value = '') => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   let contextPromise = null;
   let renderTimer = null;
   let neutralTimer = null;
@@ -282,7 +282,6 @@
           if (next !== node.nodeValue) node.nodeValue = next;
         }
       }));
-      if (currentRoute() === 'profile') scheduleRender(80);
       scheduleNeutralize();
     });
     observer.observe(document.body, {childList:true,subtree:true});
@@ -292,7 +291,7 @@
     window.addEventListener('hashchange', () => scheduleRender(90));
     window.addEventListener('popstate', () => scheduleRender(90));
     window.addEventListener('pageshow', () => { scheduleNeutralize(); scheduleRender(180); });
-    scheduleRender(260);
+    [260,700,1400,2400].forEach(delay => setTimeout(() => render(), delay));
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once:true});
