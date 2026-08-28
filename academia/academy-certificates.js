@@ -69,7 +69,7 @@
   function byteLengthLatin1(value=''){return [...String(value)].length;}
   function centerX(text,size){return Math.max(60,421-(String(text).length*size*.26));}
   function pdfBytes(meta){
-    const recipient=latin1(meta.recipient_name||'Alumna');
+    const recipient=latin1(meta.recipient_name||'Estudiante');
     const course=latin1(meta.course_title||'Programa académico');
     const date=latin1(fmtDate(meta.issued_at));
     const code=latin1(meta.verification_code||'');
@@ -129,7 +129,7 @@
   function certCard(data,cert){
     const title=courseName(data,cert.course_id);
     const revoked=!!cert.revoked_at;
-    const meta={recipient_name:cert.recipient_name||data.profile.full_name||'Alumna',course_title:title,issued_at:cert.issued_at,verification_code:cert.verification_code};
+    const meta={recipient_name:cert.recipient_name||data.profile.full_name||'Estudiante',course_title:title,issued_at:cert.issued_at,verification_code:cert.verification_code};
     return `<article class="academy-cert-pro-card ${revoked?'revoked':''}" data-cert-id="${esc(cert.id)}">
       <div class="academy-cert-pro-top"><span>${revoked?'CERTIFICADO REVOCADO':'CERTIFICADO OFICIAL'}</span><b>${revoked?'!':'✓'}</b></div>
       <h3>${esc(title)}</h3><p>Emitido a <strong>${esc(meta.recipient_name)}</strong> el ${esc(fmtDate(cert.issued_at))}.</p>
@@ -174,7 +174,7 @@
 
   function bindStudent(page,data){
     $$('[data-cert-pdf]',page).forEach(btn=>btn.addEventListener('click',()=>{
-      const id=btn.closest('[data-cert-id]')?.dataset.certId;const cert=data.certs.find(c=>c.id===id);if(cert)downloadPdf({recipient_name:cert.recipient_name||data.profile.full_name||'Alumna',course_title:courseName(data,cert.course_id),issued_at:cert.issued_at,verification_code:cert.verification_code});
+      const id=btn.closest('[data-cert-id]')?.dataset.certId;const cert=data.certs.find(c=>c.id===id);if(cert)downloadPdf({recipient_name:cert.recipient_name||data.profile.full_name||'Estudiante',course_title:courseName(data,cert.course_id),issued_at:cert.issued_at,verification_code:cert.verification_code});
     }));
     $$('[data-cert-copy]',page).forEach(btn=>btn.addEventListener('click',async()=>{
       const id=btn.closest('[data-cert-id]')?.dataset.certId;const code=data.certs.find(c=>c.id===id)?.verification_code||'';try{await navigator.clipboard.writeText(code);btn.textContent='Código copiado';setTimeout(()=>btn.textContent='Copiar código',1400);}catch{btn.textContent='Copia manualmente';}
@@ -208,7 +208,7 @@
     let profiles=[];if(userIds.length){const result=await ctx.sb.from('profiles').select('id,full_name,email').in('id',userIds);profiles=result.data||[];}
     return {...ctx,allowed:true,certs:certs||[],profiles};
   }
-  function adminProfile(data,id){const p=data.profiles.find(x=>x.id===id);return p?.full_name||p?.email||'Alumna';}
+  function adminProfile(data,id){const p=data.profiles.find(x=>x.id===id);return p?.full_name||p?.email||'Estudiante';}
   function adminMarkup(data){
     const active=data.certs.filter(c=>!c.revoked_at).length;const revoked=data.certs.length-active;
     return `<section class="cert-admin"><div class="cert-admin-head"><div><span>CONTROL DE CERTIFICADOS</span><h3>Verificación y revocación</h3><p>Administra únicamente certificados reales emitidos. Revocar cambia inmediatamente el estado de la verificación pública.</p></div><div class="cert-admin-stats"><b>${active}<small>válidos</small></b><b>${revoked}<small>revocados</small></b></div></div>

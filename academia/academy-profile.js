@@ -1,14 +1,13 @@
 (() => {
   'use strict';
 
-  const VERSION = '78.0.0';
+  const VERSION = '89.0.0';
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-  const esc = (value = '') => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const esc = (value = '') => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[char]));
   let contextPromise = null;
   let renderTimer = null;
-  let neutralTimer = null;
 
   function currentRoute() {
     return decodeURIComponent(String(location.hash || '#home').replace(/^#/, '').split('/')[0] || 'home');
@@ -224,7 +223,7 @@
       window.scrollTo({top:0,behavior:'auto'});
       return true;
     } catch (error) {
-      console.error('Academia Yamilet profile v78', error);
+      console.error('Academia Yamilet profile v89', error);
       page.innerHTML = '<section class="v78-profile-empty"><strong>No fue posible cargar tu perfil</strong><span>El resto de la Academia sigue disponible. Intenta nuevamente desde el menú.</span><a href="#home">Volver al inicio</a></section>';
       return false;
     }
@@ -247,14 +246,24 @@
       .replace(/\balumnas\b/g, 'estudiantes')
       .replace(/\bAlumna\b/g, 'Estudiante')
       .replace(/\balumna\b/g, 'estudiante')
+      .replace(/\bAlumno\b/g, 'Estudiante')
+      .replace(/\balumno\b/g, 'estudiante')
       .replace(/\bBienvenido\b/g, 'Te damos la bienvenida')
       .replace(/\bBienvenida\b/g, 'Te damos la bienvenida')
       .replace(/Ya estoy inscrita/g, 'Ya tengo acceso')
       .replace(/Ya estoy inscrito/g, 'Ya tengo acceso');
   }
 
-  function neutralizeNode(root = document.body) {
+  function neutralizeNode(root) {
     if (!root) return;
+    if (root.nodeType === Node.TEXT_NODE) {
+      const parent = root.parentElement;
+      if (!parent || /^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA)$/i.test(parent.tagName)) return;
+      const next = neutralizeText(root.nodeValue || '');
+      if (next !== root.nodeValue) root.nodeValue = next;
+      return;
+    }
+    if (root.nodeType !== Node.ELEMENT_NODE && root !== document.body) return;
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     const nodes = [];
     while (walker.nextNode()) nodes.push(walker.currentNode);
@@ -273,22 +282,10 @@
     }));
   }
 
-  function scheduleNeutralize() {
-    clearTimeout(neutralTimer);
-    neutralTimer = setTimeout(() => neutralizeNode(document.body), 20);
-  }
-
   function start() {
     neutralizeNode(document.body);
     const observer = new MutationObserver(mutations => {
-      mutations.forEach(mutation => mutation.addedNodes.forEach(node => {
-        if (node.nodeType === Node.ELEMENT_NODE) neutralizeNode(node);
-        else if (node.nodeType === Node.TEXT_NODE && node.parentElement) {
-          const next = neutralizeText(node.nodeValue || '');
-          if (next !== node.nodeValue) node.nodeValue = next;
-        }
-      }));
-      scheduleNeutralize();
+      mutations.forEach(mutation => mutation.addedNodes.forEach(node => neutralizeNode(node)));
     });
     observer.observe(document.body, {childList:true,subtree:true});
     document.addEventListener('click', event => {
@@ -296,7 +293,7 @@
     }, true);
     window.addEventListener('hashchange', routeBurst);
     window.addEventListener('popstate', routeBurst);
-    window.addEventListener('pageshow', () => { scheduleNeutralize(); routeBurst(); });
+    window.addEventListener('pageshow', routeBurst);
     [260,700,1400,2400].forEach(delay => setTimeout(() => render(), delay));
   }
 

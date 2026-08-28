@@ -13,7 +13,7 @@
   <meta name="application-name" content="Academia Yamilet">
   <meta name="format-detection" content="telephone=no">
   <meta name="deployment" content="academia-yamilet-architecture-step-13">
-  <meta name="academy-build" content="certificate-admin-v84">
+  <meta name="academy-build" content="v89-hardening">
   <!-- Previous stable release marker retained for CI migration: aula-compas-clone-v69 -->
   <!-- CI architecture compatibility markers: ./app.js?v=56 ./academy-courses.js?v=4 ./academy-navigation.js?v=1 -->
   <link rel="manifest" href="./manifest.webmanifest?v=57">
@@ -23,7 +23,6 @@
   <link rel="stylesheet" href="./auth-p0.css?v=2">
   <link rel="stylesheet" href="./learning-p1.css?v=1">
   <link rel="stylesheet" href="./private-media-p15.css?v=1">
-  <link rel="stylesheet" href="./content-admin-p15.css?v=80">
   <link rel="stylesheet" href="./academy-shell-v21.css?v=34">
   <link rel="stylesheet" href="./academy-navigation.css?v=1">
   <link rel="stylesheet" href="./academy-dashboard.css?v=1">
@@ -36,13 +35,8 @@
   <link rel="stylesheet" href="./academy-support.css?v=1">
   <link rel="stylesheet" href="./academy-explore.css?v=1">
   <link rel="stylesheet" href="./academy-admin.css?v=1">
-  <link rel="stylesheet" href="./academy-admin-operations.css?v=1&build=2">
-  <link rel="stylesheet" href="./academy-commercial-admin.css?v=1&build=1">
-  <link rel="stylesheet" href="./academy-sales-admin.css?v=1&build=1">
   <link rel="stylesheet" href="./academy-assessment-admin.css?v=82">
-  <link rel="stylesheet" href="./academy-assessment-review.css?v=1&build=1">
   <link rel="stylesheet" href="./academy-assessment-player.css?v=1&build=1">
-  <link rel="stylesheet" href="./academy-event-admin.css?v=1&build=1">
   <link rel="stylesheet" href="./academy-player-v35.css?v=38">
   <link rel="stylesheet" href="./academy-i18n-v27.css?v=27">
   <link rel="stylesheet" href="./cloudflare-stream-v28.css?v=62">
@@ -58,7 +52,6 @@
   <link rel="stylesheet" href="./academy-aula-clone-v69-user.css?v=69">
   <link rel="stylesheet" href="./academy-hash-router-v70.css?v=70">
   <link rel="stylesheet" href="./academy-aula-pages-v71.css?v=71">
-  <link rel="stylesheet" href="./academy-content-cms-v80.css?v=80">
 </head>
 <body>
   <header class="topbar">
@@ -83,13 +76,12 @@
         <section class="panel learning-view hidden" data-course-view><button class="text-action back-learning" type="button" data-back-courses>← Volver a mis cursos</button><div data-course-detail></div></section>
         <section class="panel lesson-view hidden" data-lesson-view><button class="text-action back-learning" type="button" data-back-course>← Volver al temario</button><div data-lesson-detail></div></section>
         <section class="panel content-admin hidden" id="contenido" data-content-admin><div data-content-admin-root></div></section>
-        <section class="panel students-admin hidden" id="alumnas" data-students-admin><div data-students-admin-root></div></section>
+        <section class="panel students-admin hidden" id="estudiantes" data-students-admin><div data-students-admin-root></div></section>
         <section class="panel hidden" id="reservas" data-manager-only><div class="booking-list" data-booking-list></div></section>
       </div>
     </section>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js"></script>
   <script src="./academy-i18n-v27.js?v=27"></script>
   <script src="./academy-i18n-preference-v27.js?v=27"></script>
   <script src="./auth-email-p18.js?v=1"></script>
@@ -97,8 +89,6 @@
   <script src="./private-media-p15.js?v=1"></script>
   <script src="./drive-media-v26.js?v=26"></script>
   <script src="./cloudflare-stream-v37.js?v=37"></script>
-  <script src="./academy-video-admin-v62.js?v=62"></script>
-  <script src="./academy-video-cloudflare-manual-v64.js?v=64"></script>
   <script src="./recovery-p17.js?v=1"></script>
   <script src="./academy-shell-v21.js?v=34"></script>
   <script src="./academy-navigation.js?v=68"></script>
@@ -115,10 +105,8 @@
   <script src="./academy-admin.js?v=1&build=2"></script>
   <script src="./academy-admin-operations.js?v=1&build=2"></script>
   <script src="./academy-commercial-admin.js?v=1&build=1"></script>
-  <script src="./academy-sales-admin.js?v=1&build=1"></script>
   <script src="./academy-assessment-runtime-v82.js?v=82"></script>
   <script src="./academy-certificate-runtime-v84.js?v=84"></script>
-  <script src="./academy-assessment-review.js?v=1&build=1"></script>
   <script src="./academy-assessment-player.js?v=1&build=1"></script>
   <script src="./academy-event-admin.js?v=1&build=1"></script>
   <script src="./academy-player-v37.js?v=38"></script>
@@ -129,7 +117,6 @@
   <script src="./academy-aula-clone-v69.js?v=69"></script>
   <script src="./academy-hash-router-v70.js?v=70"></script>
   <script src="./academy-aula-pages-v71.js?v=71"></script>
-  <script src="./academy-content-cms-v80.js?v=80"></script>
   <script src="./academy-content-runtime-v80.js?v=80"></script>
 </body>
 </html>
