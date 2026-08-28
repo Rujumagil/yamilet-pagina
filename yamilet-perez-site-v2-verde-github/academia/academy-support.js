@@ -218,23 +218,24 @@
     }
   }
 
-  function schedule(delay = 100) {
+  function schedule(delay = 180) {
     clearTimeout(renderTimer);
     renderTimer = setTimeout(() => render(), delay);
   }
 
+  function routeBurst() {
+    schedule(180);
+    setTimeout(() => render(), 420);
+  }
+
   function start() {
-    const observer = new MutationObserver(() => {
-      if (currentRoute() === 'help') schedule(90);
-    });
-    observer.observe(document.body, {childList:true,subtree:true});
     document.addEventListener('click', event => {
-      if (event.target.closest('[data-shell-route="help"],[data-quick-help],a[href="#help"]')) schedule(100);
+      if (event.target.closest('[data-shell-route="help"],[data-quick-help],a[href="#help"]')) routeBurst();
     }, true);
-    window.addEventListener('hashchange', () => schedule(90));
-    window.addEventListener('popstate', () => schedule(90));
-    window.addEventListener('pageshow', () => schedule(180));
-    schedule(260);
+    window.addEventListener('hashchange', routeBurst);
+    window.addEventListener('popstate', routeBurst);
+    window.addEventListener('pageshow', routeBurst);
+    [300,900,1800].forEach(delay => setTimeout(() => render(), delay));
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once:true});
