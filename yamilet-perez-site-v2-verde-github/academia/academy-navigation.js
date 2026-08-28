@@ -18,7 +18,7 @@
     library: 'Mi biblioteca',
     help: 'Ayuda y soporte',
     profile: 'Mi perfil',
-    explore: 'Explorar cursos',
+    explore: 'Catálogo de cursos',
     admin: 'Panel administrativo'
   };
 
@@ -47,7 +47,6 @@
 
       const section = document.createElement('section');
       section.className = `academy-nav-group${group.admin ? ' academy-nav-group-admin' : ''}`;
-
       const label = document.createElement('div');
       label.className = 'academy-nav-group-label';
       label.textContent = group.label;
@@ -73,11 +72,17 @@
     if (attempts <= 40) window.setTimeout(organizeNavigation, 250);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', organizeNavigation, { once: true });
-  } else {
-    organizeNavigation();
-  }
+  document.addEventListener('click', event => {
+    if (event.target.closest('[data-shell-route="explore"]')) {
+      window.setTimeout(() => {
+        const breadcrumb = document.querySelector('[data-shell-breadcrumb]');
+        if (breadcrumb) breadcrumb.textContent = 'Catálogo de cursos';
+      }, 0);
+    }
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', organizeNavigation, { once: true });
+  else organizeNavigation();
 
   window.addEventListener('pageshow', () => {
     attempts = 0;
@@ -109,7 +114,6 @@
         changed = true;
       }
     });
-
     if (!changed) return;
 
     document.querySelectorAll('.academy-video-module').forEach(module => {
@@ -141,7 +145,7 @@
     if (!view) return;
     const title = view.querySelector('.lesson-title h2')?.textContent || '';
     if (!isExcludedVideoLesson(title)) return;
-    view.querySelectorAll('.video-shell, .lesson-video, [data-mes-video-pending], [data-cloudflare-stream-player], [data-cloudflare-stream-error]').forEach(el => el.remove());
+    view.querySelectorAll('.video-shell,.lesson-video,[data-mes-video-pending],[data-cloudflare-stream-player],[data-cloudflare-stream-error]').forEach(el => el.remove());
   }
 
   function applyVideoExclusion() {
@@ -166,96 +170,4 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootVideoExclusion, { once: true });
   else bootVideoExclusion();
-})();
-
-(() => {
-  'use strict';
-
-  let decorateScheduled = false;
-
-  function courseButtons() {
-    return [...document.querySelectorAll('[data-course-list] [data-open-course]')];
-  }
-
-  function singleCourseButton() {
-    const buttons = courseButtons();
-    return buttons.length === 1 ? buttons[0] : null;
-  }
-
-  function setCourseNavActive() {
-    document.querySelectorAll('[data-shell-route]').forEach(button => {
-      button.classList.toggle('active', button.dataset.shellRoute === 'courses');
-    });
-    const breadcrumb = document.querySelector('[data-shell-breadcrumb]');
-    if (breadcrumb) breadcrumb.textContent = 'Método MES®';
-  }
-
-  function decorateSingleCourseFlow() {
-    decorateScheduled = false;
-    const button = singleCourseButton();
-    const back = document.querySelector('[data-back-courses]');
-
-    if (!button) {
-      delete document.body.dataset.singleCourseDirect;
-      if (back?.dataset.singleCourseBack === 'true') {
-        back.textContent = '← Volver a mis cursos';
-        delete back.dataset.singleCourseBack;
-      }
-      return;
-    }
-
-    document.body.dataset.singleCourseDirect = 'true';
-    button.textContent = 'Entrar al curso';
-    button.setAttribute('aria-label', 'Entrar directamente a Método MES');
-
-    if (back) {
-      back.textContent = '← Volver al inicio';
-      back.dataset.singleCourseBack = 'true';
-    }
-  }
-
-  function scheduleDecorate() {
-    if (decorateScheduled) return;
-    decorateScheduled = true;
-    requestAnimationFrame(decorateSingleCourseFlow);
-  }
-
-  function openSingleCourse() {
-    const button = singleCourseButton();
-    if (!button) return false;
-    setCourseNavActive();
-    button.click();
-    window.setTimeout(() => {
-      document.querySelector('[data-course-view]:not(.hidden)')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      decorateSingleCourseFlow();
-    }, 80);
-    return true;
-  }
-
-  document.addEventListener('click', event => {
-    const coursesRoute = event.target.closest('[data-shell-route="courses"], [data-scroll-courses], [data-dashboard-open-courses]');
-    if (coursesRoute && singleCourseButton()) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      openSingleCourse();
-      return;
-    }
-
-    const backToCourses = event.target.closest('[data-back-courses]');
-    if (backToCourses && singleCourseButton()) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      const home = document.querySelector('[data-shell-route="home"]') || document.querySelector('[data-scroll-home]');
-      home?.click();
-    }
-  }, true);
-
-  const observer = new MutationObserver(scheduleDecorate);
-  observer.observe(document.body, { childList: true, subtree: true });
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', scheduleDecorate, { once: true });
-  } else {
-    scheduleDecorate();
-  }
 })();

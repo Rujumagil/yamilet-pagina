@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Catálogo de cursos | Academia Yamilet</title>
+  <meta name="description" content="Conoce los cursos disponibles y próximos programas de Academia Yamilet.">
+  <meta name="theme-color" content="#123f35">
+  <link rel="icon" href="../assets/logo-yamilet.png?v=68">
+  <link rel="stylesheet" href="./academy-public-catalog-v68.css?v=68">
+</head>
+<body>
+  <header class="catalog-topbar">
+    <a class="catalog-brand" href="../es/" aria-label="Yamilet Pérez"><img src="../assets/logo-yamilet.png" alt="YP"><span><strong>Academia Yamilet</strong><small>Formación y Método MES®</small></span></a>
+    <nav><a href="../es/">Página principal</a><a class="catalog-login" href="./">Entrar a mi academia</a></nav>
+  </header>
+
+  <main>
+    <section class="catalog-hero">
+      <div class="catalog-hero-copy"><span>CATÁLOGO DE CURSOS</span><h1>Encuentra tu siguiente experiencia de aprendizaje.</h1><p>Conoce los programas disponibles de Academia Yamilet y descubre las formaciones que están por llegar. El contenido de cada curso se habilita dentro de la Academia únicamente después de activar tu inscripción.</p></div>
+      <div class="catalog-hero-mark"><img src="../assets/logo-yamilet.png" alt=""><strong>Aprende a tu ritmo</strong><span>Programas guiados · acceso privado</span></div>
+    </section>
+
+    <section class="catalog-section" aria-labelledby="catalog-title">
+      <div class="catalog-section-head"><div><span>FORMACIÓN</span><h2 id="catalog-title">Cursos de Academia Yamilet</h2></div><p>Selecciona un programa para conocer sus detalles. Los cursos marcados como “Próximamente” todavía no admiten inscripción.</p></div>
+      <div class="catalog-toolbar"><div class="catalog-search"><span>⌕</span><input type="search" data-public-catalog-search placeholder="Buscar cursos" aria-label="Buscar cursos"></div><div class="catalog-filters"><button class="active" type="button" data-public-catalog-filter="all">Todos</button><button type="button" data-public-catalog-filter="available">Disponibles</button><button type="button" data-public-catalog-filter="upcoming">Próximamente</button></div></div>
+      <div class="catalog-grid" data-public-catalog-grid><div class="catalog-loading">Cargando cursos…</div></div>
+    </section>
+  </main>
+
+  <dialog class="catalog-dialog" data-course-dialog><button class="catalog-dialog-close" type="button" data-course-dialog-close aria-label="Cerrar">×</button><div data-course-dialog-content></div></dialog>
+
+  <footer class="catalog-footer"><div><img src="../assets/logo-yamilet.png" alt="YP"><span>Academia Yamilet</span></div><p>Tu formación privada vive dentro de la Academia. Este espacio es únicamente el catálogo público.</p><a href="./">Ya estoy inscrita →</a></footer>
+  <script src="./academy-public-catalog-v68.js?v=68"></script>
+</body>
+</html>

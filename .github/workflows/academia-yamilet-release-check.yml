@@ -33,6 +33,9 @@ jobs:
           node --check yamilet-perez-site-v2-verde-github/academia/academy-navigation.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-dashboard.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-courses.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-explore.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-public-catalog-v68.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-module-navigation-v66.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-evaluations.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-library.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-calendar.js
@@ -40,7 +43,6 @@ jobs:
           node --check yamilet-perez-site-v2-verde-github/academia/verificar-certificado.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-profile.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-support.js
-          node --check yamilet-perez-site-v2-verde-github/academia/academy-explore.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-admin.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-i18n-v27.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-i18n-preference-v27.js
@@ -52,58 +54,67 @@ jobs:
 
       - name: Validate architecture step 13 wiring
         run: |
-          test -s yamilet-perez-site-v2-verde-github/academia/index.html
-          test -s yamilet-perez-site-v2-verde-github/academia/styles.css
+          base='yamilet-perez-site-v2-verde-github/academia'
+          test -s "$base/index.html"
+          test -s "$base/catalogo.html"
+          test -s "$base/styles.css"
           test -s yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png
-          test -s yamilet-perez-site-v2-verde-github/academia/academy-admin.js
-          test -s yamilet-perez-site-v2-verde-github/academia/academy-admin.css
-          test -s yamilet-perez-site-v2-verde-github/academia/academy-progress-v58.js
-          test -s yamilet-perez-site-v2-verde-github/academia/academy-progress-v58.css
-          test -s yamilet-perez-site-v2-verde-github/academia/academy-pwa-v57.js
-          test -s yamilet-perez-site-v2-verde-github/academia/academy-pwa-v57.css
-          test -s yamilet-perez-site-v2-verde-github/academia/manifest.webmanifest
-          test -s yamilet-perez-site-v2-verde-github/academia/offline.html
-          test -s yamilet-perez-site-v2-verde-github/academia/sw.js
-          test -s yamilet-perez-site-v2-verde-github/academia/verificar.html
-          test -s yamilet-perez-site-v2-verde-github/academia/verificar-certificado.js
-          test -s yamilet-perez-site-v2-verde-github/academia/verificar-certificado.css
-          grep -q 'academia-yamilet-architecture-step-13' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './app.js?v=56' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-navigation.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-dashboard.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-courses.js?v=4' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-evaluations.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-library.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-library.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-calendar.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-calendar.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-certificates.js?v=2' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-certificates.css?v=2' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-profile.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-profile.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-support.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-support.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-explore.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-explore.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-admin.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-admin.css?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-player-v37.js?v=38' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-progress-v58.js?v=58' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-progress-v58.css?v=58' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-pwa-v57.js?v=57' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './academy-pwa-v57.css?v=57' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './manifest.webmanifest?v=57' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q 'academia-yamilet-pwa-' yamilet-perez-site-v2-verde-github/academia/sw.js
-          grep -q 'v58' yamilet-perez-site-v2-verde-github/academia/sw.js
-          grep -q './auth-email-p18.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './private-media-p15.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './drive-media-v26.js?v=26' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './cloudflare-stream-v37.js?v=37' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './recovery-p17.js?v=1' yamilet-perez-site-v2-verde-github/academia/index.html
-          grep -q './verificar-certificado.js?v=1' yamilet-perez-site-v2-verde-github/academia/verificar.html
-          grep -q './verificar-certificado.css?v=1' yamilet-perez-site-v2-verde-github/academia/verificar.html
-          grep -q "academy-public-config" yamilet-perez-site-v2-verde-github/academia/app.js
-          grep -q "workspaceSlug = 'yamilet-mes'" yamilet-perez-site-v2-verde-github/academia/app.js
+          test -s "$base/academy-admin.js"
+          test -s "$base/academy-admin.css"
+          test -s "$base/academy-progress-v58.js"
+          test -s "$base/academy-progress-v58.css"
+          test -s "$base/academy-pwa-v57.js"
+          test -s "$base/academy-pwa-v57.css"
+          test -s "$base/academy-course-hub-v68.css"
+          test -s "$base/academy-public-catalog-v68.css"
+          test -s "$base/academy-public-catalog-v68.js"
+          test -s "$base/manifest.webmanifest"
+          test -s "$base/offline.html"
+          test -s "$base/sw.js"
+          test -s "$base/verificar.html"
+          test -s "$base/verificar-certificado.js"
+          test -s "$base/verificar-certificado.css"
+          grep -q 'academia-yamilet-architecture-step-13' "$base/index.html"
+          grep -q 'course-hub-catalog-v68' "$base/index.html"
+          grep -q './app.js?v=66' "$base/index.html"
+          grep -q './academy-navigation.js?v=68' "$base/index.html"
+          grep -q './academy-dashboard.js?v=1' "$base/index.html"
+          grep -q './academy-courses.js?v=68' "$base/index.html"
+          grep -q './academy-course-hub-v68.css?v=68' "$base/index.html"
+          grep -q './academy-explore.js?v=68' "$base/index.html"
+          grep -q './academy-evaluations.js?v=1' "$base/index.html"
+          grep -q './academy-library.js?v=1' "$base/index.html"
+          grep -q './academy-library.css?v=1' "$base/index.html"
+          grep -q './academy-calendar.js?v=1' "$base/index.html"
+          grep -q './academy-calendar.css?v=1' "$base/index.html"
+          grep -q './academy-certificates.js?v=2' "$base/index.html"
+          grep -q './academy-certificates.css?v=2' "$base/index.html"
+          grep -q './academy-profile.js?v=1' "$base/index.html"
+          grep -q './academy-profile.css?v=1' "$base/index.html"
+          grep -q './academy-support.js?v=1' "$base/index.html"
+          grep -q './academy-support.css?v=1' "$base/index.html"
+          grep -q './academy-explore.css?v=1' "$base/index.html"
+          grep -q './academy-admin.js?v=1' "$base/index.html"
+          grep -q './academy-admin.css?v=1' "$base/index.html"
+          grep -q './academy-player-v37.js?v=38' "$base/index.html"
+          grep -q './academy-progress-v58.js?v=58' "$base/index.html"
+          grep -q './academy-progress-v58.css?v=58' "$base/index.html"
+          grep -q './academy-pwa-v57.js?v=57' "$base/index.html"
+          grep -q './academy-pwa-v57.css?v=57' "$base/index.html"
+          grep -q './manifest.webmanifest?v=57' "$base/index.html"
+          grep -q './auth-email-p18.js?v=1' "$base/index.html"
+          grep -q './private-media-p15.js?v=1' "$base/index.html"
+          grep -q './drive-media-v26.js?v=26' "$base/index.html"
+          grep -q './cloudflare-stream-v37.js?v=37' "$base/index.html"
+          grep -q './recovery-p17.js?v=1' "$base/index.html"
+          grep -q './academy-public-catalog-v68.js?v=68' "$base/catalogo.html"
+          grep -q './academy-public-catalog-v68.css?v=68' "$base/catalogo.html"
+          grep -q 'academia-yamilet-pwa-' "$base/sw.js"
+          grep -q 'v68' "$base/sw.js"
+          grep -q './verificar-certificado.js?v=1' "$base/verificar.html"
+          grep -q './verificar-certificado.css?v=1' "$base/verificar.html"
+          grep -q "academy-public-config" "$base/app.js"
+          grep -q "workspaceSlug = 'yamilet-mes'" "$base/app.js"
 
       - name: Block obsolete runtime layers
         run: |
@@ -114,12 +125,13 @@ jobs:
         run: |
           set -euo pipefail
           base='yamilet-perez-site-v2-verde-github/academia'
-          index="$base/index.html"
-          grep -oE '(src|href)="\./[^\"]+\.(js|css)(\?[^\"]*)?"' "$index" | sed -E 's/^(src|href)="\.\/([^"?]+).*/\2/' | sort -u | while IFS= read -r asset; do
-            test -s "$base/$asset" || { echo "Missing or empty local asset referenced by index.html: $asset" >&2; exit 1; }
-            case "$asset" in
-              *.js) node --check "$base/$asset" ;;
-            esac
+          for index in "$base/index.html" "$base/catalogo.html"; do
+            grep -oE '(src|href)="\./[^\"]+\.(js|css)(\?[^\"]*)?"' "$index" | sed -E 's/^(src|href)="\.\/([^"?]+).*/\2/' | sort -u | while IFS= read -r asset; do
+              test -s "$base/$asset" || { echo "Missing or empty local asset referenced by $index: $asset" >&2; exit 1; }
+              case "$asset" in
+                *.js) node --check "$base/$asset" ;;
+              esac
+            done
           done
 
       - name: Guard public client boundary
@@ -161,39 +173,29 @@ jobs:
           test -d "$source_dir"
           mkdir -p "$public_dir"
           rsync -a --delete --exclude='.git/' "$source_dir" "$public_dir"
-
-          # Academia references this shared logo one level above /academia/.
-          install -D -m 0644 \
-            source/yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png \
-            public/assets/logo-yamilet.png
+          install -D -m 0644 source/yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png public/assets/logo-yamilet.png
 
       - name: Verify synchronized snapshot
         shell: bash
         run: |
           set -euo pipefail
-          diff -qr \
-            source/yamilet-perez-site-v2-verde-github/academia \
-            public/academia
-
+          diff -qr source/yamilet-perez-site-v2-verde-github/academia public/academia
           test -s public/academia/index.html
+          test -s public/academia/catalogo.html
           test -s public/academia/sw.js
           test -s public/academia/manifest.webmanifest
           test -s public/assets/logo-yamilet.png
-
-          grep -q 'academia-yamilet-architecture-step-13' public/academia/index.html
-          grep -q './academy-progress-v58.js?v=58' public/academia/index.html
-          grep -q './academy-pwa-v57.js?v=57' public/academia/index.html
-          grep -q 'v58' public/academia/sw.js
+          grep -q 'course-hub-catalog-v68' public/academia/index.html
+          grep -q './academy-courses.js?v=68' public/academia/index.html
+          grep -q './academy-public-catalog-v68.js?v=68' public/academia/catalogo.html
+          grep -q 'v68' public/academia/sw.js
 
       - name: Guard deployment scope
         shell: bash
         run: |
           set -euo pipefail
           cd public
-          unexpected="$(
-            git status --porcelain | awk '{print $2}' |
-            grep -Ev '^(academia/|assets/logo-yamilet\.png$)' || true
-          )"
+          unexpected="$(git status --porcelain | awk '{print $2}' | grep -Ev '^(academia/|assets/logo-yamilet\.png$)' || true)"
           if [ -n "$unexpected" ]; then
             echo "Deployment attempted to change files outside the Academy scope:" >&2
             echo "$unexpected" >&2
@@ -208,14 +210,10 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A academia assets/logo-yamilet.png
-
           if git diff --cached --quiet; then
             echo "gh-pages already matches validated main; nothing to publish."
             exit 0
           fi
-
           short_sha="${GITHUB_SHA::7}"
-          git commit \
-            -m "deploy(academia): sync ${short_sha}" \
-            -m "Validated source: ${GITHUB_SHA}"
+          git commit -m "deploy(academia): sync ${short_sha}" -m "Validated source: ${GITHUB_SHA}"
           git push origin HEAD:gh-pages
