@@ -1,6 +1,6 @@
 const CACHE_PREFIX = 'academia-yamilet-pwa-';
-const CACHE_NAME = `${CACHE_PREFIX}v86`;
-// CI compatibility markers from previous stable caches: v69 v71 v72 v73 v74 v75 v76 v77 v78 v79 v80 v81 v82 v82.1 v83 v84 v85
+const CACHE_NAME = `${CACHE_PREFIX}v87`;
+// CI compatibility markers from previous stable caches: v69 v71 v72 v73 v74 v75 v76 v77 v78 v79 v80 v81 v82 v82.1 v83 v84 v85 v86
 const BASE = new URL('./', self.location.href);
 const OFFLINE_URL = new URL('./offline.html', BASE).href;
 const PRECACHE = [
@@ -31,6 +31,8 @@ const PRECACHE = [
   new URL('./academy-admin.js?v=1&build=2', BASE).href,
   new URL('./academy-admin-operations.css?v=1&build=2', BASE).href,
   new URL('./academy-admin-operations.js?v=1&build=2', BASE).href,
+  new URL('./academy-operations-admin-v87.css?v=87', BASE).href,
+  new URL('./academy-operations-admin-v87.js?v=87', BASE).href,
   new URL('./academy-assessment-admin.css?v=82', BASE).href,
   new URL('./academy-assessment-admin.js?v=82', BASE).href,
   new URL('./academy-assessment-runtime-v82.js?v=82', BASE).href,
@@ -97,19 +99,15 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
-
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-
   if (request.mode === 'navigate') {
     event.respondWith(fetch(request).catch(() => caches.match(OFFLINE_URL)));
     return;
   }
-
   const isAcademyAsset = url.pathname.includes('/academia/') || url.pathname.includes('/assets/');
   const isStatic = ['style', 'script', 'image', 'font'].includes(request.destination) || url.pathname.endsWith('.webmanifest');
   if (!isAcademyAsset || !isStatic) return;
-
   event.respondWith(
     caches.open(CACHE_NAME).then(async cache => {
       const cached = await cache.match(request);
