@@ -1,6 +1,6 @@
 const CACHE_PREFIX = 'academia-yamilet-pwa-';
-const CACHE_NAME = `${CACHE_PREFIX}v73`;
-// CI compatibility markers from previous stable caches: v69 v71 v72
+const CACHE_NAME = `${CACHE_PREFIX}v74`;
+// CI compatibility markers from previous stable caches: v69 v71 v72 v73
 const BASE = new URL('./', self.location.href);
 const OFFLINE_URL = new URL('./offline.html', BASE).href;
 const PRECACHE = [
@@ -25,6 +25,7 @@ const PRECACHE = [
   new URL('./academy-aula-pages-v71.js?v=71', BASE).href,
   new URL('./academy-v72-refinement.css?v=72', BASE).href,
   new URL('./academy-courses-refinement-v73.css?v=73', BASE).href,
+  new URL('./academy-library-refinement-v74.css?v=74', BASE).href,
   new URL('./academy-module-navigation-v66.js?v=66', BASE).href,
   new URL('./academy-module-navigation-v66.css?v=66', BASE).href,
   new URL('./academy-pwa-v57.css', BASE).href,

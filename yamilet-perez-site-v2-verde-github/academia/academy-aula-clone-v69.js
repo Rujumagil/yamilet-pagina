@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = '73.0.0';
+  const VERSION = '74.0.0';
   const TOP_LEVEL = new Set(['home','courses','resources','agenda','certificates']);
   let scheduled = false;
 
@@ -28,6 +28,7 @@
   function ensureRefinementStyles() {
     ensureStylesheet('link[data-academy-v72]', './academy-v72-refinement.css?v=72', 'academyV72');
     ensureStylesheet('link[data-academy-courses-v73]', './academy-courses-refinement-v73.css?v=73', 'academyCoursesV73');
+    ensureStylesheet('link[data-academy-library-v74]', './academy-library-refinement-v74.css?v=74', 'academyLibraryV74');
   }
 
   function enhanceBrand() {
@@ -130,6 +131,77 @@
     if (continuePrimary) continuePrimary.textContent = /continuar/i.test(continuePrimary.textContent || '') ? 'Continuar curso →' : 'Entrar al curso →';
   }
 
+  function enhanceResourcesPage() {
+    const page = document.querySelector('.v71-library-page');
+    if (!page) return;
+
+    const cards = Array.from(page.querySelectorAll('[data-v71-resource-card]'));
+    const books = cards.filter(card => card.dataset.resourceGroup === 'book');
+    const materials = cards.filter(card => card.dataset.resourceGroup !== 'book');
+    const titles = cards.map(card => card.querySelector('h3')?.textContent?.trim() || '').join('|');
+    const signature = `${cards.length}:${books.length}:${materials.length}:${titles}`;
+    if (page.dataset.v74Enhanced === signature) return;
+
+    page.dataset.v74Enhanced = signature;
+    page.dataset.v74ResourceCount = String(cards.length);
+    page.dataset.v74BookCount = String(books.length);
+    page.dataset.v74MaterialCount = String(materials.length);
+
+    const header = page.querySelector(':scope > .v71-page-heading');
+    const eyebrow = header?.querySelector('.v71-eyebrow');
+    const description = header?.querySelector('p');
+    if (eyebrow) eyebrow.textContent = 'Tu colección';
+    if (description) description.textContent = 'Libros, ejercicios y materiales asignados a tus programas, reunidos en un solo lugar.';
+
+    const toolbar = page.querySelector(':scope > .v71-toolbar');
+    if (toolbar) toolbar.dataset.v74Hidden = cards.length < 4 ? 'true' : 'false';
+
+    cards.forEach(card => {
+      delete card.dataset.v74FeaturedDuplicate;
+      const action = card.querySelector('[data-v71-resource]');
+      makeCardClickable(card, action, 'v74ResourceClick');
+    });
+
+    const featured = page.querySelector(':scope > .v71-featured-resource');
+    const featuredTitle = featured?.querySelector('h2')?.textContent?.trim().toLowerCase() || '';
+    const bookGrid = page.querySelector('.v71-resource-grid.books');
+    const bookSection = bookGrid?.closest('.v71-library-section');
+
+    let visibleBooks = books;
+    if (featuredTitle) {
+      let duplicateMarked = false;
+      books.forEach(card => {
+        const title = card.querySelector('h3')?.textContent?.trim().toLowerCase() || '';
+        if (!duplicateMarked && title && title === featuredTitle) {
+          card.dataset.v74FeaturedDuplicate = 'true';
+          duplicateMarked = true;
+        }
+      });
+      visibleBooks = books.filter(card => card.dataset.v74FeaturedDuplicate !== 'true');
+    }
+
+    if (bookSection) {
+      bookSection.dataset.v74EmptySection = visibleBooks.length ? 'false' : 'true';
+      const count = bookSection.querySelector(':scope > .v71-section-heading > span');
+      if (count && visibleBooks.length) count.textContent = `${visibleBooks.length} ${visibleBooks.length === 1 ? 'título' : 'títulos'}`;
+    }
+
+    const materialGrid = Array.from(page.querySelectorAll('.v71-resource-grid')).find(grid => !grid.classList.contains('books'));
+    const materialSection = materialGrid?.closest('.v71-library-section');
+    if (materialSection) materialSection.dataset.v74MaterialSection = 'true';
+
+    const empty = page.querySelector('.v71-library-content .v71-empty');
+    if (empty && !empty.querySelector('.v74-empty-actions')) {
+      empty.insertAdjacentHTML('beforeend', '<div class="v74-empty-actions"><a href="#courses">Volver a mis cursos</a><a href="#catalog">Explorar catálogo</a></div>');
+    }
+
+    const security = page.querySelector('.v71-security-note');
+    const securityTitle = security?.querySelector('strong');
+    const securityText = security?.querySelector('p');
+    if (securityTitle) securityTitle.textContent = 'Biblioteca privada';
+    if (securityText) securityText.textContent = 'Tus archivos se abren únicamente con los permisos de tu cuenta de Academia Yamilet.';
+  }
+
   function enhanceTopbar() {
     const topbar = document.querySelector('.academy-topbar');
     if (!topbar) return;
@@ -161,6 +233,7 @@
     enhanceUserCard();
     enhanceCourseCards();
     enhanceCoursesPage();
+    enhanceResourcesPage();
     cleanRouteLayers();
   }
 
@@ -182,6 +255,7 @@
     window.ACADEMIA_YAMILET_AULA_CLONE_V69 = Object.freeze({ version: VERSION, refresh: schedule });
     window.ACADEMIA_YAMILET_REFINEMENT_V72 = Object.freeze({ version: VERSION, refresh: schedule });
     window.ACADEMIA_YAMILET_COURSES_V73 = Object.freeze({ version: VERSION, refresh: schedule });
+    window.ACADEMIA_YAMILET_LIBRARY_V74 = Object.freeze({ version: VERSION, refresh: schedule });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
