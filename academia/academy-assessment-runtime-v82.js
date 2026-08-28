@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = '82.0.0';
+  const VERSION = '82.0.1';
   let loading = null;
   let loaded = false;
   let timer = null;
@@ -65,9 +65,22 @@
     },delay);
   }
 
+  function restoreSearchFocus(position){
+    setTimeout(() => {
+      const input = $('[data-assess82-search]');
+      if(!input || !isRoute()) return;
+      input.focus({preventScroll:true});
+      if(Number.isInteger(position) && input.setSelectionRange) input.setSelectionRange(position,position);
+    },0);
+  }
+
   function start(){
     document.addEventListener('click',event => {
       if(event.target.closest('[data-admin-v79-go="evaluations"],a[href="#admin/evaluations"]')) schedule(120);
+    },true);
+    document.addEventListener('input',event => {
+      if(!event.target.matches?.('[data-assess82-search]')) return;
+      restoreSearchFocus(event.target.selectionStart);
     },true);
     window.addEventListener('hashchange',() => schedule(100));
     window.addEventListener('popstate',() => schedule(100));
