@@ -1,0 +1,68 @@
+/* Academia Yamilet v68 · Mis cursos privado + próximos reales */
+.dashboard-main[data-academy-section="courses"]>#mis-cursos.academy-v68-course-hub{padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.dashboard-main[data-academy-section="courses"]>#mis-cursos.academy-v68-course-hub>.panel-head{display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:22px!important;margin:0 0 28px!important;padding:0!important}
+.academy-v68-course-hub>.panel-head>div{max-width:760px}
+.academy-v68-course-hub>.panel-head .kicker{color:#aa7b1d!important;font-size:10px!important;font-weight:900!important;letter-spacing:.15em!important;text-transform:uppercase}
+.academy-v68-course-hub>.panel-head h2{margin:5px 0 8px!important;color:#21372e!important;font:600 clamp(42px,5vw,62px)/.95 Georgia,"Times New Roman",serif!important;letter-spacing:-.045em!important}
+.academy-v68-course-hub>.panel-head p{max-width:720px!important;margin:0!important;color:#6f7d75!important;font-size:13px!important;line-height:1.6!important}
+.academy-v68-catalog-link{flex:0 0 auto;min-height:44px;padding:0 16px;border:1px solid rgba(18,63,53,.13);border-radius:13px;background:#fff;color:#17483d;font-size:11px;font-weight:850;cursor:pointer;box-shadow:0 8px 22px rgba(18,63,53,.05)}
+.academy-v68-catalog-link:hover{border-color:rgba(18,63,53,.28);background:#f9fbf8}
+.academy-v68-active-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:0 0 14px;padding:0 2px}
+.academy-v68-active-head>div>span,.academy-v68-upcoming-head>div>span{display:block;color:#ac7e21;font-size:9px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.academy-v68-active-head h3,.academy-v68-upcoming-head h3{margin:5px 0 0;color:#273b32;font:600 28px/1.05 Georgia,"Times New Roman",serif}
+.academy-v68-active-head p,.academy-v68-upcoming-head p{max-width:600px;margin:0;color:#79857e;font-size:11px;line-height:1.55;text-align:right}
+.dashboard-main[data-academy-section="courses"] .learning-course-list.academy-v68-active-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important;align-items:stretch!important;margin:0!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course{grid-column:auto!important;display:flex!important;flex-direction:column!important;min-width:0!important;min-height:0!important;width:100%!important;border:1px solid rgba(18,63,53,.1)!important;border-radius:22px!important;background:#fff!important;box-shadow:0 13px 34px rgba(18,63,53,.055)!important;overflow:hidden!important;cursor:pointer!important;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course::before{display:none!important;content:none!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course:hover{transform:translateY(-3px)!important;border-color:rgba(18,63,53,.22)!important;box-shadow:0 18px 42px rgba(18,63,53,.095)!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course:focus-visible{outline:3px solid rgba(184,138,43,.38);outline-offset:3px}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course .course-cover{display:block!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:16/9!important;object-fit:cover!important;border-radius:0!important;background:#113d34}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course .course-card-body{display:flex!important;flex:1!important;flex-direction:column!important;justify-content:flex-start!important;gap:10px!important;padding:18px 18px 19px!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course .course-card-top{order:0}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course h3{margin:1px 0 0!important;color:#263b31!important;font:600 clamp(24px,2.2vw,31px)/1 Georgia,"Times New Roman",serif!important;letter-spacing:-.025em!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course p{display:-webkit-box!important;min-height:42px!important;margin:0!important;color:#718078!important;font-size:11px!important;line-height:1.55!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course .progress-track{height:6px!important;margin-top:3px!important;border-radius:99px!important;background:#edf0eb!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course .course-meta{display:flex!important;justify-content:space-between!important;gap:8px!important;color:#7c8780!important;font-size:9px!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course .course-action{align-self:stretch!important;width:100%!important;min-width:0!important;min-height:43px!important;margin-top:auto!important;border-radius:12px!important;background:#123f35!important;color:#fff!important;font-size:11px!important;font-weight:850!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course .course-action:hover{background:#0d342c!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course .tag{background:#eaf4ed!important;color:#2e5e49!important;border:1px solid rgba(18,63,53,.08)!important;font-size:8px!important;font-weight:900!important;letter-spacing:.1em!important}
+.dashboard-main[data-academy-section="courses"] .learning-course-card.academy-v68-active-course .course-percent{font:600 16px Georgia,serif!important;color:#123f35!important}
+.academy-v68-draft-card{display:none!important}
+
+.academy-v68-upcoming{margin-top:34px;padding-top:28px;border-top:1px solid rgba(18,63,53,.09)}
+.academy-v68-upcoming-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:15px}
+.academy-v68-upcoming-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.academy-v68-upcoming-card{overflow:hidden;border:1px solid rgba(18,63,53,.09);border-radius:20px;background:#fff;box-shadow:0 10px 28px rgba(18,63,53,.04)}
+.academy-v68-upcoming-media{position:relative;aspect-ratio:16/9;background:linear-gradient(145deg,#103b32,#1a5143);overflow:hidden}
+.academy-v68-upcoming-media img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.75) brightness(.94)}
+.academy-v68-upcoming-media>span{position:absolute;left:12px;top:12px;padding:6px 9px;border-radius:999px;background:rgba(255,248,229,.95);color:#84631d;font-size:8px;font-weight:900;letter-spacing:.1em}
+.academy-v68-cover-fallback{width:100%;height:100%;display:grid;place-items:center;color:#e3bb59;font:600 34px Georgia,serif}
+.academy-v68-upcoming-copy{padding:16px 17px 18px}
+.academy-v68-upcoming-copy>small{display:block;color:#a37a24;font-size:8px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+.academy-v68-upcoming-copy h4{margin:7px 0 7px;color:#293b33;font:600 22px/1.05 Georgia,"Times New Roman",serif}
+.academy-v68-upcoming-copy p{min-height:36px;margin:0;color:#76827b;font-size:10px;line-height:1.5}
+.academy-v68-upcoming-copy>div{margin-top:13px;padding-top:11px;border-top:1px solid rgba(18,63,53,.07);color:#78847d;font-size:9px}
+.academy-v68-upcoming-empty,.academy-v68-upcoming-loading{display:flex;flex-direction:column;gap:5px;padding:21px 22px;border:1px dashed rgba(18,63,53,.14);border-radius:18px;background:rgba(255,255,255,.64)}
+.academy-v68-upcoming-empty strong{color:#315247;font:600 17px Georgia,serif}
+.academy-v68-upcoming-empty span,.academy-v68-upcoming-loading{color:#7b8780;font-size:10px;line-height:1.5}
+
+/* El curso inscrito abre directamente a su recorrido, sin landing comercial interna. */
+body[data-academy-learning-view="course"] .academy-v68-learning-course .academy-course-hero,
+body[data-academy-learning-view="course"] .academy-v68-learning-course .academy-program-heading{display:none!important}
+body[data-academy-learning-view="course"] .academy-v68-learning-course .course-detail-head{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:22px!important;margin:0 0 14px!important;padding:24px 26px!important;border:1px solid rgba(18,63,53,.09)!important;border-radius:22px!important;background:linear-gradient(145deg,#fff,#fbfaf5)!important;box-shadow:0 12px 30px rgba(18,63,53,.045)!important}
+body[data-academy-learning-view="course"] .academy-v68-learning-course .course-detail-head h2{margin:5px 0 7px!important;color:#22382e!important;font:600 clamp(34px,4vw,48px)/.95 Georgia,"Times New Roman",serif!important;letter-spacing:-.035em!important}
+body[data-academy-learning-view="course"] .academy-v68-learning-course .course-detail-head p{max-width:760px!important;margin:0!important;color:#728078!important;font-size:11px!important;line-height:1.55!important}
+body[data-academy-learning-view="course"] .academy-v68-learning-course .progress-track.large{display:block!important;height:7px!important;margin:0 2px 22px!important;border-radius:99px!important;background:#e8ece7!important}
+body[data-academy-learning-view="course"] .academy-v68-learning-course .progress-orb{width:82px!important;height:82px!important;min-width:82px!important}
+
+@media(max-width:1120px){
+  .dashboard-main[data-academy-section="courses"] .learning-course-list.academy-v68-active-grid,.academy-v68-upcoming-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+  .academy-v68-course-hub>.panel-head,.academy-v68-active-head,.academy-v68-upcoming-head{align-items:flex-start!important;flex-direction:column!important}
+  .academy-v68-active-head p,.academy-v68-upcoming-head p{text-align:left}
+  .academy-v68-catalog-link{width:100%}
+  .dashboard-main[data-academy-section="courses"] .learning-course-list.academy-v68-active-grid,.academy-v68-upcoming-grid{grid-template-columns:1fr!important}
+  body[data-academy-learning-view="course"] .academy-v68-learning-course .course-detail-head{grid-template-columns:1fr!important;padding:20px!important}
+  body[data-academy-learning-view="course"] .academy-v68-learning-course .progress-orb{width:70px!important;height:70px!important;min-width:70px!important}
+}
