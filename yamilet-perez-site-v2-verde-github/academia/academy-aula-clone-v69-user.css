@@ -1,0 +1,33 @@
+/* Complemento sidebar/user card para Aula clone v69 */
+body:has(.dashboard:not(.hidden)) .academy-aula-user-card{
+  min-height:68px;
+  display:grid;
+  grid-template-columns:40px minmax(0,1fr) 14px;
+  align-items:center;
+  gap:10px;
+  margin-top:auto;
+  margin-bottom:8px;
+  padding:11px 12px;
+  border-radius:16px;
+  background:rgba(255,255,255,.075);
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff;
+}
+body:has(.dashboard:not(.hidden)) .academy-aula-user-avatar{
+  width:40px;height:40px;display:grid;place-items:center;
+  border-radius:50%;
+  background:linear-gradient(145deg,#315f52,#183f35);
+  border:1px solid rgba(255,255,255,.16);
+  color:#fff;font-size:.72rem;font-weight:800;
+}
+body:has(.dashboard:not(.hidden)) .academy-aula-user-copy{min-width:0;display:block}
+body:has(.dashboard:not(.hidden)) .academy-aula-user-copy strong{
+  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:#fff!important;font-size:.71rem!important;line-height:1.2!important;font-weight:700!important;
+}
+body:has(.dashboard:not(.hidden)) .academy-aula-user-copy small{
+  display:block;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:rgba(247,251,249,.62);font-size:.57rem;line-height:1.1;
+}
+body:has(.dashboard:not(.hidden)) .academy-aula-user-arrow{color:rgba(247,251,249,.48);font-size:1rem}
+@media(max-width:900px){body:has(.dashboard:not(.hidden)) .academy-aula-user-card{display:none!important}}

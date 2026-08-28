@@ -35,6 +35,7 @@ jobs:
           node --check yamilet-perez-site-v2-verde-github/academia/academy-courses.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-explore.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-public-catalog-v68.js
+          node --check yamilet-perez-site-v2-verde-github/academia/academy-aula-clone-v69.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-module-navigation-v66.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-evaluations.js
           node --check yamilet-perez-site-v2-verde-github/academia/academy-library.js
@@ -68,6 +69,9 @@ jobs:
           test -s "$base/academy-course-hub-v68.css"
           test -s "$base/academy-public-catalog-v68.css"
           test -s "$base/academy-public-catalog-v68.js"
+          test -s "$base/academy-aula-clone-v69.css"
+          test -s "$base/academy-aula-clone-v69-user.css"
+          test -s "$base/academy-aula-clone-v69.js"
           test -s "$base/manifest.webmanifest"
           test -s "$base/offline.html"
           test -s "$base/sw.js"
@@ -75,12 +79,15 @@ jobs:
           test -s "$base/verificar-certificado.js"
           test -s "$base/verificar-certificado.css"
           grep -q 'academia-yamilet-architecture-step-13' "$base/index.html"
-          grep -q 'course-hub-catalog-v68' "$base/index.html"
+          grep -q 'aula-compas-clone-v69' "$base/index.html"
           grep -q './app.js?v=66' "$base/index.html"
           grep -q './academy-navigation.js?v=68' "$base/index.html"
           grep -q './academy-dashboard.js?v=1' "$base/index.html"
           grep -q './academy-courses.js?v=68' "$base/index.html"
           grep -q './academy-course-hub-v68.css?v=68' "$base/index.html"
+          grep -q './academy-aula-clone-v69.css?v=69' "$base/index.html"
+          grep -q './academy-aula-clone-v69-user.css?v=69' "$base/index.html"
+          grep -q './academy-aula-clone-v69.js?v=69' "$base/index.html"
           grep -q './academy-explore.js?v=68' "$base/index.html"
           grep -q './academy-evaluations.js?v=1' "$base/index.html"
           grep -q './academy-library.js?v=1' "$base/index.html"
@@ -110,7 +117,7 @@ jobs:
           grep -q './academy-public-catalog-v68.js?v=68' "$base/catalogo.html"
           grep -q './academy-public-catalog-v68.css?v=68' "$base/catalogo.html"
           grep -q 'academia-yamilet-pwa-' "$base/sw.js"
-          grep -q 'v68' "$base/sw.js"
+          grep -q 'v69' "$base/sw.js"
           grep -q './verificar-certificado.js?v=1' "$base/verificar.html"
           grep -q './verificar-certificado.css?v=1' "$base/verificar.html"
           grep -q "academy-public-config" "$base/app.js"
@@ -185,10 +192,12 @@ jobs:
           test -s public/academia/sw.js
           test -s public/academia/manifest.webmanifest
           test -s public/assets/logo-yamilet.png
-          grep -q 'course-hub-catalog-v68' public/academia/index.html
+          grep -q 'aula-compas-clone-v69' public/academia/index.html
+          grep -q './academy-aula-clone-v69.css?v=69' public/academia/index.html
+          grep -q './academy-aula-clone-v69.js?v=69' public/academia/index.html
           grep -q './academy-courses.js?v=68' public/academia/index.html
           grep -q './academy-public-catalog-v68.js?v=68' public/academia/catalogo.html
-          grep -q 'v68' public/academia/sw.js
+          grep -q 'v69' public/academia/sw.js
 
       - name: Guard deployment scope
         shell: bash
