@@ -1,0 +1,94 @@
+/* Academia Yamilet · Mi biblioteca v74
+   Biblioteca privada: libros, materiales y recursos con jerarquía compacta. */
+
+.v71-library-page{gap:22px!important}
+.v71-library-page>.v71-page-heading{align-items:center!important;padding:4px 0 0!important}
+.v71-library-page>.v71-page-heading>div:first-child{max-width:720px!important}
+.v71-library-page>.v71-page-heading h1{font-size:clamp(30px,3vw,38px)!important;line-height:1.06!important;letter-spacing:-.035em!important;font-weight:730!important}
+.v71-library-page>.v71-page-heading p{max-width:680px!important;font-size:14px!important;line-height:1.55!important}
+.v71-library-page .v71-library-summary{gap:10px!important}
+.v71-library-page .v71-library-summary article{min-width:104px!important;padding:11px 15px!important;border-radius:12px!important;box-shadow:none!important;background:#fff!important}
+.v71-library-page .v71-library-summary strong{font-size:21px!important;font-weight:750!important}
+.v71-library-page .v71-library-summary span{font-size:10px!important;letter-spacing:.04em!important}
+
+/* El buscador sólo aparece cuando la colección ya necesita filtrado. */
+.v71-library-page .v71-toolbar[data-v74-hidden="true"]{display:none!important}
+.v71-library-page .v71-toolbar{padding:10px!important;border-radius:13px!important;box-shadow:none!important}
+.v71-library-page .v71-toolbar label{max-width:620px!important;background:#f8faf9!important}
+.v71-library-page .v71-toolbar button{min-width:76px!important}
+
+/* Recurso destacado: portada clara + contenido, sin repetirlo en la estantería. */
+.v71-library-page .v71-featured-resource{grid-template-columns:minmax(220px,34%) minmax(0,1fr)!important;min-height:300px!important;border-radius:18px!important;background:linear-gradient(135deg,#103f36 0%,#0f4b3f 72%,#176052 100%)!important;box-shadow:0 14px 34px rgba(15,75,63,.11)!important}
+.v71-library-page .v71-featured-resource>img{width:100%!important;height:100%!important;min-height:300px!important;object-fit:cover!important;object-position:center!important;background:#eaf2ef!important}
+.v71-library-page .v71-featured-resource>div{padding:34px clamp(26px,4vw,50px)!important;max-width:760px!important}
+.v71-library-page .v71-featured-resource h2{font-size:clamp(25px,2.5vw,34px)!important;line-height:1.08!important;letter-spacing:-.025em!important}
+.v71-library-page .v71-featured-resource p{font-size:14px!important;line-height:1.6!important;max-width:620px!important;margin:10px 0 22px!important}
+.v71-library-page .v71-featured-resource .v71-btn{min-width:136px!important;width:max-content!important}
+
+[data-v74-featured-duplicate="true"]{display:none!important}
+.v71-library-section[data-v74-empty-section="true"]{display:none!important}
+
+/* Secciones de biblioteca. */
+.v71-library-page .v71-library-content{gap:24px!important}
+.v71-library-page .v71-library-section{gap:14px!important}
+.v71-library-page .v71-library-section>.v71-section-heading{padding:0 2px!important}
+.v71-library-page .v71-library-section>.v71-section-heading h2{font-size:21px!important;font-weight:700!important}
+.v71-library-page .v71-library-section>.v71-section-heading>span{font-size:11px!important;color:#68756f!important;font-weight:700!important}
+
+/* Libros: estantería visual, no tarjetas gigantes horizontales. */
+.v71-library-page .v71-resource-grid.books{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important}
+.v71-library-page .v71-resource-grid.books .v71-resource-card{display:flex!important;flex-direction:column!important;min-width:0!important;border-radius:15px!important;overflow:hidden!important;background:#fff!important;box-shadow:none!important;cursor:pointer!important}
+.v71-library-page .v71-resource-grid.books .v71-resource-card:hover{transform:translateY(-2px)!important;box-shadow:0 12px 28px rgba(15,75,63,.08)!important}
+.v71-library-page .v71-resource-grid.books .v71-resource-card>img{width:100%!important;aspect-ratio:4/3!important;height:auto!important;object-fit:cover!important;background:#eaf2ef!important}
+.v71-library-page .v71-resource-grid.books .v71-resource-card>div{padding:16px!important;display:flex!important;flex:1!important;flex-direction:column!important;gap:7px!important}
+.v71-library-page .v71-resource-grid.books .v71-resource-card h3{font-size:16px!important;line-height:1.25!important}
+.v71-library-page .v71-resource-grid.books .v71-resource-card p{font-size:12px!important;line-height:1.5!important;display:-webkit-box!important;-webkit-line-clamp:3!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
+.v71-library-page .v71-resource-grid.books .v71-text-action{margin-top:auto!important;padding-top:5px!important;text-align:left!important}
+
+/* Materiales: formato compacto de recurso descargable. */
+.v71-library-page .v71-resource-grid:not(.books){grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+.v71-library-page .v71-resource-grid:not(.books) .v71-resource-card{display:grid!important;grid-template-columns:72px minmax(0,1fr)!important;align-items:center!important;min-height:116px!important;border-radius:14px!important;padding:12px!important;background:#fff!important;cursor:pointer!important;box-shadow:none!important}
+.v71-library-page .v71-resource-grid:not(.books) .v71-resource-card:hover{border-color:rgba(15,75,63,.22)!important;box-shadow:0 10px 24px rgba(15,75,63,.055)!important}
+.v71-library-page .v71-resource-grid:not(.books) .v71-resource-card>img{width:72px!important;height:72px!important;border-radius:11px!important;object-fit:cover!important;background:#eaf2ef!important}
+.v71-library-page .v71-resource-grid:not(.books) .v71-resource-card>div{padding:0 4px 0 14px!important;display:grid!important;gap:4px!important}
+.v71-library-page .v71-resource-grid:not(.books) .v71-resource-card .v71-eyebrow{margin-bottom:0!important;font-size:9px!important}
+.v71-library-page .v71-resource-grid:not(.books) .v71-resource-card h3{font-size:15px!important}
+.v71-library-page .v71-resource-grid:not(.books) .v71-resource-card p{font-size:11px!important;line-height:1.4!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.v71-library-page .v71-resource-grid:not(.books) .v71-text-action{font-size:11px!important;text-align:left!important}
+
+/* Estado vacío útil y compacto. */
+.v71-library-page .v71-empty{min-height:260px!important;padding:42px!important;border:1px dashed rgba(15,75,63,.20)!important;border-radius:18px!important;background:linear-gradient(145deg,#fff 0%,#f3f7f5 100%)!important;text-align:center!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important}
+.v71-library-page .v71-empty>span{color:#c89b32!important;font-size:10px!important;font-weight:850!important;letter-spacing:.11em!important;text-transform:uppercase!important}
+.v71-library-page .v71-empty h2{font-size:24px!important;margin-top:8px!important}
+.v71-library-page .v71-empty p{max-width:560px!important;margin-top:8px!important}
+.v74-empty-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+.v74-empty-actions a{min-height:40px;padding:0 16px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:750;border:1px solid #dce4e0;color:#0f4b3f;background:#fff;text-decoration:none}
+.v74-empty-actions a:first-child{background:#0f4b3f;color:#fff;border-color:#0f4b3f}
+
+/* Nota de seguridad discreta. */
+.v71-library-page .v71-security-note{min-height:64px!important;padding:13px 16px!important;border-radius:13px!important;background:#f1f6f4!important;border:1px solid #dce4e0!important;box-shadow:none!important;display:flex!important;align-items:center!important;gap:12px!important}
+.v71-library-page .v71-security-note>span{width:34px!important;height:34px!important;flex:0 0 34px!important;border-radius:10px!important;background:#e4efeb!important;color:#0f4b3f!important;display:grid!important;place-items:center!important}
+.v71-library-page .v71-security-note strong{font-size:12px!important}
+.v71-library-page .v71-security-note p{font-size:11px!important;line-height:1.4!important;margin-top:2px!important}
+
+@media (max-width:1180px){
+  .v71-library-page .v71-resource-grid.books{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media (max-width:900px){
+  .v71-library-page>.v71-page-heading{align-items:flex-start!important;flex-direction:column!important}
+  .v71-library-page .v71-featured-resource{grid-template-columns:210px minmax(0,1fr)!important}
+  .v71-library-page .v71-resource-grid.books{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .v71-library-page .v71-resource-grid:not(.books){grid-template-columns:1fr!important}
+}
+@media (max-width:640px){
+  .v71-library-page{gap:18px!important}
+  .v71-library-page .v71-library-summary{width:100%!important}
+  .v71-library-page .v71-library-summary article{flex:1!important;min-width:0!important}
+  .v71-library-page .v71-featured-resource{grid-template-columns:1fr!important}
+  .v71-library-page .v71-featured-resource>img{height:210px!important;min-height:210px!important}
+  .v71-library-page .v71-featured-resource>div{padding:24px!important}
+  .v71-library-page .v71-resource-grid.books{grid-template-columns:1fr!important}
+  .v71-library-page .v71-resource-grid.books .v71-resource-card{display:grid!important;grid-template-columns:120px minmax(0,1fr)!important}
+  .v71-library-page .v71-resource-grid.books .v71-resource-card>img{height:100%!important;aspect-ratio:auto!important;min-height:150px!important}
+  .v71-library-page .v71-empty{padding:30px 20px!important;min-height:230px!important}
+}
