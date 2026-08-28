@@ -1,0 +1,115 @@
+/* Academia Yamilet · Certificados v76 */
+.v71-certificates-page{gap:22px!important}
+.v71-certificates-page>.v71-page-heading{align-items:center!important;padding:4px 0 0!important}
+.v71-certificates-page>.v71-page-heading>div:first-child{max-width:720px!important}
+.v71-certificates-page>.v71-page-heading h1{font-size:clamp(30px,3vw,38px)!important;line-height:1.06!important;letter-spacing:-.035em!important;font-weight:730!important}
+.v71-certificates-page>.v71-page-heading p{max-width:680px!important;font-size:14px!important;line-height:1.55!important}
+.v71-certificates-page .v71-library-summary{gap:10px!important}
+.v71-certificates-page .v71-library-summary article{min-width:118px!important;padding:11px 15px!important;border-radius:12px!important;background:#fff!important;box-shadow:none!important;border:1px solid #dce4e0!important}
+.v71-certificates-page .v71-library-summary strong{font-size:21px!important;font-weight:760!important;color:#18231f!important}
+.v71-certificates-page .v71-library-summary span{font-size:10px!important;letter-spacing:.04em!important;color:#68756f!important}
+
+/* Certificado protagonista */
+.v71-certificates-page .v71-certificate-feature{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr)!important;gap:0!important;min-height:360px!important;border-radius:20px!important;overflow:hidden!important;border:1px solid #d8e2dd!important;background:linear-gradient(135deg,#103f36 0%,#0f4b3f 100%)!important;box-shadow:0 16px 40px rgba(15,75,63,.10)!important}
+.v71-certificates-page .v71-certificate-feature>div:first-child{padding:38px clamp(28px,4vw,54px)!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+.v71-certificates-page .v71-certificate-feature .v71-eyebrow{color:#f2c963!important}
+.v71-certificates-page .v71-certificate-feature h2{font-size:clamp(26px,2.8vw,36px)!important;line-height:1.08!important;letter-spacing:-.03em!important;color:#fff!important;margin:8px 0 10px!important}
+.v71-certificates-page .v71-certificate-feature p{max-width:560px!important;font-size:13px!important;line-height:1.6!important;color:rgba(255,255,255,.76)!important;margin:0 0 22px!important}
+.v71-certificates-page .v71-certificate-feature .v71-course-actions{display:flex!important;gap:9px!important;flex-wrap:wrap!important}
+.v71-certificates-page .v71-certificate-feature .v71-btn{min-height:42px!important;padding:0 16px!important;border-radius:10px!important;font-size:11px!important;font-weight:780!important}
+.v71-certificates-page .v71-certificate-feature .v71-btn.primary{background:#fff!important;color:#0f4b3f!important;border-color:#fff!important}
+.v71-certificates-page .v71-certificate-feature .v71-btn.ghost{background:transparent!important;color:#fff!important;border-color:rgba(255,255,255,.28)!important}
+.v71-certificates-page .v71-certificate-preview{margin:24px!important;padding:34px!important;border-radius:16px!important;background:#fffdf7!important;border:1px solid rgba(200,155,50,.28)!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;box-shadow:0 18px 42px rgba(7,39,33,.18)!important;position:relative!important;overflow:hidden!important}
+.v71-certificates-page .v71-certificate-preview:before{content:"";position:absolute;inset:10px;border:1px solid rgba(200,155,50,.34);border-radius:11px;pointer-events:none}
+.v71-certificates-page .v71-certificate-preview>span{font-size:9px!important;font-weight:850!important;letter-spacing:.16em!important;color:#9f7921!important;margin-bottom:28px!important}
+.v71-certificates-page .v71-certificate-preview>strong{font-size:clamp(22px,2.6vw,32px)!important;line-height:1.08!important;color:#17342d!important;font-family:Georgia,'Times New Roman',serif!important;font-weight:600!important}
+.v71-certificates-page .v71-certificate-preview>small{margin-top:10px!important;font-size:11px!important;line-height:1.4!important;color:#68756f!important;max-width:260px!important}
+.v71-certificates-page .v71-certificate-preview>i{margin-top:34px!important;width:48px!important;height:48px!important;border-radius:50%!important;background:#0f4b3f!important;color:#fff!important;display:grid!important;place-items:center!important;font-style:normal!important;font-size:12px!important;font-weight:850!important;border:4px solid #e9d59b!important}
+
+/* Próximo certificado */
+.v71-certificates-page .v71-certificate-progress{display:grid!important;grid-template-columns:58px minmax(0,1fr) auto!important;align-items:center!important;gap:18px!important;padding:20px 22px!important;border:1px solid #dce4e0!important;border-radius:16px!important;background:#fff!important;box-shadow:none!important}
+.v71-certificates-page .v71-cert-icon{width:54px!important;height:54px!important;border-radius:14px!important;background:#eaf2ef!important;color:#0f4b3f!important;display:grid!important;place-items:center!important;font-size:23px!important}
+.v71-certificates-page .v71-certificate-progress h2{font-size:20px!important;line-height:1.2!important;margin:4px 0 5px!important;color:#18231f!important}
+.v71-certificates-page .v71-certificate-progress p{font-size:12px!important;line-height:1.5!important;color:#68756f!important;margin:0 0 10px!important}
+.v71-certificates-page .v71-certificate-progress .v71-progress{height:7px!important;background:#edf1ef!important;border-radius:999px!important;overflow:hidden!important}
+.v71-certificates-page .v71-certificate-progress .v71-progress span{background:#0f4b3f!important;border-radius:inherit!important}
+.v71-certificates-page .v71-certificate-progress small{display:block!important;margin-top:6px!important;font-size:10px!important;font-weight:700!important;color:#68756f!important}
+.v71-certificates-page .v71-certificate-progress>.v71-btn{min-height:40px!important;padding:0 15px!important;border-radius:10px!important;font-size:11px!important;white-space:nowrap!important}
+
+/* Evita repetir el certificado destacado y el curso de progreso en las listas. */
+.v71-certificates-page:has(.v71-certificate-feature) .v71-cert-grid>.v71-cert-card:first-child{display:none!important}
+.v71-certificates-page:has(.v71-certificate-feature) .v71-cert-grid>.v71-cert-card:first-child:last-child{display:none!important}
+.v71-certificates-page:has(.v71-certificate-progress) .v71-pending-list>article:first-child{display:none!important}
+.v71-certificates-page:has(.v71-certificate-progress) .v71-pending-list>article:first-child:last-child{display:none!important}
+.v71-certificates-page:has(.v71-certificate-feature) .v71-cert-section:has(.v71-cert-grid>.v71-cert-card:only-child){display:none!important}
+.v71-certificates-page:has(.v71-certificate-progress) .v71-cert-section:has(.v71-pending-list>article:only-child){display:none!important}
+
+/* Encabezados secundarios */
+.v71-certificates-page .v71-cert-section{display:grid!important;gap:13px!important}
+.v71-certificates-page .v71-cert-section>.v71-section-heading{padding:2px!important}
+.v71-certificates-page .v71-cert-section>.v71-section-heading h2{font-size:21px!important;line-height:1.2!important;font-weight:720!important;color:#18231f!important}
+.v71-certificates-page .v71-cert-section>.v71-section-heading .v71-eyebrow{font-size:9px!important;color:#c28e22!important}
+
+/* Certificados históricos */
+.v71-certificates-page .v71-cert-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+.v71-certificates-page .v71-cert-card{min-height:220px!important;padding:20px!important;border:1px solid #dce4e0!important;border-radius:15px!important;background:#fff!important;box-shadow:none!important;display:flex!important;flex-direction:column!important;gap:7px!important;position:relative!important;overflow:hidden!important}
+.v71-certificates-page .v71-cert-card:before{content:"✓";position:absolute;right:16px;top:16px;width:30px;height:30px;border-radius:9px;background:#eaf2ef;color:#0f4b3f;display:grid;place-items:center;font-size:12px;font-weight:850}
+.v71-certificates-page .v71-cert-card>span{font-size:9px!important;font-weight:850!important;letter-spacing:.10em!important;text-transform:uppercase!important;color:#c28e22!important;padding-right:40px!important}
+.v71-certificates-page .v71-cert-card h3{font-size:17px!important;line-height:1.25!important;color:#18231f!important;margin:3px 0!important;padding-right:34px!important}
+.v71-certificates-page .v71-cert-card p{font-size:11px!important;line-height:1.45!important;color:#68756f!important;margin:0!important}
+.v71-certificates-page .v71-cert-card code{margin-top:6px!important;padding:7px 9px!important;border-radius:8px!important;background:#f4f7f5!important;color:#4f5d57!important;font-size:9px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.v71-certificates-page .v71-cert-card>div{margin-top:auto!important;padding-top:12px!important;display:flex!important;gap:8px!important;align-items:center!important}
+.v71-certificates-page .v71-cert-card button,.v71-certificates-page .v71-cert-card a{min-height:34px!important;padding:0 11px!important;border-radius:8px!important;font-size:10px!important;font-weight:760!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;text-decoration:none!important}
+.v71-certificates-page .v71-cert-card button{border:1px solid #0f4b3f!important;background:#0f4b3f!important;color:#fff!important}
+.v71-certificates-page .v71-cert-card a{border:1px solid #dce4e0!important;background:#fff!important;color:#0f4b3f!important}
+
+/* Certificados en proceso */
+.v71-certificates-page .v71-pending-list{display:grid!important;gap:10px!important}
+.v71-certificates-page .v71-pending-list>article{display:grid!important;grid-template-columns:72px minmax(0,1fr) auto!important;align-items:center!important;gap:15px!important;padding:12px 14px!important;border:1px solid #dce4e0!important;border-radius:14px!important;background:#fff!important;box-shadow:none!important}
+.v71-certificates-page .v71-pending-list img{width:72px!important;height:72px!important;border-radius:11px!important;object-fit:cover!important;background:#eaf2ef!important}
+.v71-certificates-page .v71-pending-list>article>div>span{font-size:10px!important;color:#68756f!important}
+.v71-certificates-page .v71-pending-list>article>div>span strong{color:#0f4b3f!important}
+.v71-certificates-page .v71-pending-list h3{font-size:15px!important;line-height:1.25!important;color:#18231f!important;margin:4px 0 8px!important}
+.v71-certificates-page .v71-pending-list .v71-progress{height:6px!important;border-radius:999px!important;background:#edf1ef!important;overflow:hidden!important}
+.v71-certificates-page .v71-pending-list .v71-progress span{background:#0f4b3f!important}
+.v71-certificates-page .v71-pending-list .v71-btn{min-height:36px!important;border-radius:9px!important;padding:0 12px!important;font-size:10px!important}
+
+/* Ayuda y estados */
+.v71-certificates-page .v71-info-note{display:grid!important;grid-template-columns:36px minmax(0,1fr) auto!important;align-items:center!important;gap:12px!important;padding:14px 16px!important;border:1px solid #dce4e0!important;border-radius:13px!important;background:#f3f7f5!important;box-shadow:none!important}
+.v71-certificates-page .v71-info-note>span{width:34px!important;height:34px!important;border-radius:10px!important;background:#e2eee9!important;color:#0f4b3f!important;display:grid!important;place-items:center!important;font-weight:850!important}
+.v71-certificates-page .v71-info-note strong{font-size:12px!important;color:#18231f!important}
+.v71-certificates-page .v71-info-note p{font-size:11px!important;line-height:1.45!important;color:#68756f!important;margin:2px 0 0!important}
+.v71-certificates-page .v71-info-note a{font-size:10px!important;font-weight:760!important;color:#0f4b3f!important;text-decoration:none!important;white-space:nowrap!important}
+.v71-certificates-page>.v71-empty{min-height:260px!important;padding:40px!important;border:1px dashed rgba(15,75,63,.20)!important;border-radius:18px!important;background:#fbfcfb!important;text-align:center!important}
+
+@media (max-width:1120px){
+  .v71-certificates-page .v71-certificate-feature{grid-template-columns:1fr!important}
+  .v71-certificates-page .v71-certificate-preview{min-height:280px!important}
+  .v71-certificates-page .v71-cert-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media (max-width:760px){
+  .v71-certificates-page>.v71-page-heading{align-items:flex-start!important;flex-direction:column!important}
+  .v71-certificates-page .v71-library-summary{width:100%!important}
+  .v71-certificates-page .v71-library-summary article{flex:1!important;min-width:0!important}
+  .v71-certificates-page .v71-certificate-feature>div:first-child{padding:28px!important}
+  .v71-certificates-page .v71-certificate-preview{margin:0 18px 18px!important;padding:28px 20px!important;min-height:250px!important}
+  .v71-certificates-page .v71-certificate-progress{grid-template-columns:50px minmax(0,1fr)!important}
+  .v71-certificates-page .v71-certificate-progress>.v71-btn{grid-column:1/-1!important;width:max-content!important;margin-left:68px!important}
+  .v71-certificates-page .v71-cert-grid{grid-template-columns:1fr!important}
+  .v71-certificates-page .v71-pending-list>article{grid-template-columns:62px minmax(0,1fr)!important}
+  .v71-certificates-page .v71-pending-list img{width:62px!important;height:62px!important}
+  .v71-certificates-page .v71-pending-list .v71-btn{grid-column:1/-1!important;width:max-content!important;margin-left:77px!important}
+  .v71-certificates-page .v71-info-note{grid-template-columns:34px minmax(0,1fr)!important}
+  .v71-certificates-page .v71-info-note>a{grid-column:2!important}
+}
+@media (max-width:520px){
+  .v71-certificates-page{gap:18px!important}
+  .v71-certificates-page .v71-certificate-feature>div:first-child{padding:24px!important}
+  .v71-certificates-page .v71-certificate-preview{margin:0 14px 14px!important;min-height:230px!important}
+  .v71-certificates-page .v71-certificate-progress{grid-template-columns:1fr!important;text-align:left!important}
+  .v71-certificates-page .v71-cert-icon{width:46px!important;height:46px!important}
+  .v71-certificates-page .v71-certificate-progress>.v71-btn{margin-left:0!important}
+  .v71-certificates-page .v71-pending-list>article{grid-template-columns:54px minmax(0,1fr)!important;gap:11px!important}
+  .v71-certificates-page .v71-pending-list img{width:54px!important;height:54px!important}
+  .v71-certificates-page .v71-pending-list .v71-btn{margin-left:65px!important}
+}
