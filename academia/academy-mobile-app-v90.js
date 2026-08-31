@@ -1,8 +1,17 @@
 (()=>{
   'use strict';
-  const VERSION='90.0.0';
+  const VERSION='90.1.0';
   const items=[['#home','⌂','Inicio'],['#courses','▣','Cursos'],['#agenda','◷','Agenda'],['#library','◇','Biblioteca'],['#profile','○','Perfil']];
+  const loadHomeFix=()=>{
+    if(document.querySelector('link[data-home-fix-v92]')) return;
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='./academy-home-backgrounds-v92.css?v=92.1';
+    link.dataset.homeFixV92='true';
+    document.head.appendChild(link);
+  };
   const mount=()=>{
+    loadHomeFix();
     if(document.querySelector('[data-mobile-app-nav]')) return;
     const dash=document.querySelector('[data-dashboard]'); if(!dash) return;
     const nav=document.createElement('nav'); nav.className='mobile-app-nav'; nav.setAttribute('data-mobile-app-nav',''); nav.setAttribute('aria-label','Navegación principal');
