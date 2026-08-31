@@ -1,0 +1,198 @@
+/* Academia Yamilet · Mobile Home v94
+   Carga directa para evitar cache viejo de v92/v93.
+   Un solo Inicio en móvil y composición visual con imágenes oficiales. */
+
+@media (max-width:760px){
+  /* Ocultar SIEMPRE el Inicio heredado cuando estamos en Inicio móvil. */
+  body.pwa-dashboard-active .dashboard-main[data-academy-section="home"] > .dash-head,
+  body.pwa-dashboard-active .dashboard-main[data-academy-section="home"] > .stats,
+  body.pwa-dashboard-active .dashboard-main[data-academy-section="home"] > #continuar,
+  body.pwa-dashboard-active .dashboard-main[data-academy-section="home"] > #mis-cursos,
+  body.pwa-dashboard-active .dashboard-main[data-academy-section="home"] > .academy-home-roadmap,
+  body.pwa-dashboard-active .dashboard-main[data-academy-section="home"] > .academy-home-visual-links{
+    display:none!important;
+  }
+
+  /* El host v71 se convierte en el único Inicio visible. */
+  body.pwa-dashboard-active .dashboard-main[data-academy-section="home"] > .aula-v71-page-host{
+    display:block!important;
+    padding:10px 12px calc(122px + env(safe-area-inset-bottom))!important;
+    margin:0!important;
+  }
+  body.pwa-dashboard-active .dashboard-main[data-academy-section="home"] > .aula-v71-page-host[hidden]{
+    display:block!important;
+  }
+  body.pwa-dashboard-active .v71-home-page{
+    display:grid!important;
+    gap:14px!important;
+  }
+
+  /* Hero principal: imagen móvil, texto arriba y rostro completo abajo. */
+  body.pwa-dashboard-active .v71-home-page .v71-welcome{
+    display:block!important;
+    position:relative!important;
+    min-height:405px!important;
+    padding:24px 22px 218px!important;
+    border-radius:22px!important;
+    overflow:hidden!important;
+    background-image:
+      linear-gradient(180deg,rgba(250,248,243,.99) 0%,rgba(250,248,243,.92) 30%,rgba(250,248,243,.38) 54%,rgba(250,248,243,.02) 74%),
+      url("../imagenes-academia-yamilet-final/07-academia-hero-mobile.webp")!important;
+    background-size:cover!important;
+    background-position:center 72%!important;
+    border:1px solid rgba(18,63,53,.08)!important;
+    box-shadow:0 14px 32px rgba(18,63,53,.06)!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-welcome h1{
+    font-size:clamp(35px,10vw,46px)!important;
+    line-height:1!important;
+    color:#172825!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-welcome p{
+    max-width:92%!important;
+    font-size:13px!important;
+    line-height:1.45!important;
+    color:#52655f!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-date{display:none!important}
+
+  /* KPIs */
+  body.pwa-dashboard-active .v71-home-page .v71-summary-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:9px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-summary-card{
+    min-height:102px!important;
+    padding:14px!important;
+    border-radius:18px!important;
+  }
+
+  /* Curso destacado: mostrar la imagen 13 y asegurar contraste. */
+  body.pwa-dashboard-active .v71-home-page .v71-home-grid{
+    grid-template-columns:1fr!important;
+    gap:12px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course{
+    position:relative!important;
+    min-height:390px!important;
+    border-radius:22px!important;
+    overflow:hidden!important;
+    background-image:url("../imagenes-academia-yamilet-final/13-continuar-aprendiendo.webp")!important;
+    background-size:cover!important;
+    background-position:58% center!important;
+    background-color:#123f35!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course>img{display:none!important}
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course::after{
+    content:""!important;
+    position:absolute!important;
+    inset:0!important;
+    z-index:1!important;
+    background:linear-gradient(180deg,rgba(6,49,42,.24) 0%,rgba(6,49,42,.67) 43%,rgba(6,49,42,.97) 100%)!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course>div{
+    position:relative!important;
+    z-index:2!important;
+    min-height:390px!important;
+    padding:24px 22px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:flex-end!important;
+    color:#fff!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course h2,
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course h3{
+    color:#fff!important;
+    font-size:31px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course p,
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-progress-label{
+    color:rgba(255,255,255,.88)!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-progress-label strong{color:#fff!important}
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-btn.primary{
+    background:#fff!important;
+    color:#0d4b43!important;
+    border-color:#fff!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-btn.ghost{
+    color:#fff!important;
+    background:rgba(255,255,255,.10)!important;
+    border-color:rgba(255,255,255,.38)!important;
+  }
+
+  /* Agenda con imagen superior. */
+  body.pwa-dashboard-active .v71-home-page .v71-event-card{
+    overflow:hidden!important;
+    border-radius:22px!important;
+    padding:20px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-event-card::before{
+    content:""!important;
+    display:block!important;
+    width:calc(100% + 40px)!important;
+    height:170px!important;
+    margin:-20px -20px 18px!important;
+    flex:0 0 170px!important;
+    background:url("../imagenes-academia-yamilet-final/14-comunidad-acompanamiento.webp") center 42%/cover no-repeat!important;
+  }
+
+  /* Cursos y novedades visuales. */
+  body.pwa-dashboard-active .v71-home-page .v71-card-row{grid-template-columns:1fr!important}
+  body.pwa-dashboard-active .v71-home-page .v71-card-row .v71-course-cover{height:220px!important}
+  body.pwa-dashboard-active .v71-home-page .v71-lower-grid{
+    grid-template-columns:1fr!important;
+    gap:12px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news,
+  body.pwa-dashboard-active .v71-home-page .v71-support{border-radius:22px!important}
+  body.pwa-dashboard-active .v71-home-page .v71-news{padding:18px!important}
+  body.pwa-dashboard-active .v71-home-page .v71-news>a{
+    display:grid!important;
+    grid-template-columns:96px minmax(0,1fr)!important;
+    grid-template-rows:auto auto auto!important;
+    column-gap:12px!important;
+    align-items:center!important;
+    padding:14px 0!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a::before{
+    content:""!important;
+    grid-column:1!important;
+    grid-row:1/4!important;
+    width:96px!important;
+    height:82px!important;
+    border-radius:12px!important;
+    background-size:cover!important;
+    background-position:center!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a:nth-of-type(1)::before{
+    background-image:url("../imagenes-academia-yamilet-final/15-recursos-descargables.webp")!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a:nth-of-type(2)::before{
+    background-image:url("../imagenes-academia-yamilet-final/14-comunidad-acompanamiento.webp")!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a>span,
+  body.pwa-dashboard-active .v71-home-page .v71-news>a>strong,
+  body.pwa-dashboard-active .v71-home-page .v71-news>a>small{grid-column:2!important}
+
+  body.pwa-dashboard-active .v71-home-page .v71-support{
+    min-height:310px!important;
+    padding:22px!important;
+    position:relative!important;
+    overflow:hidden!important;
+    background-image:
+      linear-gradient(180deg,rgba(8,57,49,.22),rgba(8,57,49,.96)),
+      url("../imagenes-academia-yamilet-final/14-comunidad-acompanamiento.webp")!important;
+    background-size:cover!important;
+    background-position:center 38%!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-support h2{color:#fff!important}
+  body.pwa-dashboard-active .v71-home-page .v71-support p{color:rgba(255,255,255,.86)!important}
+}
+
+@media (max-width:390px){
+  body.pwa-dashboard-active .v71-home-page .v71-welcome{
+    min-height:385px!important;
+    padding-bottom:205px!important;
+  }
+}
