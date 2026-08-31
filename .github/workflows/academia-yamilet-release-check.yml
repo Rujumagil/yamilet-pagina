@@ -35,7 +35,7 @@ jobs:
           test "$count" -gt 0
           echo "Validated $count production JavaScript files."
 
-      - name: Validate current v94 mobile architecture
+      - name: Validate current v108 stable architecture
         shell: bash
         run: |
           set -euo pipefail
@@ -44,6 +44,13 @@ jobs:
             index.html catalogo.html styles.css manifest.webmanifest offline.html sw.js
             app.js academy-shell-v21.js academy-navigation.js academy-dashboard.js academy-visuals-v91.css
             academy-mobile-home-v94.css academy-visual-path-fix-v92.js
+            academy-mobile-hero-v95.css academy-mobile-continue-v96.css academy-mobile-lower-home-v97.css
+            academy-mobile-courses-v98.css academy-mobile-course-interior-v99.css
+            academy-mobile-library-v100.css academy-mobile-certificates-v101.css academy-mobile-calendar-v102.css
+            academy-mobile-profile-support-v103.css academy-profile-support-fix-v103.js
+            academy-mobile-evaluations-v104.css academy-assessment-mobile-v104.js
+            academy-mobile-admin-v105.css academy-mobile-admin-agenda-evaluations-v106.css
+            academy-mobile-admin-certificates-support-v107.css
             academy-courses.js academy-evaluations.js academy-library.js academy-calendar.js
             academy-certificates.js academy-profile.js academy-support.js academy-explore.js
             academy-admin.js academy-content-runtime-v80.js academy-students-runtime-v81.js
@@ -53,9 +60,24 @@ jobs:
             academy-settings-admin-v88.js verificar.html verificar-certificado.js
           )
           for asset in "${required[@]}"; do test -s "$base/$asset" || { echo "Missing $asset" >&2; exit 1; }; done
+          test -s "$base/admin/index.html"
           test -s yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png
-          grep -q 'name="academy-build" content="v91-visuals"' "$base/index.html"
-          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v94`' "$base/sw.js"
+          grep -q 'name="academy-build" content="v108-stable"' "$base/index.html"
+          grep -q 'manifest.webmanifest?v=108' "$base/index.html"
+          grep -q 'academy-hash-router-v70.js?v=108' "$base/index.html"
+          grep -q 'academy-dashboard.js?v=108' "$base/index.html"
+          grep -q 'academy-pwa-v57.js?v=108' "$base/index.html"
+          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v108`' "$base/sw.js"
+          grep -q "library: 'library'" "$base/academy-hash-router-v70.js"
+          grep -q "resources: 'library'" "$base/academy-hash-router-v70.js"
+          grep -q "calendar: 'calendar'" "$base/academy-hash-router-v70.js"
+          grep -q "agenda: 'calendar'" "$base/academy-hash-router-v70.js"
+          grep -q '../imagenes-academia-yamilet-final/04-favicon.png' "$base/manifest.webmanifest"
+          ! grep -q '../../imagenes-academia-yamilet-final' "$base/manifest.webmanifest"
+          ! grep -q '../../imagenes-academia-yamilet-final' "$base/academy-dashboard.js"
+          ! grep -q '../../imagenes-academia-yamilet-final' "$base/academy-visuals-v91.css"
+          grep -q "target.hash = '#admin'" "$base/admin/index.html"
+          ! grep -q 'admin-v34.js' "$base/admin/index.html"
           grep -q "const VERSION = '89.0.0'" "$base/academy-aula-clone-v69.js"
           grep -q "const VERSION = '89.0.0'" "$base/academy-profile.js"
           grep -q "academy-public-config" "$base/app.js"
@@ -166,7 +188,7 @@ jobs:
           rsync -a --delete "$visual_source" "$visual_public"
           install -D -m 0644 source/yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png public/assets/logo-yamilet.png
 
-      - name: Verify synchronized v94 snapshot
+      - name: Verify synchronized v108 snapshot
         shell: bash
         run: |
           set -euo pipefail
@@ -178,14 +200,21 @@ jobs:
           test -s public/academia/manifest.webmanifest
           test -s public/academia/academy-visuals-v91.css
           test -s public/academia/academy-mobile-home-v94.css
+          test -s public/academia/academy-mobile-admin-certificates-support-v107.css
           test -s public/assets/logo-yamilet.png
           test -s public/imagenes-academia-yamilet-final/05-academia-hero-desktop.webp
           test -s public/imagenes-academia-yamilet-final/07-academia-hero-mobile.webp
           test -s public/imagenes-academia-yamilet-final/17-academia-fondo-claro.webp
-          grep -q 'name="academy-build" content="v91-visuals"' public/academia/index.html
-          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v94`' public/academia/sw.js
+          grep -q 'name="academy-build" content="v108-stable"' public/academia/index.html
+          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v108`' public/academia/sw.js
+          grep -q "library: 'library'" public/academia/academy-hash-router-v70.js
+          grep -q "calendar: 'calendar'" public/academia/academy-hash-router-v70.js
+          grep -q '../imagenes-academia-yamilet-final/04-favicon.png' public/academia/manifest.webmanifest
           ! grep -q 'academy-sales-admin.js' public/academia/index.html
           ! grep -q 'academy-assessment-review.js' public/academia/index.html
+          ! grep -q '../../imagenes-academia-yamilet-final' public/academia/manifest.webmanifest
+          ! grep -q '../../imagenes-academia-yamilet-final' public/academia/academy-dashboard.js
+          ! grep -q '../../imagenes-academia-yamilet-final' public/academia/academy-visuals-v91.css
 
       - name: Guard deployment scope
         shell: bash
