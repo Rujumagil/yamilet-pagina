@@ -1,0 +1,140 @@
+/* Academia Yamilet · Evaluaciones + assessment mobile refinement v104 */
+:root{--v104-green:#123f35;--v104-green-2:#1b5a49;--v104-gold:#b88a2c;--v104-cream:#fbf8f0;--v104-ink:#253b33;--v104-muted:#738078;--v104-line:rgba(18,63,53,.11)}
+
+/* Evaluations landing */
+.v77-evaluations-page{gap:16px!important;max-width:1220px!important}
+.v77-eval-heading{padding-top:0!important}
+.v77-eval-heading h1{font-family:Georgia,"Times New Roman",serif!important;font-weight:600!important;color:var(--v104-ink)!important}
+.v77-eval-heading p{font-size:12px!important;line-height:1.55!important}
+.v77-eval-summary article{border-radius:15px!important;background:linear-gradient(145deg,#fff,#fbfcfa)!important;box-shadow:0 9px 22px rgba(18,63,53,.035)!important}
+.v77-eval-summary strong{font-family:Georgia,"Times New Roman",serif!important;color:var(--v104-green)!important}
+.v77-eval-progress{padding:18px 20px!important;border-radius:18px!important;background:linear-gradient(145deg,#fff,#f8faf8)!important;box-shadow:0 10px 26px rgba(18,63,53,.04)!important}
+.v77-eval-progress h2{font-family:Georgia,"Times New Roman",serif!important;color:var(--v104-ink)!important}
+.v77-eval-progress-bar{height:7px!important;background:#e9efec!important}
+.v77-eval-progress-bar i{background:linear-gradient(90deg,var(--v104-green),#4f8872)!important}
+
+.v77-eval-feature{position:relative;min-height:248px!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:24px!important;background-image:linear-gradient(90deg,rgba(12,50,42,.98) 0%,rgba(18,63,53,.94) 48%,rgba(18,63,53,.52) 72%,rgba(18,63,53,.22) 100%),url('../imagenes-academia-yamilet-final/10-metodo-mes-cover.webp')!important;background-size:cover!important;background-position:center!important;box-shadow:0 18px 42px rgba(18,63,53,.13)!important}
+.v77-eval-feature>div{position:relative;z-index:1;padding:30px 34px!important;max-width:690px}
+.v77-eval-feature>div>span{color:#edc96d!important}
+.v77-eval-feature h2{font-family:Georgia,"Times New Roman",serif!important;font-weight:600!important;max-width:620px}
+.v77-eval-feature p{max-width:600px!important;font-size:12px!important}
+.v77-eval-feature button{min-height:43px!important;padding:0 17px!important;border-radius:12px!important;box-shadow:0 8px 20px rgba(0,0,0,.12)!important}
+.v77-eval-feature aside{position:relative;z-index:1;background:rgba(255,255,255,.055)!important;backdrop-filter:blur(4px)}
+
+.v77-eval-list-heading h2,.v77-eval-card h3,.v77-eval-empty h2{font-family:Georgia,"Times New Roman",serif!important;color:var(--v104-ink)!important}
+.v77-eval-grid{gap:10px!important}
+.v77-eval-card{min-height:190px!important;padding:17px!important;border-radius:17px!important;box-shadow:0 9px 24px rgba(18,63,53,.03)!important}
+.v77-eval-number{font-family:Georgia,"Times New Roman",serif!important;color:#a8b5ae!important}
+.v77-eval-action,.assessment-open-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:40px!important;padding:0 14px!important;border-radius:11px!important;background:var(--v104-green)!important;color:#fff!important;text-decoration:none!important}
+.v77-eval-filters{gap:6px!important}
+.v77-eval-filters button{min-height:35px!important}
+.v77-eval-note{border-radius:15px!important;background:#f2f7f4!important}
+.v77-eval-empty{border-radius:20px!important;background:linear-gradient(145deg,#fff,#f5f8f6)!important}
+
+/* Assessment modal */
+.assessment-player-overlay{background:rgba(6,24,20,.78)!important;backdrop-filter:blur(10px)!important}
+.assessment-player-shell{max-width:850px!important;border-radius:26px!important;box-shadow:0 34px 90px rgba(0,0,0,.28)!important}
+.assessment-close{width:40px!important;height:40px!important;background:rgba(240,246,243,.96)!important;box-shadow:0 6px 16px rgba(18,63,53,.09)!important}
+.assessment-player-intro{position:relative;padding:46px!important;background:linear-gradient(145deg,#fff,#fbfcfa)!important}
+.assessment-player-intro:before{content:"";display:block;width:62px;height:4px;margin-bottom:18px;border-radius:999px;background:var(--v104-gold)}
+.assessment-player-intro h2,.assessment-player-head h2,.assessment-result h2{font-family:Georgia,"Times New Roman",serif!important;font-weight:600!important;letter-spacing:-.025em!important;color:var(--v104-green)!important}
+.assessment-player-intro>p,.assessment-result p{font-size:13px!important;line-height:1.6!important}
+.assessment-player-facts{gap:9px!important;margin:22px 0!important}
+.assessment-player-facts span{padding:14px!important;border:1px solid var(--v104-line)!important;border-radius:14px!important;background:#f6f9f7!important}
+.assessment-player-facts strong{font-family:Georgia,"Times New Roman",serif!important;font-size:1.2rem!important;color:var(--v104-green)!important}
+.assessment-player-facts small{font-size:9px!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+.assessment-last-result{border:1px solid rgba(184,138,44,.16)!important;border-radius:14px!important}
+.assessment-intro-actions button,.assessment-result button,.assessment-player-footer button{min-height:42px!important;border-radius:11px!important}
+
+.assessment-player-head{padding:20px 62px 17px 24px!important;background:rgba(255,255,255,.98)!important;backdrop-filter:blur(10px)!important}
+.assessment-player-head h2{font-size:clamp(1.35rem,2.5vw,2rem)!important;margin-bottom:0!important}
+.assessment-timer{padding:8px 11px!important;background:#eef5f1!important;color:var(--v104-green)!important;font-size:11px!important}
+.assessment-v104-progress{padding:14px 24px 0;background:#fff}
+.assessment-v104-progress-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;color:#738078;font-size:10px;font-weight:800}
+.assessment-v104-progress-head strong{color:var(--v104-green);font-size:10px}
+.assessment-v104-progress-track{height:6px;border-radius:999px;background:#e8eeeb;overflow:hidden}
+.assessment-v104-progress-track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--v104-green),#5b927c);transition:width .22s ease}
+.assessment-v104-progress-sub{display:flex;justify-content:space-between;gap:10px;margin-top:7px;color:#8a958f;font-size:9px}
+
+.assessment-question-list{padding:20px 24px 24px!important;background:#f8faf8!important}
+.assessment-question{padding:22px!important;border-radius:18px!important;background:#fff!important;box-shadow:0 10px 28px rgba(18,63,53,.045)!important}
+.assessment-question[hidden]{display:none!important}
+.assessment-question-head{font-size:10px!important}
+.assessment-question h3{margin:11px 0 18px!important;font-family:Georgia,"Times New Roman",serif!important;font-size:1.12rem!important;color:var(--v104-ink)!important}
+.assessment-options{gap:8px!important}
+.assessment-options label{min-height:46px;padding:12px 13px!important;border-radius:13px!important;align-items:center!important;transition:.15s ease}
+.assessment-options label:hover{border-color:rgba(18,63,53,.25)!important;background:#f8fbf9!important}
+.assessment-options label:has(input:checked){border-color:rgba(18,63,53,.42)!important;background:#edf6f1!important;box-shadow:0 0 0 2px rgba(18,63,53,.055)}
+.assessment-options input{accent-color:var(--v104-green);width:17px;height:17px;margin:0!important;flex:0 0 auto}
+.assessment-question textarea{min-height:130px!important;border-radius:13px!important;background:#fbfcfb!important;line-height:1.55!important}
+.assessment-question textarea:focus{outline:none;border-color:#83a99a!important;box-shadow:0 0 0 3px rgba(18,63,53,.07)}
+
+.assessment-player-footer{padding:14px 24px!important;background:rgba(255,255,255,.98)!important;backdrop-filter:blur(10px)!important}
+.assessment-player-footer>[data-submit-status]{font-size:10px!important;line-height:1.4!important}
+.assessment-v104-actions{display:flex;gap:8px;align-items:center;margin-left:auto}
+.assessment-v104-actions button{min-width:104px;padding:0 14px!important}
+.assessment-v104-actions .assessment-v104-prev{border:1px solid var(--v104-line)!important;background:#fff!important;color:var(--v104-green)!important}
+.assessment-v104-actions .assessment-v104-next{background:#eaf3ef!important;color:var(--v104-green)!important}
+.assessment-v104-actions button[disabled]{opacity:.42;cursor:not-allowed}
+.assessment-result{padding:58px 38px!important;background:linear-gradient(145deg,#fff,#fafcfb)!important}
+.assessment-result-icon{width:78px!important;height:78px!important;border:1px solid rgba(18,63,53,.08)!important}
+
+@media(max-width:760px){
+  .v77-evaluations-page{padding:16px 14px 92px!important;gap:14px!important}
+  .v77-eval-heading{gap:14px!important}
+  .v77-eval-heading h1{font-size:34px!important}
+  .v77-eval-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+  .v77-eval-summary article{padding:10px!important;text-align:center!important}
+  .v77-eval-summary strong{font-size:20px!important}
+  .v77-eval-summary span{font-size:8px!important}
+  .v77-eval-progress{grid-template-columns:1fr auto!important;padding:15px!important;gap:10px!important}
+  .v77-eval-progress p{font-size:10px!important}
+  .v77-eval-progress-value strong{font-size:25px!important}
+  .v77-eval-feature{min-height:300px!important;background-image:linear-gradient(180deg,rgba(13,51,43,.78) 0%,rgba(13,51,43,.94) 58%,rgba(13,51,43,.99) 100%),url('../imagenes-academia-yamilet-final/10-metodo-mes-cover.webp')!important;background-position:center top!important}
+  .v77-eval-feature>div{justify-content:flex-end!important;padding:24px 20px!important}
+  .v77-eval-feature h2{font-size:27px!important}
+  .v77-eval-feature p{font-size:11px!important}
+  .v77-eval-feature aside{display:none!important}
+  .v77-eval-card{min-height:0!important;padding:15px!important}
+  .v77-eval-card h3{font-size:18px!important}
+  .v77-eval-filters{display:flex!important;width:100%!important;overflow-x:auto!important;flex-wrap:nowrap!important;padding-bottom:2px;scrollbar-width:none}
+  .v77-eval-filters::-webkit-scrollbar{display:none}
+  .v77-eval-filters button{width:auto!important;white-space:nowrap!important;flex:0 0 auto}
+
+  .assessment-player-overlay{padding:0!important}
+  .assessment-player-shell{min-height:100dvh!important;margin:0!important;border-radius:0!important;display:flex;flex-direction:column}
+  .assessment-player-intro{padding:62px 18px 26px!important;min-height:100dvh;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center}
+  .assessment-player-intro:before{margin-bottom:14px}
+  .assessment-player-intro h2{font-size:30px!important}
+  .assessment-player-intro>p{font-size:12px!important}
+  .assessment-player-facts{grid-template-columns:1fr 1fr!important;margin:18px 0!important}
+  .assessment-player-facts span:nth-child(3){grid-column:1/-1}
+  .assessment-intro-actions{display:grid!important;grid-template-columns:1fr!important;margin-top:18px!important}
+  .assessment-intro-actions button{width:100%!important}
+
+  .assessment-player-active{min-height:100dvh!important}
+  .assessment-player-head{position:sticky!important;top:0!important;display:grid!important;grid-template-columns:1fr auto!important;gap:6px 10px!important;padding:14px 54px 12px 16px!important}
+  .assessment-player-head>div:first-child{min-width:0}
+  .assessment-player-head h2{font-size:20px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .assessment-timer{grid-column:1/-1;justify-self:start;font-size:9px!important}
+  .assessment-v104-progress{padding:11px 16px 0!important}
+  .assessment-v104-progress-sub{font-size:8px!important}
+  .assessment-question-list{flex:1;padding:14px 14px 110px!important}
+  .assessment-question{padding:17px 15px!important;border-radius:16px!important}
+  .assessment-question h3{font-size:1.08rem!important;line-height:1.4!important}
+  .assessment-options label{min-height:50px;padding:13px 12px!important;font-size:13px;line-height:1.35}
+  .assessment-question textarea{min-height:150px!important;font-size:14px}
+  .assessment-player-footer{position:fixed!important;left:0;right:0;bottom:0;z-index:4;display:grid!important;grid-template-columns:1fr!important;gap:8px!important;padding:10px 14px max(10px,env(safe-area-inset-bottom))!important;border-top:1px solid rgba(18,63,53,.10)!important;box-shadow:0 -10px 30px rgba(18,63,53,.08)!important}
+  .assessment-player-footer>[data-submit-status]{margin:0!important;min-height:14px;font-size:9px!important}
+  .assessment-v104-actions{width:100%;display:grid!important;grid-template-columns:1fr 1fr;margin:0!important}
+  .assessment-v104-actions button{width:100%!important;min-width:0!important}
+  .assessment-v104-actions [data-submit-assessment]{grid-column:1/-1}
+  .assessment-result{min-height:100dvh;box-sizing:border-box;padding:68px 22px 34px!important;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .assessment-result h2{font-size:31px!important}
+}
+
+@media(max-width:390px){
+  .v77-eval-summary span{font-size:7px!important;letter-spacing:0!important}
+  .assessment-player-facts strong{font-size:1.05rem!important}
+  .assessment-player-facts small{font-size:8px!important}
+}
