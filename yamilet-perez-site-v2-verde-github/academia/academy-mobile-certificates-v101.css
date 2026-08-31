@@ -1,0 +1,305 @@
+/* Academia Yamilet · Certificados visual refinement v101 */
+
+[data-shell-page="certificates"].academy-certificates-page,
+[data-shell-page="certificates"]{
+  --cert-v101-green:#123f35;
+  --cert-v101-green-2:#1a5748;
+  --cert-v101-gold:#c19a43;
+  --cert-v101-cream:#f7f4ec;
+  --cert-v101-ink:#263b32;
+  --cert-v101-muted:#748078;
+}
+
+[data-shell-page="certificates"] .shell-page-heading{
+  margin-bottom:14px!important;
+}
+[data-shell-page="certificates"] .shell-page-heading h2{
+  font-size:clamp(34px,4vw,50px)!important;
+  letter-spacing:-.035em!important;
+}
+
+/* Hero con imagen oficial */
+[data-shell-page="certificates"] .academy-cert-hero{
+  position:relative!important;
+  isolation:isolate;
+  overflow:hidden!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1.2fr) 132px minmax(180px,.52fr)!important;
+  gap:18px!important;
+  align-items:center!important;
+  min-height:300px!important;
+  margin:0 0 18px!important;
+  padding:26px!important;
+  border:1px solid rgba(18,63,53,.08)!important;
+  border-radius:24px!important;
+  background:linear-gradient(118deg,#103d33 0%,#174c40 58%,#174c40 58%,#174c40 100%)!important;
+  box-shadow:0 18px 42px rgba(18,63,53,.10)!important;
+}
+[data-shell-page="certificates"] .academy-cert-hero::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0 0 0 auto;
+  width:43%;
+  background-image:
+    linear-gradient(90deg,rgba(18,63,53,.96) 0%,rgba(18,63,53,.55) 25%,rgba(18,63,53,.08) 70%),
+    url('../imagenes-academia-yamilet-final/16-certificados.webp');
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+[data-shell-page="certificates"] .academy-cert-hero-copy{
+  position:relative;
+  z-index:1;
+  max-width:650px!important;
+}
+[data-shell-page="certificates"] .academy-cert-kicker{
+  color:#e4bd61!important;
+  font-size:9px!important;
+  letter-spacing:.14em!important;
+}
+[data-shell-page="certificates"] .academy-cert-hero h3{
+  margin:7px 0 8px!important;
+  max-width:620px!important;
+  color:#fff!important;
+  font-size:clamp(28px,3.2vw,43px)!important;
+  line-height:1.02!important;
+}
+[data-shell-page="certificates"] .academy-cert-hero p{
+  max-width:610px!important;
+  color:#c8dbd3!important;
+  font-size:12px!important;
+  line-height:1.6!important;
+}
+
+/* Progreso */
+[data-shell-page="certificates"] .academy-cert-ring{
+  width:116px!important;
+  height:116px!important;
+  background:conic-gradient(#e1b64e var(--cert-progress),rgba(255,255,255,.15) 0)!important;
+  box-shadow:0 10px 26px rgba(0,0,0,.12)!important;
+}
+[data-shell-page="certificates"] .academy-cert-ring:before{
+  inset:9px!important;
+  background:#16483c!important;
+}
+[data-shell-page="certificates"] .academy-cert-ring strong{font-size:25px!important}
+[data-shell-page="certificates"] .academy-cert-summary{
+  position:relative;
+  z-index:1;
+  gap:8px!important;
+}
+[data-shell-page="certificates"] .academy-cert-summary article{
+  padding:12px 13px!important;
+  border:1px solid rgba(255,255,255,.22)!important;
+  border-radius:14px!important;
+  background:rgba(255,255,255,.93)!important;
+  box-shadow:0 8px 18px rgba(18,63,53,.06)!important;
+}
+[data-shell-page="certificates"] .academy-cert-summary strong{font-size:21px!important}
+
+/* Camino hacia el certificado */
+[data-shell-page="certificates"] .academy-cert-requirements{
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr))!important;
+  gap:12px!important;
+  margin-bottom:18px!important;
+}
+[data-shell-page="certificates"] .academy-cert-eligibility{
+  position:relative;
+  overflow:hidden;
+  padding:18px!important;
+  border:1px solid rgba(18,63,53,.09)!important;
+  border-radius:18px!important;
+  background:linear-gradient(145deg,#fff,#fbfaf5)!important;
+  box-shadow:0 8px 24px rgba(18,63,53,.035)!important;
+}
+[data-shell-page="certificates"] .academy-cert-eligibility::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:4px;
+  background:#d7bd79;
+}
+[data-shell-page="certificates"] .academy-cert-eligibility.eligible::before{background:#2f7b63}
+[data-shell-page="certificates"] .academy-cert-eligibility h4{
+  margin:5px 0 12px!important;
+  color:var(--cert-v101-ink)!important;
+  font-size:18px!important;
+}
+[data-shell-page="certificates"] .academy-cert-meter{
+  height:7px!important;
+  background:#edf1ed!important;
+}
+[data-shell-page="certificates"] .academy-cert-meter i{
+  background:linear-gradient(90deg,#2f775f,#d0aa50)!important;
+}
+[data-shell-page="certificates"] .academy-cert-checks{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+}
+[data-shell-page="certificates"] .academy-cert-checks span{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:34px!important;
+  padding:7px 9px!important;
+  border-radius:10px!important;
+  text-align:center!important;
+  font-size:10px!important;
+}
+[data-shell-page="certificates"] .academy-cert-eligibility>button{
+  width:100%!important;
+  min-height:42px!important;
+  border-radius:12px!important;
+}
+
+/* Certificados emitidos */
+[data-shell-page="certificates"] .academy-cert-pro-grid{
+  gap:13px!important;
+}
+[data-shell-page="certificates"] .academy-cert-pro-card{
+  padding:21px!important;
+  border-radius:19px!important;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.98),rgba(255,253,247,.96)),
+    url('../imagenes-academia-yamilet-final/16-certificados.webp')!important;
+  background-size:cover!important;
+  background-position:center!important;
+  box-shadow:0 10px 28px rgba(18,63,53,.05)!important;
+}
+[data-shell-page="certificates"] .academy-cert-pro-card h3{
+  margin:13px 0 7px!important;
+  font-size:24px!important;
+}
+[data-shell-page="certificates"] .academy-cert-pro-code{
+  margin-top:14px!important;
+  padding:10px 11px!important;
+}
+[data-shell-page="certificates"] .academy-cert-pro-actions{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:7px!important;
+}
+[data-shell-page="certificates"] .academy-cert-pro-actions button,
+[data-shell-page="certificates"] .academy-cert-pro-actions a{
+  width:100%!important;
+  min-height:40px!important;
+  padding:0 10px!important;
+  border-radius:10px!important;
+  font-size:9px!important;
+}
+
+/* Estado sin certificado */
+[data-shell-page="certificates"] .academy-cert-empty{
+  position:relative;
+  overflow:hidden;
+  grid-template-columns:58px minmax(0,1fr)!important;
+  gap:16px!important;
+  min-height:150px!important;
+  padding:22px!important;
+  border:1px solid rgba(18,63,53,.10)!important;
+  border-radius:19px!important;
+  background:linear-gradient(90deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.92) 60%,rgba(255,255,255,.35) 100%),url('../imagenes-academia-yamilet-final/16-certificados.webp') center/cover no-repeat!important;
+  text-align:left!important;
+}
+[data-shell-page="certificates"] .academy-cert-empty-icon{
+  width:54px!important;
+  height:54px!important;
+  border-radius:15px!important;
+  background:#eef4ef!important;
+  font-size:22px!important;
+}
+[data-shell-page="certificates"] .academy-cert-empty h3{
+  margin:5px 0!important;
+  font-size:23px!important;
+}
+[data-shell-page="certificates"] .academy-cert-empty p{
+  max-width:620px!important;
+  font-size:11px!important;
+  line-height:1.55!important;
+}
+
+@media(max-width:900px){
+  [data-shell-page="certificates"] .academy-cert-hero{
+    grid-template-columns:minmax(0,1fr) 112px!important;
+    min-height:280px!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-summary{
+    grid-column:1/-1!important;
+    grid-template-columns:repeat(2,1fr)!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-hero::before{width:48%}
+}
+
+@media(max-width:640px){
+  [data-shell-page="certificates"]{
+    padding-bottom:calc(108px + env(safe-area-inset-bottom,0px))!important;
+  }
+  [data-shell-page="certificates"] .shell-page-heading{
+    margin-bottom:10px!important;
+  }
+  [data-shell-page="certificates"] .shell-page-heading h2{
+    font-size:32px!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-hero{
+    grid-template-columns:1fr!important;
+    gap:12px!important;
+    min-height:0!important;
+    padding:178px 18px 18px!important;
+    border-radius:19px!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-hero::before{
+    inset:0 0 auto 0;
+    width:100%;
+    height:160px;
+    background-image:
+      linear-gradient(180deg,rgba(18,63,53,.06) 0%,rgba(18,63,53,.10) 55%,rgba(18,63,53,.96) 100%),
+      url('../imagenes-academia-yamilet-final/16-certificados.webp');
+    background-position:center 42%;
+  }
+  [data-shell-page="certificates"] .academy-cert-hero h3{
+    font-size:28px!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-hero p{
+    font-size:11px!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-progress{
+    justify-content:start!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-ring{
+    width:88px!important;
+    height:88px!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-ring strong{font-size:20px!important}
+  [data-shell-page="certificates"] .academy-cert-summary{
+    grid-template-columns:1fr 1fr!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-summary article{
+    padding:10px 11px!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-requirements{
+    grid-template-columns:1fr!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-eligibility{
+    padding:16px!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-checks{
+    grid-template-columns:1fr!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-pro-grid{
+    grid-template-columns:1fr!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-pro-card{
+    padding:18px!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-pro-actions{
+    grid-template-columns:1fr!important;
+  }
+  [data-shell-page="certificates"] .academy-cert-empty{
+    grid-template-columns:1fr!important;
+    min-height:0!important;
+    padding:18px!important;
+    background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.97)),url('../imagenes-academia-yamilet-final/16-certificados.webp') center/cover no-repeat!important;
+  }
+}
