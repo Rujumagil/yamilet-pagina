@@ -1,0 +1,21 @@
+ACADEMIA YAMILET — IMÁGENES FINALES
+18 imágenes verificadas y normalizadas a los tamaños acordados.
+
+01. 01-yamilet-logo-master.png — 2400 x 800 px — PNG
+02. 02-yamilet-isotipo.png — 1200 x 1200 px — PNG
+03. 03-yamilet-logo-header.png — 600 x 200 px — PNG
+04. 04-favicon.png — 512 x 512 px — PNG
+05. 05-academia-hero-desktop.webp — 1920 x 720 px — WEBP
+06. 06-academia-hero-tablet.webp — 1400 x 800 px — WEBP
+07. 07-academia-hero-mobile.webp — 1080 x 1350 px — WEBP
+08. 08-yamilet-academia.webp — 1600 x 2000 px — WEBP
+09. 09-yamilet-academia-horizontal.webp — 1920 x 1280 px — WEBP
+10. 10-metodo-mes-cover.webp — 1600 x 900 px — WEBP
+11. 11-metodo-mes-cover-vertical.webp — 1200 x 1500 px — WEBP
+12. 12-metodo-mes-thumb.webp — 800 x 450 px — WEBP
+13. 13-continuar-aprendiendo.webp — 1200 x 675 px — WEBP
+14. 14-comunidad-acompanamiento.webp — 1200 x 800 px — WEBP
+15. 15-recursos-descargables.webp — 1200 x 800 px — WEBP
+16. 16-certificados.webp — 1200 x 800 px — WEBP
+17. 17-academia-fondo-claro.webp — 1920 x 1080 px — WEBP
+18. 18-avatar-alumno-generico.webp — 512 x 512 px — WEBP

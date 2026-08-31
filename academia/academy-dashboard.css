@@ -50,10 +50,36 @@ body:has(.dashboard:not(.hidden)) .dashboard-main{gap:18px;background:radial-gra
 .dashboard-main[data-academy-section="courses"]>#mis-cursos{display:block!important;grid-column:1/-1!important}
 .dashboard-main[data-academy-section="courses"]>#continuar,.dashboard-main[data-academy-section="courses"]>.dash-head,.dashboard-main[data-academy-section="courses"]>.stats{display:none!important}
 
+/* v91 · las páginas v71 son la interfaz activa: evita duplicar bloques del shell anterior */
+.dashboard-main[data-v71-route]>.academy-home-roadmap,
+.dashboard-main[data-v71-route]>.academy-home-visual-links{display:none!important}
+
+/* v91 · retrato horizontal de Yamilet en la bienvenida activa */
+.dashboard-main[data-v71-route="home"] .v71-welcome{position:relative!important;isolation:isolate;overflow:hidden!important;min-height:150px!important;padding:24px 26px!important;border:1px solid rgba(18,63,53,.09)!important;border-radius:18px!important;background:#fff!important;box-shadow:0 12px 30px rgba(18,63,53,.045)!important}
+.dashboard-main[data-v71-route="home"] .v71-welcome::before{content:"";position:absolute;z-index:-2;inset:0 0 0 auto;width:46%;background:url("../../imagenes-academia-yamilet-final/09-yamilet-academia-horizontal.webp") center 30%/cover no-repeat}
+.dashboard-main[data-v71-route="home"] .v71-welcome::after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,.98) 48%,rgba(255,255,255,.5) 72%,rgba(255,255,255,.08) 100%)}
+.dashboard-main[data-v71-route="home"] .v71-welcome>div{position:relative;z-index:1}
+.dashboard-main[data-v71-route="home"] .v71-welcome>div:first-child{max-width:62%!important}
+
+/* v91 · hero principal responsive usando los originales 1920/1400/1080 */
+.dashboard-main[data-v71-route="home"] .v71-featured-course::before{content:"";position:absolute;inset:0;background:url("../../imagenes-academia-yamilet-final/05-academia-hero-desktop.webp") center/cover no-repeat}
+.dashboard-main[data-v71-route="home"] .v71-featured-course>img{opacity:0!important}
+.dashboard-main[data-v71-route="home"] .v71-featured-course>div{position:relative;z-index:2}
+
+/* v91 · comunidad visible en el bloque de acompañamiento */
+.dashboard-main[data-v71-route="home"] .v71-support{position:relative!important;isolation:isolate;overflow:hidden!important;background:#123f35!important}
+.dashboard-main[data-v71-route="home"] .v71-support::before{content:"";position:absolute;z-index:-2;inset:0;background:url("../../imagenes-academia-yamilet-final/14-comunidad-acompanamiento.webp") center/cover no-repeat}
+.dashboard-main[data-v71-route="home"] .v71-support::after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(135deg,rgba(18,63,53,.97),rgba(18,63,53,.68))}
+
+/* v91 · certificados en la pantalla activa */
+.v71-certificate-feature,.v71-certificate-progress{position:relative!important;isolation:isolate;overflow:hidden!important;background-image:linear-gradient(90deg,rgba(255,255,255,.98),rgba(255,255,255,.88) 58%,rgba(255,255,255,.34)),url("../../imagenes-academia-yamilet-final/16-certificados.webp")!important;background-size:cover!important;background-position:center!important}
+.v71-certificates-page .v71-pending-list article>img{object-fit:cover!important}
+
 @media(max-width:1180px){
  .dashboard-main[data-academy-section="home"]>.stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
  .dashboard-main[data-academy-section="home"]>#continuar,.academy-home-roadmap{grid-column:1/-1!important}
  .academy-home-roadmap{min-height:auto}
+ .dashboard-main[data-v71-route="home"] .v71-featured-course::before{background-image:url("../../imagenes-academia-yamilet-final/06-academia-hero-tablet.webp")}
 }
 @media(max-width:720px){
  .dashboard-main[data-academy-section="home"]>.dash-head{min-height:auto;padding:26px 22px;border-radius:20px}
@@ -61,4 +87,10 @@ body:has(.dashboard:not(.hidden)) .dashboard-main{gap:18px;background:radial-gra
  .dashboard-main[data-academy-section="home"]>.stats{grid-template-columns:1fr!important}
  .dashboard-main[data-academy-section="home"]>.stats article{min-height:96px!important}
  .dashboard-main[data-academy-section="home"]>#continuar,.academy-home-roadmap{padding:20px!important;border-radius:20px!important}
+ .dashboard-main[data-v71-route="home"] .v71-welcome{min-height:220px!important;padding:20px!important}
+ .dashboard-main[data-v71-route="home"] .v71-welcome::before{inset:auto 0 0 0;width:100%;height:54%;background-position:center 25%}
+ .dashboard-main[data-v71-route="home"] .v71-welcome::after{background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.98) 48%,rgba(255,255,255,.58) 72%,rgba(255,255,255,.1) 100%)}
+ .dashboard-main[data-v71-route="home"] .v71-welcome>div:first-child{max-width:100%!important}
+ .dashboard-main[data-v71-route="home"] .v71-featured-course::before{background-image:url("../../imagenes-academia-yamilet-final/07-academia-hero-mobile.webp");background-position:center top}
+ .v71-certificate-feature,.v71-certificate-progress{background-image:linear-gradient(180deg,rgba(255,255,255,.98),rgba(255,255,255,.88)),url("../../imagenes-academia-yamilet-final/16-certificados.webp")!important}
 }

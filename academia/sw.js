@@ -1,10 +1,10 @@
 const CACHE_PREFIX = 'academia-yamilet-pwa-';
-const CACHE_NAME = `${CACHE_PREFIX}v89`;
-// Stable lineage markers: v69 v71 v72 v73 v74 v75 v76 v77 v78 v79 v80 v81 v82 v82.1 v83 v84 v85 v86 v87 v88
+const CACHE_NAME = `${CACHE_PREFIX}v91`;
+// Stable lineage markers: v69 v71 v72 v73 v74 v75 v76 v77 v78 v79 v80 v81 v82 v82.1 v83 v84 v85 v86 v87 v88 v89
 const BASE = new URL('./', self.location.href);
 const OFFLINE_URL = new URL('./offline.html', BASE).href;
 
-// v89: precache only the learner-facing shell. Administrative tools are cached on first use.
+// v91: shell + visual assets críticos. El resto de imágenes se guarda en caché al primer uso.
 const PRECACHE = [
   new URL('./', BASE).href,
   new URL('./index.html', BASE).href,
@@ -12,6 +12,14 @@ const PRECACHE = [
   OFFLINE_URL,
   new URL('./manifest.webmanifest?v=57', BASE).href,
   new URL('../assets/logo-yamilet.png?v=57', BASE).href,
+  new URL('../../imagenes-academia-yamilet-final/01-yamilet-logo-master.png', BASE).href,
+  new URL('../../imagenes-academia-yamilet-final/02-yamilet-isotipo.png', BASE).href,
+  new URL('../../imagenes-academia-yamilet-final/03-yamilet-logo-header.png', BASE).href,
+  new URL('../../imagenes-academia-yamilet-final/04-favicon.png', BASE).href,
+  new URL('../../imagenes-academia-yamilet-final/05-academia-hero-desktop.webp', BASE).href,
+  new URL('../../imagenes-academia-yamilet-final/06-academia-hero-tablet.webp', BASE).href,
+  new URL('../../imagenes-academia-yamilet-final/07-academia-hero-mobile.webp', BASE).href,
+  new URL('../../imagenes-academia-yamilet-final/17-academia-fondo-claro.webp', BASE).href,
   new URL('./styles.css?v=5', BASE).href,
   new URL('./auth-p0.css?v=2', BASE).href,
   new URL('./learning-p1.css?v=1', BASE).href,
@@ -19,6 +27,7 @@ const PRECACHE = [
   new URL('./academy-shell-v21.css?v=34', BASE).href,
   new URL('./academy-navigation.css?v=1', BASE).href,
   new URL('./academy-dashboard.css?v=1', BASE).href,
+  new URL('./academy-visuals-v91.css?v=91', BASE).href,
   new URL('./academy-courses.css?v=2', BASE).href,
   new URL('./academy-evaluations.css?v=1', BASE).href,
   new URL('./academy-library.css?v=1', BASE).href,
@@ -108,7 +117,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  const isAcademyAsset = url.pathname.includes('/academia/') || url.pathname.includes('/assets/');
+  const isAcademyAsset = url.pathname.includes('/academia/') || url.pathname.includes('/assets/') || url.pathname.includes('/imagenes-academia-yamilet-final/');
   const isStatic = ['style','script','image','font'].includes(request.destination) || url.pathname.endsWith('.webmanifest');
   if (!isAcademyAsset || !isStatic) return;
 
