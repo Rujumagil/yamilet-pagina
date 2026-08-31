@@ -5,7 +5,9 @@
     home: 'home',
     courses: 'courses',
     resources: 'library',
+    library: 'library',
     agenda: 'calendar',
+    calendar: 'calendar',
     certificates: 'certificates',
     evaluations: 'evaluations',
     help: 'help',
@@ -14,15 +16,22 @@
     admin: 'admin'
   };
 
+  const CANONICAL_PUBLIC = {
+    library: 'library',
+    calendar: 'calendar'
+  };
+
   const INTERNAL_TO_PUBLIC = Object.fromEntries(
-    Object.entries(PUBLIC_TO_INTERNAL).map(([publicRoute, internalRoute]) => [internalRoute, publicRoute])
+    Object.entries(PUBLIC_TO_INTERNAL).map(([publicRoute, internalRoute]) => [internalRoute, CANONICAL_PUBLIC[internalRoute] || publicRoute])
   );
 
   const ROUTE_TITLES = {
     home: 'Inicio',
     courses: 'Mis cursos',
     resources: 'Mi biblioteca',
+    library: 'Mi biblioteca',
     agenda: 'Calendario',
+    calendar: 'Calendario',
     certificates: 'Certificados',
     evaluations: 'Evaluaciones',
     help: 'Ayuda y soporte',
