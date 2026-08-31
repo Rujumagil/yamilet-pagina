@@ -4,12 +4,12 @@
   const MARKER = '/imagenes-academia-yamilet-final/';
   const PUBLIC_BASE = new URL('../imagenes-academia-yamilet-final/', document.baseURI).href;
 
-  function loadV93Styles() {
-    if (document.querySelector('link[data-academy-mobile-visuals-v93]')) return;
+  function loadV94Styles() {
+    if (document.querySelector('link[data-academy-mobile-home-v94]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = './academy-mobile-visual-refinement-v93.css?v=93';
-    link.dataset.academyMobileVisualsV93 = 'true';
+    link.href = './academy-mobile-home-v94.css?v=94';
+    link.dataset.academyMobileHomeV94 = 'true';
     document.head.appendChild(link);
   }
 
@@ -51,7 +51,7 @@
     patchElement(document.documentElement);
   }
 
-  loadV93Styles();
+  loadV94Styles();
 
   const style = document.createElement('style');
   style.id = 'academy-visual-path-fix-v92';
@@ -82,10 +82,10 @@
   });
 
   window.addEventListener('pageshow', () => {
-    loadV93Styles();
+    loadV94Styles();
     patchAll();
   });
-  window.setTimeout(() => { loadV93Styles(); patchAll(); }, 100);
-  window.setTimeout(patchAll, 500);
-  window.setTimeout(patchAll, 1500);
+  window.setTimeout(() => { loadV94Styles(); patchAll(); }, 100);
+  window.setTimeout(() => { loadV94Styles(); patchAll(); }, 500);
+  window.setTimeout(() => { loadV94Styles(); patchAll(); }, 1500);
 })();
