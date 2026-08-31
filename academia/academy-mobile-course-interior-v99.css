@@ -1,0 +1,379 @@
+/* Academia Yamilet · Interior Método MES v99
+   Curso, módulos, lecciones y reproductor optimizados para móvil/tablet. */
+
+@media (max-width: 760px) {
+  body[data-academy-learning-view="course"] [data-course-view] {
+    padding: 6px 10px calc(118px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-back-courses],
+  body[data-academy-learning-view="course"] .back-learning {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 38px !important;
+    margin: 0 0 10px !important;
+    padding: 0 12px !important;
+    border: 1px solid rgba(18,63,53,.10) !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,.88) !important;
+    color: #31584d !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    box-shadow: 0 5px 16px rgba(18,63,53,.04) !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .course-detail-head {
+    position: relative !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    min-height: 0 !important;
+    margin: 0 0 10px !important;
+    padding: 184px 18px 18px !important;
+    border: 1px solid rgba(18,63,53,.09) !important;
+    border-radius: 22px !important;
+    background: #fff !important;
+    box-shadow: 0 14px 32px rgba(18,63,53,.055) !important;
+    overflow: hidden !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .course-detail-head::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 0 auto 0 !important;
+    height: 166px !important;
+    background:
+      linear-gradient(180deg, rgba(18,63,53,.02), rgba(18,63,53,.12)),
+      url("../imagenes-academia-yamilet-final/10-metodo-mes-cover.webp") center 44% / cover no-repeat !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .course-detail-head > div,
+  body[data-academy-learning-view="course"] [data-course-detail] .progress-orb {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .course-detail-head .eyebrow {
+    margin-bottom: 7px !important;
+    color: #ad7c20 !important;
+    font-size: 9px !important;
+    font-weight: 900 !important;
+    letter-spacing: .13em !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .course-detail-head h2 {
+    margin: 0 0 8px !important;
+    color: #203a31 !important;
+    font: 600 clamp(31px, 8.7vw, 40px)/.98 Georgia, "Times New Roman", serif !important;
+    letter-spacing: -.035em !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .course-detail-head p {
+    margin: 0 !important;
+    color: #6d7e76 !important;
+    font-size: 12px !important;
+    line-height: 1.52 !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .progress-orb {
+    width: max-content !important;
+    height: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 8px 11px !important;
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 7px !important;
+    border: 1px solid rgba(18,63,53,.10) !important;
+    border-radius: 999px !important;
+    background: #f1f5f1 !important;
+    box-shadow: none !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .progress-orb strong {
+    color: #123f35 !important;
+    font-size: 19px !important;
+    line-height: 1 !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .progress-orb span {
+    margin: 0 !important;
+    color: #6e7d75 !important;
+    font-size: 8px !important;
+    letter-spacing: .08em !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .progress-track.large {
+    height: 7px !important;
+    margin: 0 2px 14px !important;
+    border-radius: 999px !important;
+    background: #e6ece7 !important;
+    overflow: hidden !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .syllabus {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .module-block {
+    margin: 0 !important;
+    border: 1px solid rgba(18,63,53,.09) !important;
+    border-radius: 20px !important;
+    background: #fff !important;
+    box-shadow: 0 10px 26px rgba(18,63,53,.045) !important;
+    overflow: hidden !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .module-head {
+    padding: 15px 15px 13px !important;
+    column-gap: 10px !important;
+    row-gap: 6px !important;
+    background: linear-gradient(145deg,#fff,#fbfbf7) !important;
+    border-bottom: 1px solid rgba(18,63,53,.06) !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .academy-week-card .module-head {
+    grid-template-columns: 40px minmax(0,1fr) auto !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .academy-week-card .academy-week-number {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 12px !important;
+    background: #123f35 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .module-label {
+    margin-bottom: 4px !important;
+    color: #ad7c20 !important;
+    font-size: 8px !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .module-head h3 {
+    margin: 0 0 5px !important;
+    color: #283f35 !important;
+    font: 600 23px/1.02 Georgia, "Times New Roman", serif !important;
+    letter-spacing: -.02em !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .module-head p {
+    color: #75827b !important;
+    font-size: 11px !important;
+    line-height: 1.48 !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .academy-module-count,
+  body[data-academy-learning-view="course"] [data-course-detail] .module-head > span:not(.module-label) {
+    min-width: 46px !important;
+    padding: 6px 8px !important;
+    border-radius: 999px !important;
+    background: #eef4ef !important;
+    color: #426659 !important;
+    font-size: 9px !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .academy-week-progress {
+    padding: 0 15px 12px !important;
+    background: #fbfcfa !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .lesson-list {
+    gap: 7px !important;
+    padding: 10px !important;
+    background: #f6f8f5 !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .lesson-row {
+    grid-template-columns: 40px minmax(0,1fr) 22px !important;
+    gap: 10px !important;
+    min-height: 64px !important;
+    padding: 10px 11px !important;
+    border: 1px solid rgba(18,63,53,.075) !important;
+    border-radius: 14px !important;
+    background: #fff !important;
+    box-shadow: 0 4px 12px rgba(18,63,53,.025) !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .lesson-row:active {
+    transform: scale(.995) !important;
+    border-color: rgba(18,63,53,.18) !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .lesson-type {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 12px !important;
+    background: #eaf3ed !important;
+    color: #174c40 !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .lesson-copy strong {
+    color: #2d4138 !important;
+    font-size: 12px !important;
+    line-height: 1.34 !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .lesson-copy small {
+    margin-top: 3px !important;
+    color: #8a958f !important;
+    font-size: 8.5px !important;
+  }
+
+  body[data-academy-learning-view="course"] [data-course-detail] .lesson-check {
+    color: #2d765f !important;
+  }
+
+  /* Reproductor de lección */
+  body.yamilet-player-mode [data-lesson-view] {
+    padding: 6px 10px calc(118px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  body.yamilet-player-mode [data-back-course] {
+    min-height: 38px !important;
+    margin: 0 0 10px !important;
+    padding: 0 12px !important;
+    border: 1px solid rgba(18,63,53,.10) !important;
+    border-radius: 999px !important;
+    background: #fff !important;
+  }
+
+  body.yamilet-player-mode .mes-player-shell {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  body.yamilet-player-mode .mes-player-heading {
+    margin-bottom: 10px !important;
+    padding: 18px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 12px 28px rgba(18,63,53,.11) !important;
+  }
+
+  body.yamilet-player-mode .mes-player-heading .lesson-breadcrumb {
+    margin-bottom: 8px !important;
+    font-size: 8px !important;
+  }
+
+  body.yamilet-player-mode .mes-player-heading .lesson-title {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  body.yamilet-player-mode .mes-player-heading .lesson-title h2 {
+    margin-bottom: 6px !important;
+    font-size: clamp(27px,8vw,36px) !important;
+    line-height: 1 !important;
+  }
+
+  body.yamilet-player-mode .mes-player-heading .lesson-complete-badge {
+    width: max-content !important;
+  }
+
+  body.yamilet-player-mode .mes-study-meta {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 8px !important;
+    margin-bottom: 10px !important;
+  }
+
+  body.yamilet-player-mode .mes-study-meta > div {
+    min-height: 62px !important;
+    padding: 11px 12px !important;
+    border-radius: 14px !important;
+  }
+
+  body.yamilet-player-mode .mes-study-current {
+    grid-column: 1 / -1 !important;
+  }
+
+  body.yamilet-player-mode .mes-player-main .video-shell,
+  body.yamilet-player-mode .mes-player-main .cloudflare-stream-shell,
+  body.yamilet-player-mode .mes-player-main .lesson-video {
+    margin-bottom: 10px !important;
+    border-radius: 17px !important;
+    box-shadow: 0 16px 38px rgba(14,43,35,.14) !important;
+  }
+
+  body.yamilet-player-mode .mes-player-main .lesson-content,
+  body.yamilet-player-mode .mes-player-main .transcript {
+    margin: 10px 0 !important;
+    padding: 18px !important;
+    border-radius: 17px !important;
+    line-height: 1.65 !important;
+  }
+
+  body.yamilet-player-mode .mes-lesson-resources {
+    margin: 10px 0 !important;
+    padding: 16px !important;
+    border-radius: 17px !important;
+  }
+
+  body.yamilet-player-mode .mes-resources-head {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+  }
+
+  body.yamilet-player-mode .mes-resources-head p {
+    text-align: left !important;
+  }
+
+  body.yamilet-player-mode .mes-resources-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.yamilet-player-mode .mes-player-main .lesson-actions {
+    align-items: stretch !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 16px !important;
+    border-radius: 17px !important;
+  }
+
+  body.yamilet-player-mode .mes-player-main .lesson-actions .btn {
+    width: 100% !important;
+  }
+
+  body.yamilet-player-mode .mes-player-main .lesson-nav {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  body.yamilet-player-mode .mes-player-main .lesson-nav .btn,
+  body.yamilet-player-mode .mes-player-main .lesson-nav .btn:last-child {
+    min-height: 58px !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+
+  body.yamilet-player-mode .mes-outline {
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    padding: 13px !important;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 24px rgba(18,63,53,.05) !important;
+  }
+}
+
+@media (max-width: 390px) {
+  body[data-academy-learning-view="course"] [data-course-detail] .course-detail-head {
+    padding-top: 166px !important;
+  }
+  body[data-academy-learning-view="course"] [data-course-detail] .course-detail-head::before {
+    height: 150px !important;
+  }
+  body[data-academy-learning-view="course"] [data-course-detail] .module-head h3 {
+    font-size: 21px !important;
+  }
+}
