@@ -35,7 +35,7 @@ jobs:
           test "$count" -gt 0
           echo "Validated $count production JavaScript files."
 
-      - name: Validate current v91 architecture
+      - name: Validate current v94 mobile architecture
         shell: bash
         run: |
           set -euo pipefail
@@ -43,6 +43,7 @@ jobs:
           required=(
             index.html catalogo.html styles.css manifest.webmanifest offline.html sw.js
             app.js academy-shell-v21.js academy-navigation.js academy-dashboard.js academy-visuals-v91.css
+            academy-mobile-home-v94.css academy-visual-path-fix-v92.js
             academy-courses.js academy-evaluations.js academy-library.js academy-calendar.js
             academy-certificates.js academy-profile.js academy-support.js academy-explore.js
             academy-admin.js academy-content-runtime-v80.js academy-students-runtime-v81.js
@@ -54,7 +55,7 @@ jobs:
           for asset in "${required[@]}"; do test -s "$base/$asset" || { echo "Missing $asset" >&2; exit 1; }; done
           test -s yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png
           grep -q 'name="academy-build" content="v91-visuals"' "$base/index.html"
-          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v91`' "$base/sw.js"
+          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v94`' "$base/sw.js"
           grep -q "const VERSION = '89.0.0'" "$base/academy-aula-clone-v69.js"
           grep -q "const VERSION = '89.0.0'" "$base/academy-profile.js"
           grep -q "academy-public-config" "$base/app.js"
@@ -165,7 +166,7 @@ jobs:
           rsync -a --delete "$visual_source" "$visual_public"
           install -D -m 0644 source/yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png public/assets/logo-yamilet.png
 
-      - name: Verify synchronized v91 snapshot
+      - name: Verify synchronized v94 snapshot
         shell: bash
         run: |
           set -euo pipefail
@@ -176,12 +177,13 @@ jobs:
           test -s public/academia/sw.js
           test -s public/academia/manifest.webmanifest
           test -s public/academia/academy-visuals-v91.css
+          test -s public/academia/academy-mobile-home-v94.css
           test -s public/assets/logo-yamilet.png
           test -s public/imagenes-academia-yamilet-final/05-academia-hero-desktop.webp
           test -s public/imagenes-academia-yamilet-final/07-academia-hero-mobile.webp
           test -s public/imagenes-academia-yamilet-final/17-academia-fondo-claro.webp
           grep -q 'name="academy-build" content="v91-visuals"' public/academia/index.html
-          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v91`' public/academia/sw.js
+          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v94`' public/academia/sw.js
           ! grep -q 'academy-sales-admin.js' public/academia/index.html
           ! grep -q 'academy-assessment-review.js' public/academia/index.html
 
