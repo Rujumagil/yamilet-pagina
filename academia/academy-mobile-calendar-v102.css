@@ -1,0 +1,400 @@
+/* Academia Yamilet · Calendario / Agenda visual v102
+   Refinamiento responsive sobre academy-calendar.css sin tocar la logica de eventos. */
+
+.academy-calendar-page{
+  padding-bottom:calc(104px + env(safe-area-inset-bottom,0px))!important;
+}
+
+.academy-calendar-page .academy-calendar-hero{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  min-height:260px!important;
+  align-items:end!important;
+  border:1px solid rgba(18,63,53,.10)!important;
+  background:
+    linear-gradient(90deg,rgba(13,52,44,.97) 0%,rgba(18,63,53,.92) 43%,rgba(18,63,53,.42) 72%,rgba(18,63,53,.18) 100%),
+    url('../imagenes-academia-yamilet-final/14-comunidad-acompanamiento.webp') center 42%/cover no-repeat!important;
+  box-shadow:0 18px 44px rgba(18,63,53,.12)!important;
+}
+
+.academy-calendar-page .academy-calendar-hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(180deg,transparent 44%,rgba(8,35,29,.18) 100%);
+  pointer-events:none;
+}
+
+.academy-calendar-page .academy-calendar-hero>div:first-child{
+  position:relative!important;
+  z-index:1!important;
+  max-width:650px!important;
+}
+
+.academy-calendar-page .academy-calendar-hero h2{
+  max-width:620px!important;
+  margin:8px 0 10px!important;
+  text-wrap:balance!important;
+}
+
+.academy-calendar-page .academy-calendar-hero p{
+  max-width:570px!important;
+  color:rgba(244,249,246,.84)!important;
+  font-size:12px!important;
+}
+
+.academy-calendar-page .academy-calendar-stats{
+  position:relative!important;
+  z-index:1!important;
+  align-self:end!important;
+}
+
+.academy-calendar-page .academy-calendar-stats article{
+  min-width:96px!important;
+  border-color:rgba(255,255,255,.17)!important;
+  background:rgba(255,255,255,.13)!important;
+  backdrop-filter:blur(7px)!important;
+  -webkit-backdrop-filter:blur(7px)!important;
+}
+
+.academy-calendar-page .academy-calendar-strip-wrap{
+  margin-bottom:16px!important;
+  padding:16px!important;
+  border-radius:20px!important;
+  background:rgba(255,255,255,.96)!important;
+}
+
+.academy-calendar-page .academy-calendar-day{
+  min-height:84px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  padding:11px 10px!important;
+  border-radius:15px!important;
+}
+
+.academy-calendar-page .academy-calendar-day.today{
+  border-color:rgba(184,138,44,.45)!important;
+  background:linear-gradient(145deg,#fffaf0,#fff5db)!important;
+  box-shadow:0 7px 18px rgba(184,138,44,.08)!important;
+}
+
+.academy-calendar-page .academy-calendar-day.has-event{
+  border-color:rgba(18,63,53,.14)!important;
+  background:linear-gradient(145deg,#f4faf6,#edf6f0)!important;
+}
+
+.academy-calendar-page .academy-calendar-toolbar{
+  padding:2px 2px 0!important;
+}
+
+.academy-calendar-page .academy-calendar-events{
+  gap:10px!important;
+}
+
+.academy-calendar-page .academy-calendar-event{
+  position:relative!important;
+  overflow:hidden!important;
+  border-radius:19px!important;
+  box-shadow:0 10px 27px rgba(18,63,53,.045)!important;
+}
+
+.academy-calendar-page .academy-calendar-event.featured::before{
+  content:"DESTACADO";
+  position:absolute;
+  right:14px;
+  top:0;
+  padding:5px 9px;
+  border-radius:0 0 9px 9px;
+  background:#b88a2c;
+  color:#fff;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.1em;
+}
+
+.academy-calendar-page .academy-calendar-date{
+  background:linear-gradient(145deg,#eef6f1,#f8faf7)!important;
+}
+
+.academy-calendar-page .academy-calendar-event-copy h4{
+  color:#273d33!important;
+}
+
+.academy-calendar-page .academy-calendar-event-meta span{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:25px!important;
+  padding:0 8px!important;
+  border-radius:999px!important;
+  background:#f3f6f3!important;
+  color:#68776f!important;
+}
+
+.academy-calendar-page .academy-calendar-event-actions .status{
+  border:1px solid rgba(18,63,53,.08)!important;
+  background:#eef5f0!important;
+  color:#426356!important;
+}
+
+.academy-calendar-page .academy-calendar-event-actions a{
+  min-height:40px!important;
+  border-radius:12px!important;
+  box-shadow:0 8px 18px rgba(18,63,53,.10)!important;
+}
+
+.academy-calendar-page .academy-calendar-event-actions button{
+  min-height:40px!important;
+  border-radius:12px!important;
+}
+
+.academy-calendar-page .academy-calendar-empty{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  min-height:260px!important;
+  border:0!important;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.98),rgba(255,255,255,.91) 57%,rgba(255,255,255,.50)),
+    url('../imagenes-academia-yamilet-final/14-comunidad-acompanamiento.webp') center/cover no-repeat!important;
+  box-shadow:0 12px 32px rgba(18,63,53,.06)!important;
+}
+
+@media(max-width:760px){
+  .academy-calendar-page{
+    padding-bottom:calc(118px + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  .academy-calendar-page .academy-calendar-hero{
+    min-height:310px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:flex-end!important;
+    gap:17px!important;
+    padding:22px 20px!important;
+    background:
+      linear-gradient(180deg,rgba(18,63,53,.14) 0%,rgba(18,63,53,.42) 37%,rgba(12,49,41,.96) 73%,rgba(10,42,35,.99) 100%),
+      url('../imagenes-academia-yamilet-final/14-comunidad-acompanamiento.webp') center 27%/cover no-repeat!important;
+  }
+
+  .academy-calendar-page .academy-calendar-hero h2{
+    max-width:100%!important;
+    font-size:clamp(31px,8.5vw,39px)!important;
+    line-height:1!important;
+  }
+
+  .academy-calendar-page .academy-calendar-hero p{
+    max-width:100%!important;
+    font-size:11px!important;
+    line-height:1.55!important;
+  }
+
+  .academy-calendar-page .academy-calendar-stats{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-stats article{
+    min-width:0!important;
+    padding:10px 9px!important;
+    border-radius:13px!important;
+    text-align:center!important;
+  }
+
+  .academy-calendar-page .academy-calendar-stats strong{
+    font-size:22px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-stats span{
+    font-size:7px!important;
+  }
+
+  /* En movil los 14 dias dejan de apilarse: se navegan horizontalmente. */
+  .academy-calendar-page .academy-calendar-strip-wrap{
+    padding:15px 0 15px 15px!important;
+    overflow:hidden!important;
+  }
+
+  .academy-calendar-page .academy-calendar-strip-head{
+    padding-right:15px!important;
+    margin-bottom:11px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-days{
+    display:flex!important;
+    gap:8px!important;
+    width:auto!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    padding:1px 15px 7px 0!important;
+    scroll-snap-type:x proximity!important;
+    scrollbar-width:none!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+
+  .academy-calendar-page .academy-calendar-days::-webkit-scrollbar{
+    display:none!important;
+  }
+
+  .academy-calendar-page .academy-calendar-day{
+    flex:0 0 72px!important;
+    width:72px!important;
+    min-height:82px!important;
+    scroll-snap-align:start!important;
+    text-align:center!important;
+    align-items:center!important;
+  }
+
+  .academy-calendar-page .academy-calendar-day strong{
+    font-size:24px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-toolbar{
+    gap:10px!important;
+    margin-bottom:11px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-toolbar h3{
+    font-size:23px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-filters{
+    display:flex!important;
+    width:calc(100vw - 38px)!important;
+    max-width:100%!important;
+    gap:6px!important;
+    overflow-x:auto!important;
+    padding-bottom:4px!important;
+    scrollbar-width:none!important;
+  }
+
+  .academy-calendar-page .academy-calendar-filters::-webkit-scrollbar{
+    display:none!important;
+  }
+
+  .academy-calendar-page .academy-calendar-filters button{
+    flex:0 0 auto!important;
+    min-height:36px!important;
+    padding:0 13px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event{
+    display:grid!important;
+    grid-template-columns:70px minmax(0,1fr)!important;
+    gap:12px!important;
+    padding:14px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-date{
+    min-height:74px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    padding:9px!important;
+    text-align:center!important;
+  }
+
+  .academy-calendar-page .academy-calendar-date strong{
+    font-size:25px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event-copy h4{
+    padding-right:5px!important;
+    font-size:19px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event-copy p{
+    display:-webkit-box!important;
+    overflow:hidden!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event-meta{
+    gap:5px!important;
+    margin-top:8px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event-meta span{
+    min-height:23px!important;
+    padding:0 7px!important;
+    font-size:8px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event-actions{
+    grid-column:1/-1!important;
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:auto minmax(0,1fr)!important;
+    gap:7px!important;
+    align-items:center!important;
+    justify-items:stretch!important;
+    min-width:0!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event-actions .status{
+    grid-column:1/-1!important;
+    justify-self:start!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event-actions a,
+  .academy-calendar-page .academy-calendar-event-actions button{
+    width:100%!important;
+    min-width:0!important;
+    padding:0 9px!important;
+    font-size:9px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-empty{
+    min-height:320px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:flex-end!important;
+    gap:11px!important;
+    padding:22px 20px!important;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.20),rgba(255,255,255,.72) 44%,rgba(255,255,255,.98) 76%),
+      url('../imagenes-academia-yamilet-final/14-comunidad-acompanamiento.webp') center 22%/cover no-repeat!important;
+  }
+
+  .academy-calendar-page .academy-calendar-empty-icon{
+    width:48px!important;
+    height:48px!important;
+    border-radius:14px!important;
+    font-size:21px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-empty h3{
+    font-size:24px!important;
+  }
+}
+
+@media(max-width:430px){
+  .academy-calendar-page .academy-calendar-hero{
+    min-height:300px!important;
+    padding:20px 18px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event{
+    grid-template-columns:62px minmax(0,1fr)!important;
+    gap:10px!important;
+    padding:12px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-date{
+    min-height:68px!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event-actions{
+    grid-template-columns:1fr!important;
+  }
+
+  .academy-calendar-page .academy-calendar-event-actions .status{
+    grid-column:auto!important;
+  }
+}
