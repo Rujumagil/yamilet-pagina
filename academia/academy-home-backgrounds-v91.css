@@ -1,25 +1,26 @@
-/* Academia Yamilet · Inicio v92
-   Corrección de nitidez: se evita ampliar el raster embebido de Método MES.
-   Corrección UI: navegación móvil solo visible en pantallas móviles. */
-.v71-home-page .v71-featured-course{position:relative!important;overflow:hidden!important;background:#fbfaf6 url('./home-metodo-mes-soft.svg') right center/600px 300px no-repeat!important;border:1px solid #dfe4dc!important;color:#26332e!important}
+/* Academia Yamilet · Inicio v93
+   Ajuste de composición: fondos completos dentro de cada tarjeta.
+   El texto del curso vuelve a ser HTML para mantener nitidez y accesibilidad. */
+.v71-home-page .v71-featured-course{position:relative!important;overflow:hidden!important;background:#fbfaf6 url('./home-metodo-mes-soft.svg') center/100% 100% no-repeat!important;border:1px solid #dfe4dc!important;color:#26332e!important}
 .v71-home-page .v71-featured-course::after{display:none!important}
 .v71-home-page .v71-featured-course>img{display:none!important}
 .v71-home-page .v71-featured-course>div{position:relative!important;z-index:2!important;min-height:100%!important;background:transparent!important}
-.v71-home-page .v71-featured-course h2,.v71-home-page .v71-featured-course p{display:none!important}
-.v71-home-page .v71-featured-course .v71-badge{position:absolute!important;left:24px!important;top:22px!important;z-index:4!important;margin:0!important;background:rgba(229,232,205,.90)!important;color:#315843!important;border:1px solid rgba(82,111,84,.12)!important;box-shadow:none!important}
+.v71-home-page .v71-featured-course h2{display:block!important;position:absolute!important;left:24px!important;top:76px!important;max-width:430px!important;margin:0!important;color:#234f3f!important;font-size:clamp(28px,3vw,42px)!important;line-height:1.05!important;text-shadow:0 1px 0 rgba(255,255,255,.45)!important}
+.v71-home-page .v71-featured-course p{display:block!important;position:absolute!important;left:24px!important;top:128px!important;max-width:360px!important;margin:0!important;color:#50645b!important;font-size:14px!important;line-height:1.45!important}
+.v71-home-page .v71-featured-course .v71-badge{position:absolute!important;left:24px!important;top:22px!important;z-index:4!important;margin:0!important;background:rgba(229,232,205,.92)!important;color:#315843!important;border:1px solid rgba(82,111,84,.12)!important;box-shadow:none!important}
 .v71-home-page .v71-featured-actions{position:absolute!important;right:22px!important;bottom:20px!important;z-index:5!important;margin:0!important}
 .v71-home-page .v71-featured-actions .ghost{display:none!important}
 .v71-home-page .v71-featured-actions .primary{min-height:46px!important;padding:0 18px!important;border-radius:14px!important;background:#35664f!important;color:#fff!important;border:1px solid #35664f!important;box-shadow:0 7px 18px rgba(42,79,60,.16)!important}
 .v71-home-page .v71-progress-label{position:absolute!important;left:24px!important;right:300px!important;bottom:52px!important;z-index:4!important;color:#426250!important}
 .v71-home-page .v71-progress.large{position:absolute!important;left:24px!important;right:300px!important;bottom:24px!important;z-index:4!important;background:rgba(216,221,215,.78)!important}
 .v71-home-page .v71-progress.large span{background:#799786!important}
-.v71-home-page .v71-event-card{position:relative!important;overflow:hidden!important;background:#fffaf4 url('./home-agenda-soft.svg') center/cover no-repeat!important;border:1px solid #e5dfd4!important;color:#26332e!important}
+.v71-home-page .v71-event-card{position:relative!important;overflow:hidden!important;background:#fffaf4 url('./home-agenda-soft.svg') center/100% 100% no-repeat!important;border:1px solid #e5dfd4!important;color:#26332e!important}
 .v71-home-page .v71-event-card::after{display:none!important}
-.v71-home-page .v71-event-card h2{color:#26332e!important;max-width:270px!important;position:relative;z-index:2}
-.v71-home-page .v71-event-card p{color:#5d6963!important;max-width:300px!important;position:relative;z-index:2}
+.v71-home-page .v71-event-card h2{color:#26332e!important;max-width:270px!important;position:relative!important;z-index:2!important}
+.v71-home-page .v71-event-card p{color:#5d6963!important;max-width:300px!important;position:relative!important;z-index:2!important}
 .v71-home-page .v71-event-card .v71-eyebrow,.v71-home-page .v71-event-card .v71-event-date,.v71-home-page .v71-event-card .v71-event-meta,.v71-home-page .v71-event-card .v71-btn{position:relative;z-index:2}
 .v71-home-page .v71-event-card .v71-btn{background:rgba(255,253,249,.94)!important;color:#3f654f!important;border:1px solid #aebdb2!important}
-.v71-home-page .v71-support{position:relative!important;overflow:hidden!important;background:#f3edf8 url('./home-ayuda-soft.svg') center/cover no-repeat!important;border:1px solid #ded5e7!important;color:#34303b!important}
+.v71-home-page .v71-support{position:relative!important;overflow:hidden!important;background:#f3edf8 url('./home-ayuda-soft.svg') center/100% 100% no-repeat!important;border:1px solid #ded5e7!important;color:#34303b!important}
 .v71-home-page .v71-support::after{display:none!important}
 .v71-home-page .v71-support>*{position:relative;z-index:2}
 .v71-home-page .v71-support h2{color:#34303b!important}
@@ -27,11 +28,13 @@
 .v71-home-page .v71-support .v71-btn{background:#806c9b!important;border-color:#806c9b!important;color:#fff!important;box-shadow:0 7px 18px rgba(91,71,112,.14)!important}
 .mobile-app-nav{display:none!important}
 @media(max-width:760px){
-  .v71-home-page .v71-featured-course{min-height:300px!important;background-size:min(600px,100%) auto!important;background-position:right center!important}
+  .v71-home-page .v71-featured-course{min-height:300px!important;background-size:100% 100%!important;background-position:center!important}
   .v71-home-page .v71-featured-course .v71-badge{left:16px!important;top:16px!important}
+  .v71-home-page .v71-featured-course h2{left:16px!important;top:66px!important;max-width:260px!important;font-size:29px!important}
+  .v71-home-page .v71-featured-course p{left:16px!important;top:108px!important;max-width:235px!important;font-size:12px!important}
   .v71-home-page .v71-featured-actions{right:16px!important;bottom:16px!important}
   .v71-home-page .v71-progress-label{left:16px!important;right:170px!important;bottom:49px!important}
   .v71-home-page .v71-progress.large{left:16px!important;right:170px!important;bottom:21px!important}
-  .v71-home-page .v71-event-card,.v71-home-page .v71-support{min-height:250px!important;background-position:center!important}
+  .v71-home-page .v71-event-card,.v71-home-page .v71-support{min-height:250px!important;background-size:100% 100%!important;background-position:center!important}
   .mobile-app-nav{display:flex!important}
 }
