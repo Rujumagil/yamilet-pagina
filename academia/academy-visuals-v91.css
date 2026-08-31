@@ -1,0 +1,79 @@
+/* Academia Yamilet · Visual Assets v91
+   Las imágenes se sirven directamente desde /imagenes-academia-yamilet-final sin reescalado ni recompresión. */
+body:has(.dashboard:not(.hidden)) .dashboard-main{
+  background-image:linear-gradient(rgba(245,243,237,.91),rgba(245,243,237,.96)),url("../../imagenes-academia-yamilet-final/17-academia-fondo-claro.webp")!important;
+  background-size:cover!important;
+  background-position:center top!important;
+  background-attachment:fixed!important;
+}
+.topbar .brand.academy-brand-upgraded img{width:170px!important;height:auto!important;max-height:58px!important;object-fit:contain!important;border-radius:0!important;background:transparent!important}
+.topbar .brand.academy-brand-upgraded span{display:none!important}
+.side-brand img.academy-side-isotipo{object-fit:contain!important;background:#fff!important}
+.login-logo.academy-login-master{width:min(290px,84%)!important;height:auto!important;max-height:none!important;object-fit:contain!important;border-radius:0!important;background:transparent!important}
+.welcome-card.academy-auth-visual{position:relative!important;overflow:hidden!important;padding-right:44%!important}
+.academy-auth-portrait{position:absolute;z-index:0;right:0;top:0;width:46%;height:100%;object-fit:cover;object-position:center top;pointer-events:none}
+.welcome-card.academy-auth-visual::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(12,52,44,.97) 0%,rgba(12,52,44,.9) 48%,rgba(12,52,44,.16) 80%,rgba(12,52,44,.04) 100%)}
+.welcome-card.academy-auth-visual>*:not(.academy-auth-portrait){position:relative;z-index:2}
+.academy-hero-media{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;pointer-events:none}
+.academy-hero-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center center}
+.dashboard-main[data-academy-section="home"]>.dash-head::before{z-index:1!important;background:linear-gradient(90deg,rgba(7,39,33,.96) 0%,rgba(10,58,48,.84) 42%,rgba(12,52,44,.3) 68%,rgba(12,52,44,.06) 100%)!important}
+.dashboard-main[data-academy-section="home"]>.dash-head>div,.dashboard-main[data-academy-section="home"]>.dash-head>a{position:relative;z-index:2!important}
+.dashboard-main[data-academy-section="home"]>.dash-head h1{max-width:680px!important}
+.dashboard-main[data-academy-section="home"]>.dash-head p{max-width:570px!important}
+.academy-roadmap-mentor{display:block;width:100%;height:124px;object-fit:cover;object-position:center 32%;border-radius:16px;margin:0 0 18px}
+.academy-home-visual-links{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.dashboard-main:not([data-academy-section="home"])>.academy-home-visual-links,.dashboard-main.shell-route-mode>.academy-home-visual-links,.dashboard-main.shell-courses-mode>.academy-home-visual-links{display:none!important}
+.academy-visual-link{position:relative;min-height:230px;padding:0;border:0;border-radius:23px;overflow:hidden;background:#123f35;cursor:pointer;text-align:left;box-shadow:0 16px 38px rgba(18,63,53,.08)}
+.academy-visual-link>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.academy-visual-link::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,45,38,.03),rgba(10,45,38,.88))}
+.academy-visual-link:hover>img{transform:scale(1.025)}
+.academy-visual-link-copy{position:absolute;z-index:2;left:20px;right:20px;bottom:19px;color:#fff}
+.academy-visual-link-copy small{display:block;color:#f1ca70;font-size:9px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
+.academy-visual-link-copy strong{display:block;margin-top:6px;font:600 25px/1.05 Georgia,"Times New Roman",serif}
+.academy-visual-link-copy span{display:block;margin-top:6px;color:rgba(255,255,255,.8);font-size:11px;line-height:1.4}
+#continuar .continue-card{position:relative!important;overflow:hidden!important;isolation:isolate}
+.academy-continue-visual{position:absolute;z-index:-2;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+#continuar .continue-card::after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.99) 0%,rgba(255,255,255,.93) 52%,rgba(255,255,255,.3) 100%)}
+#continuar .continue-card>div{max-width:67%}
+.learning-course-card .course-cover.academy-mes-cover{display:block!important;width:100%!important;min-height:190px!important;max-height:260px!important;object-fit:cover!important;object-position:center!important}
+.course-detail-head.academy-course-art-host{position:relative!important;overflow:hidden!important;isolation:isolate;padding-right:min(43vw,520px)!important;min-height:260px}
+.academy-course-detail-visual{position:absolute;z-index:-2;right:0;top:0;width:48%;height:100%;object-fit:cover;object-position:center}
+.course-detail-head.academy-course-art-host::after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,.97) 52%,rgba(255,255,255,.18) 100%)}
+.academy-route-art-host{position:relative!important;overflow:hidden!important;isolation:isolate}
+.academy-route-art{position:absolute;z-index:-2;inset:0 0 0 auto;width:46%;height:100%;object-fit:cover;object-position:center}
+.academy-route-art-host::after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,rgba(18,63,53,.99) 0%,rgba(18,63,53,.9) 56%,rgba(18,63,53,.18) 100%)}
+.academy-library-hero.academy-route-art-host>div,.academy-cert-hero.academy-route-art-host>*,.v78-support-hero.academy-route-art-host>*{position:relative;z-index:1}
+.academy-cert-hero.academy-route-art-host{background:#123f35!important}
+.v78-support-hero.academy-route-art-host{background:#123f35!important}
+.academy-avatar.academy-avatar-fallback{background-image:url("../../imagenes-academia-yamilet-final/18-avatar-alumno-generico.webp")!important;background-size:cover!important;background-position:center!important;color:transparent!important}
+.v78-profile-avatar>img.academy-generic-profile-avatar{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
+.v71-featured-course>img.academy-v91-image,.v71-continue-panel>img.academy-v91-image,.v71-featured-resource>img.academy-v91-image{filter:none!important;opacity:1!important}
+@media(max-width:1180px){
+  .academy-home-visual-links{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .academy-visual-link:last-child{grid-column:1/-1}
+}
+@media(max-width:980px){
+  .course-detail-head.academy-course-art-host{padding-right:32%!important}
+  .academy-course-detail-visual{width:38%}
+  .academy-route-art{width:54%}
+}
+@media(max-width:760px){
+  .topbar .brand.academy-brand-upgraded img{width:132px!important;max-height:48px!important}
+  .welcome-card.academy-auth-visual{padding-right:20px!important;padding-bottom:235px!important}
+  .academy-auth-portrait{top:auto;bottom:0;width:100%;height:245px;object-position:center 25%}
+  .welcome-card.academy-auth-visual::after{background:linear-gradient(180deg,rgba(12,52,44,.99) 0%,rgba(12,52,44,.94) 54%,rgba(12,52,44,.28) 100%)}
+  .academy-hero-media img{object-position:center top}
+  .dashboard-main[data-academy-section="home"]>.dash-head::before{background:linear-gradient(180deg,rgba(7,39,33,.93) 0%,rgba(7,39,33,.64) 48%,rgba(7,39,33,.28) 100%)!important}
+  .dashboard-main[data-academy-section="home"]>.dash-head h1{max-width:100%!important}
+  .academy-roadmap-mentor{height:105px}
+  .academy-home-visual-links{grid-template-columns:1fr}
+  .academy-visual-link,.academy-visual-link:last-child{grid-column:auto;min-height:200px}
+  #continuar .continue-card>div{max-width:100%}
+  #continuar .continue-card::after{background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.88))}
+  .learning-course-card .course-cover.academy-mes-cover{min-height:260px!important;max-height:360px!important;object-position:center top!important}
+  .course-detail-head.academy-course-art-host{padding-right:20px!important;padding-bottom:190px!important}
+  .academy-course-detail-visual{top:auto;bottom:0;width:100%;height:190px}
+  .course-detail-head.academy-course-art-host::after{background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.97) 60%,rgba(255,255,255,.18) 100%)}
+  .academy-route-art{width:100%;opacity:.72}
+  .academy-route-art-host::after{background:linear-gradient(180deg,rgba(18,63,53,.97) 0%,rgba(18,63,53,.83) 65%,rgba(18,63,53,.48) 100%)}
+}
