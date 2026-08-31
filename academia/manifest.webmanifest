@@ -15,7 +15,7 @@
   "categories": ["education", "lifestyle"],
   "icons": [
     {
-      "src": "../../imagenes-academia-yamilet-final/04-favicon.png",
+      "src": "../imagenes-academia-yamilet-final/04-favicon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
