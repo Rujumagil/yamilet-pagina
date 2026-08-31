@@ -35,14 +35,14 @@ jobs:
           test "$count" -gt 0
           echo "Validated $count production JavaScript files."
 
-      - name: Validate current v89 architecture
+      - name: Validate current v91 architecture
         shell: bash
         run: |
           set -euo pipefail
           base='yamilet-perez-site-v2-verde-github/academia'
           required=(
             index.html catalogo.html styles.css manifest.webmanifest offline.html sw.js
-            app.js academy-shell-v21.js academy-navigation.js academy-dashboard.js
+            app.js academy-shell-v21.js academy-navigation.js academy-dashboard.js academy-visuals-v91.css
             academy-courses.js academy-evaluations.js academy-library.js academy-calendar.js
             academy-certificates.js academy-profile.js academy-support.js academy-explore.js
             academy-admin.js academy-content-runtime-v80.js academy-students-runtime-v81.js
@@ -53,12 +53,23 @@ jobs:
           )
           for asset in "${required[@]}"; do test -s "$base/$asset" || { echo "Missing $asset" >&2; exit 1; }; done
           test -s yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png
-          grep -q 'name="academy-build" content="v89-hardening"' "$base/index.html"
-          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v89`' "$base/sw.js"
+          grep -q 'name="academy-build" content="v91-visuals"' "$base/index.html"
+          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v91`' "$base/sw.js"
           grep -q "const VERSION = '89.0.0'" "$base/academy-aula-clone-v69.js"
           grep -q "const VERSION = '89.0.0'" "$base/academy-profile.js"
           grep -q "academy-public-config" "$base/app.js"
           grep -q "workspaceSlug = 'yamilet-mes'" "$base/app.js"
+
+          visual_dir='imagenes-academia-yamilet-final'
+          visuals=(
+            01-yamilet-logo-master.png 02-yamilet-isotipo.png 03-yamilet-logo-header.png 04-favicon.png
+            05-academia-hero-desktop.webp 06-academia-hero-tablet.webp 07-academia-hero-mobile.webp
+            08-yamilet-academia.webp 09-yamilet-academia-horizontal.webp 10-metodo-mes-cover.webp
+            11-metodo-mes-cover-vertical.webp 12-metodo-mes-thumb.webp 13-continuar-aprendiendo.webp
+            14-comunidad-acompanamiento.webp 15-recursos-descargables.webp 16-certificados.webp
+            17-academia-fondo-claro.webp 18-avatar-alumno-generico.webp
+          )
+          for asset in "${visuals[@]}"; do test -s "$visual_dir/$asset" || { echo "Missing visual $asset" >&2; exit 1; }; done
 
       - name: Smoke test hash navigation and admin guards
         run: node .github/scripts/academia-navigation-smoke-v89.mjs
@@ -139,29 +150,38 @@ jobs:
           path: public
           fetch-depth: 1
 
-      - name: Sync only Academia public files
+      - name: Sync Academia and original visual assets
         shell: bash
         run: |
           set -euo pipefail
           source_dir='source/yamilet-perez-site-v2-verde-github/academia/'
           public_dir='public/academia/'
+          visual_source='source/imagenes-academia-yamilet-final/'
+          visual_public='public/imagenes-academia-yamilet-final/'
           test -d "$source_dir"
-          mkdir -p "$public_dir"
+          test -d "$visual_source"
+          mkdir -p "$public_dir" "$visual_public"
           rsync -a --delete --exclude='.git/' "$source_dir" "$public_dir"
+          rsync -a --delete "$visual_source" "$visual_public"
           install -D -m 0644 source/yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png public/assets/logo-yamilet.png
 
-      - name: Verify synchronized v89 snapshot
+      - name: Verify synchronized v91 snapshot
         shell: bash
         run: |
           set -euo pipefail
           diff -qr source/yamilet-perez-site-v2-verde-github/academia public/academia
+          diff -qr source/imagenes-academia-yamilet-final public/imagenes-academia-yamilet-final
           test -s public/academia/index.html
           test -s public/academia/catalogo.html
           test -s public/academia/sw.js
           test -s public/academia/manifest.webmanifest
+          test -s public/academia/academy-visuals-v91.css
           test -s public/assets/logo-yamilet.png
-          grep -q 'name="academy-build" content="v89-hardening"' public/academia/index.html
-          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v89`' public/academia/sw.js
+          test -s public/imagenes-academia-yamilet-final/05-academia-hero-desktop.webp
+          test -s public/imagenes-academia-yamilet-final/07-academia-hero-mobile.webp
+          test -s public/imagenes-academia-yamilet-final/17-academia-fondo-claro.webp
+          grep -q 'name="academy-build" content="v91-visuals"' public/academia/index.html
+          grep -q 'CACHE_NAME = `${CACHE_PREFIX}v91`' public/academia/sw.js
           ! grep -q 'academy-sales-admin.js' public/academia/index.html
           ! grep -q 'academy-assessment-review.js' public/academia/index.html
 
@@ -170,7 +190,7 @@ jobs:
         run: |
           set -euo pipefail
           cd public
-          unexpected="$(git status --porcelain | awk '{print $2}' | grep -Ev '^(academia/|assets/logo-yamilet\.png$)' || true)"
+          unexpected="$(git status --porcelain | awk '{print $2}' | grep -Ev '^(academia/|imagenes-academia-yamilet-final/|assets/logo-yamilet\.png$)' || true)"
           if [ -n "$unexpected" ]; then
             echo "Deployment attempted to change files outside the Academy scope:" >&2
             echo "$unexpected" >&2
@@ -184,7 +204,7 @@ jobs:
           cd public
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A academia assets/logo-yamilet.png
+          git add -A academia imagenes-academia-yamilet-final assets/logo-yamilet.png
           if git diff --cached --quiet; then
             echo "gh-pages already matches validated main; nothing to publish."
             exit 0
