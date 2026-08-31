@@ -1,7 +1,7 @@
-/* Academia Yamilet · Visual Assets v91
+/* Academia Yamilet · Visual Assets v108
    Las imágenes se sirven directamente desde /imagenes-academia-yamilet-final sin reescalado ni recompresión. */
 body:has(.dashboard:not(.hidden)) .dashboard-main{
-  background-image:linear-gradient(rgba(245,243,237,.91),rgba(245,243,237,.96)),url("../../imagenes-academia-yamilet-final/17-academia-fondo-claro.webp")!important;
+  background-image:linear-gradient(rgba(245,243,237,.91),rgba(245,243,237,.96)),url("../imagenes-academia-yamilet-final/17-academia-fondo-claro.webp")!important;
   background-size:cover!important;
   background-position:center top!important;
   background-attachment:fixed!important;
@@ -45,7 +45,7 @@ body:has(.dashboard:not(.hidden)) .dashboard-main{
 .academy-library-hero.academy-route-art-host>div,.academy-cert-hero.academy-route-art-host>*,.v78-support-hero.academy-route-art-host>*{position:relative;z-index:1}
 .academy-cert-hero.academy-route-art-host{background:#123f35!important}
 .v78-support-hero.academy-route-art-host{background:#123f35!important}
-.academy-avatar.academy-avatar-fallback{background-image:url("../../imagenes-academia-yamilet-final/18-avatar-alumno-generico.webp")!important;background-size:cover!important;background-position:center!important;color:transparent!important}
+.academy-avatar.academy-avatar-fallback{background-image:url("../imagenes-academia-yamilet-final/18-avatar-alumno-generico.webp")!important;background-size:cover!important;background-position:center!important;color:transparent!important}
 .v78-profile-avatar>img.academy-generic-profile-avatar{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
 .v71-featured-course>img.academy-v91-image,.v71-continue-panel>img.academy-v91-image,.v71-featured-resource>img.academy-v91-image{filter:none!important;opacity:1!important}
 @media(max-width:1180px){
