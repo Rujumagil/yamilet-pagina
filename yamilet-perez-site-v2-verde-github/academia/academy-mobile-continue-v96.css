@@ -1,0 +1,129 @@
+/* Academia Yamilet · Mobile Continue v96
+   Refina el bloque Continuar aprendiendo para móvil/tablet. */
+
+@media (max-width:760px){
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course{
+    min-height:0!important;
+    border-radius:24px!important;
+    overflow:hidden!important;
+    background:#fff!important;
+    border:1px solid rgba(18,63,53,.08)!important;
+    box-shadow:0 14px 34px rgba(18,63,53,.07)!important;
+    display:block!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course::before{
+    content:""!important;
+    display:block!important;
+    position:relative!important;
+    z-index:1!important;
+    width:100%!important;
+    height:190px!important;
+    background:
+      linear-gradient(180deg,rgba(9,61,52,.02) 0%,rgba(9,61,52,.08) 72%,rgba(9,61,52,.18) 100%),
+      url("../imagenes-academia-yamilet-final/13-continuar-aprendiendo.webp") center 46%/cover no-repeat!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course::after{
+    display:none!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course>img{
+    display:none!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course>div{
+    min-height:0!important;
+    height:auto!important;
+    padding:20px 20px 22px!important;
+    background:#fff!important;
+    color:#172825!important;
+    justify-content:flex-start!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-badge{
+    background:#e9f3ef!important;
+    color:#0d5a4d!important;
+    padding:7px 11px!important;
+    font-size:9.5px!important;
+    letter-spacing:.07em!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course h2,
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course h3{
+    color:#172825!important;
+    font-size:29px!important;
+    line-height:1.02!important;
+    margin-top:10px!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course p{
+    color:#62716d!important;
+    font-size:12.5px!important;
+    line-height:1.5!important;
+    margin-top:7px!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-actions{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+    margin-top:16px!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-actions .v71-btn{
+    width:100%!important;
+    min-height:46px!important;
+    border-radius:14px!important;
+    font-size:12px!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-btn.primary{
+    background:#0d5a4d!important;
+    color:#fff!important;
+    border-color:#0d5a4d!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-btn.ghost{
+    background:#f7f8f5!important;
+    color:#0d5a4d!important;
+    border-color:#dfe8e4!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-progress-label{
+    margin-top:17px!important;
+    margin-bottom:7px!important;
+    color:#687773!important;
+    font-size:11px!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-progress-label strong{
+    color:#0d5a4d!important;
+    font-size:12px!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-progress{
+    height:8px!important;
+    background:#e4ece8!important;
+    border-radius:999px!important;
+  }
+
+  body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-progress>span{
+    background:linear-gradient(90deg,#0d5a4d,#4c8c78)!important;
+  }
+
+  /* Separación más natural con las métricas y con Agenda. */
+  body.pwa-dashboard-active .v71-home-page .v71-summary-grid{
+    margin-bottom:2px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-home-grid{
+    margin-top:0!important;
+  }
+}
+
+@media (min-width:761px) and (max-width:1100px){
+  .v71-home-page .v71-featured-course{
+    min-height:330px!important;
+    background-position:60% center!important;
+  }
+}
