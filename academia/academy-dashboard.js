@@ -3,7 +3,7 @@
 
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const $ = (selector, root = document) => root.querySelector(selector);
-  const imageUrl = file => new URL(`../../imagenes-academia-yamilet-final/${file}`, document.baseURI).href;
+  const imageUrl = file => new URL(`../imagenes-academia-yamilet-final/${file}`, document.baseURI).href;
   const VISUALS = {
     master: imageUrl('01-yamilet-logo-master.png'),
     isotipo: imageUrl('02-yamilet-isotipo.png'),
@@ -31,7 +31,7 @@
     if (document.querySelector('link[data-academy-visuals-v91]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = './academy-visuals-v91.css?v=91';
+    link.href = './academy-visuals-v91.css?v=108';
     link.dataset.academyVisualsV91 = 'true';
     document.head.appendChild(link);
   }
