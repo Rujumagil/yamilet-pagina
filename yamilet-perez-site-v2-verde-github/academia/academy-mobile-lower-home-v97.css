@@ -1,0 +1,161 @@
+/* Academia Yamilet · Mobile Lower Home v97
+   Refinamiento de Agenda + Novedades/Biblioteca para móvil.
+   Usa imágenes oficiales sin modificar sus archivos. */
+
+@media (max-width:760px){
+  /* Agenda: tarjeta visual compacta con imagen superior. */
+  body.pwa-dashboard-active .v71-home-page .v71-event-card{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+    border-radius:22px!important;
+    border:1px solid rgba(18,63,53,.09)!important;
+    background:#fff!important;
+    box-shadow:0 12px 30px rgba(18,63,53,.055)!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-event-card::before{
+    content:""!important;
+    display:block!important;
+    width:100%!important;
+    height:150px!important;
+    margin:0!important;
+    flex:0 0 150px!important;
+    background-image:
+      linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.08)),
+      url("../imagenes-academia-yamilet-final/14-comunidad-acompanamiento.webp")!important;
+    background-size:cover!important;
+    background-position:center 38%!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-event-card > *{
+    margin-left:20px!important;
+    margin-right:20px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-event-card > .v71-eyebrow{
+    margin-top:18px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-event-card h2{
+    margin-top:8px!important;
+    margin-bottom:8px!important;
+    font-size:25px!important;
+    line-height:1.06!important;
+    color:#172825!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-event-card p{
+    margin-top:0!important;
+    margin-bottom:16px!important;
+    color:#60716c!important;
+    font-size:13px!important;
+    line-height:1.5!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-event-card .v71-btn{
+    margin-bottom:20px!important;
+    min-height:46px!important;
+    width:calc(100% - 40px)!important;
+    justify-content:center!important;
+    background:#0f564b!important;
+    color:#fff!important;
+    border-color:#0f564b!important;
+    border-radius:14px!important;
+    font-weight:800!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-event-card .v71-event-date{
+    margin-top:18px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-event-card .v71-event-meta{
+    margin-bottom:14px!important;
+  }
+
+  /* Novedades: título limpio y dos accesos visuales reales. */
+  body.pwa-dashboard-active .v71-home-page .v71-news{
+    padding:18px!important;
+    border-radius:22px!important;
+    border:1px solid rgba(18,63,53,.09)!important;
+    background:#fff!important;
+    box-shadow:0 12px 30px rgba(18,63,53,.05)!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news .v71-section-heading{
+    margin-bottom:10px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news .v71-section-heading h2{
+    margin:0!important;
+    font-size:26px!important;
+    line-height:1.08!important;
+    color:#172825!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a{
+    position:relative!important;
+    display:grid!important;
+    grid-template-columns:112px minmax(0,1fr)!important;
+    grid-template-rows:auto auto auto!important;
+    gap:4px 13px!important;
+    align-items:center!important;
+    padding:14px 0!important;
+    border-top:1px solid rgba(18,63,53,.09)!important;
+    text-decoration:none!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a:first-of-type{
+    border-top:none!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a::before{
+    content:""!important;
+    grid-column:1!important;
+    grid-row:1/4!important;
+    width:112px!important;
+    height:92px!important;
+    border-radius:15px!important;
+    background-size:cover!important;
+    background-position:center!important;
+    box-shadow:inset 0 0 0 1px rgba(18,63,53,.05)!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a:nth-of-type(1)::before{
+    background-image:url("../imagenes-academia-yamilet-final/15-recursos-descargables.webp")!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a:nth-of-type(2)::before{
+    background-image:url("../imagenes-academia-yamilet-final/14-comunidad-acompanamiento.webp")!important;
+    background-position:center 42%!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a>span,
+  body.pwa-dashboard-active .v71-home-page .v71-news>a>strong,
+  body.pwa-dashboard-active .v71-home-page .v71-news>a>small{
+    grid-column:2!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a>span{
+    color:#b08b2e!important;
+    font-size:10px!important;
+    line-height:1.2!important;
+    letter-spacing:.09em!important;
+    text-transform:uppercase!important;
+    font-weight:800!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a>strong{
+    color:#20312d!important;
+    font-size:14px!important;
+    line-height:1.28!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a>small{
+    color:#5f716b!important;
+    font-size:12px!important;
+  }
+
+  /* Más aire entre continuar, agenda y novedades, sin alargar de más la pantalla. */
+  body.pwa-dashboard-active .v71-home-page .v71-home-grid,
+  body.pwa-dashboard-active .v71-home-page .v71-lower-grid{
+    gap:12px!important;
+  }
+}
+
+@media (max-width:390px){
+  body.pwa-dashboard-active .v71-home-page .v71-event-card::before{
+    height:138px!important;
+    flex-basis:138px!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a{
+    grid-template-columns:98px minmax(0,1fr)!important;
+  }
+  body.pwa-dashboard-active .v71-home-page .v71-news>a::before{
+    width:98px!important;
+    height:84px!important;
+  }
+}
