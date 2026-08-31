@@ -1,0 +1,154 @@
+/* Academia Yamilet · Administración operativa móvil v105 */
+:root{--v105-green:#123f35;--v105-deep:#0e3d33;--v105-gold:#b88a2c;--v105-ink:#243a32;--v105-muted:#728078;--v105-line:rgba(18,63,53,.11);--v105-soft:#f6f8f5;--v105-card:#fff}
+
+/* Centro administrativo */
+.admin-v79-root{max-width:1320px!important}
+.admin-v79-shell{gap:15px!important}
+.admin-v79-top h1{font-family:Georgia,"Times New Roman",serif!important;font-weight:600!important;color:var(--v105-ink)!important}
+.admin-v79-top p{max-width:680px!important;font-size:12px!important}
+.admin-v79-nav{border-radius:14px!important;box-shadow:0 8px 24px rgba(18,63,53,.035)!important}
+.admin-v79-nav button{min-height:42px!important}
+.admin-v79-nav button.active{box-shadow:0 5px 14px rgba(18,63,53,.13)}
+.admin-v79-summary article{min-height:96px!important;border-radius:16px!important}
+.admin-v79-summary strong{font-family:Georgia,"Times New Roman",serif!important;font-weight:600!important}
+
+/* Native admin panels */
+body[data-admin-v79-section="content"] .admin-v79-module,
+body[data-admin-v79-section="students"] .admin-v79-module{padding-bottom:12px}
+body[data-admin-v79-section="content"] .admin-v79-native-panel,
+body[data-admin-v79-section="students"] .admin-v79-native-panel{overflow:visible!important}
+
+/* Contenido / CMS */
+body[data-admin-v79-section="content"] .cms80-root{--c80-green:var(--v105-green);--c80-deep:var(--v105-deep)}
+body[data-admin-v79-section="content"] .cms80-coursebar{border-radius:18px!important;box-shadow:0 10px 28px rgba(18,63,53,.045)!important;background:linear-gradient(135deg,#fff 0%,#fff 66%,#f0f5f2 100%)!important}
+body[data-admin-v79-section="content"] .cms80-coursebar h2{font-family:Georgia,"Times New Roman",serif!important;font-weight:600!important;color:var(--v105-ink)!important}
+body[data-admin-v79-section="content"] .cms80-summary>div{border-radius:13px!important}
+body[data-admin-v79-section="content"] .cms80-tabs{border-radius:14px!important}
+body[data-admin-v79-section="content"] .cms80-tabs button{min-height:58px!important}
+body[data-admin-v79-section="content"] .cms80-context{margin-bottom:11px!important}
+body[data-admin-v79-section="content"] .cms80-structure-main>.admin-card,
+body[data-admin-v79-section="content"] .cms80-structure-aside>.admin-card,
+body[data-admin-v79-section="content"] .cms80-course-card,
+body[data-admin-v79-section="content"] .cms80-resource-card{box-shadow:0 8px 24px rgba(18,63,53,.035)!important}
+body[data-admin-v79-section="content"] .cms80-module .module-admin-head{min-height:66px!important}
+body[data-admin-v79-section="content"] .cms80-lesson-row{min-height:62px!important}
+body[data-admin-v79-section="content"] .cms80-lesson-row .mini-btn{min-height:34px!important}
+body[data-admin-v79-section="content"] .cms80-lesson-editor{border-radius:0 0 14px 14px!important}
+body[data-admin-v79-section="content"] .cms80-editor-group{border-radius:13px!important}
+
+/* Estudiantes */
+body[data-admin-v79-section="students"] .students81{--s81-green:var(--v105-green);--s81-deep:var(--v105-deep)}
+body[data-admin-v79-section="students"] .students81-head h2,
+body[data-admin-v79-section="students"] .students81-directory-head h3,
+body[data-admin-v79-section="students"] .students81-record-person h3{font-family:Georgia,"Times New Roman",serif!important;font-weight:600!important;color:var(--v105-ink)!important}
+body[data-admin-v79-section="students"] .students81-head p{font-size:12px!important}
+body[data-admin-v79-section="students"] .students81-stats article{border-radius:14px!important;box-shadow:0 7px 20px rgba(18,63,53,.03)}
+body[data-admin-v79-section="students"] .students81-directory{border-radius:18px!important;box-shadow:0 9px 26px rgba(18,63,53,.035)}
+body[data-admin-v79-section="students"] .students81-row{border-radius:14px!important}
+body[data-admin-v79-section="students"] .students81-record-panel,
+body[data-admin-v79-section="students"] .students81-record-side article{border-radius:15px!important}
+
+@media(max-width:900px){
+  .admin-v79-shell{padding:18px 16px 92px!important}
+  .admin-v79-top{gap:14px!important}
+  .admin-v79-top-actions{width:100%}
+  .admin-v79-top-actions>*{flex:1}
+  .admin-v79-nav{position:sticky;top:58px;z-index:35;margin:0 -4px;padding:5px!important;background:rgba(255,255,255,.96)!important;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .admin-v79-nav button{min-height:40px!important;padding:0 11px!important}
+
+  body[data-admin-v79-section="content"] .cms80-coursebar{grid-template-columns:1fr!important;gap:13px!important;padding:18px!important}
+  body[data-admin-v79-section="content"] .cms80-coursebar h2{font-size:30px!important}
+  body[data-admin-v79-section="content"] .cms80-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body[data-admin-v79-section="content"] .cms80-tabs{display:flex!important;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;padding:5px!important}
+  body[data-admin-v79-section="content"] .cms80-tabs::-webkit-scrollbar{display:none}
+  body[data-admin-v79-section="content"] .cms80-tabs button{flex:0 0 170px;scroll-snap-align:start}
+  body[data-admin-v79-section="content"] .cms80-context{align-items:flex-start!important;flex-direction:column!important;gap:5px!important}
+  body[data-admin-v79-section="content"] .cms80-structure-grid{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="content"] .cms80-structure-aside{position:static!important}
+  body[data-admin-v79-section="content"] .cms80-module-creator{display:block!important}
+  body[data-admin-v79-section="content"] .cms80-lesson-editor form.admin-form.two{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="content"] .cms80-editor-basics,
+  body[data-admin-v79-section="content"] .cms80-editor-content,
+  body[data-admin-v79-section="content"] .cms80-editor-media,
+  body[data-admin-v79-section="content"] .cms80-editor-access{grid-column:1!important}
+  body[data-admin-v79-section="content"] .cms80-editor-group{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="content"] .cms80-course-card .cover-admin{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="content"] .cms80-course-card .cover-admin img{width:100%!important;max-width:360px!important}
+
+  body[data-admin-v79-section="students"] .students81-head{align-items:flex-start;flex-direction:column;gap:13px!important}
+  body[data-admin-v79-section="students"] .students81-head .students81-primary{width:100%;min-height:44px}
+  body[data-admin-v79-section="students"] .students81-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  body[data-admin-v79-section="students"] .students81-invite{grid-template-columns:1fr!important;gap:14px!important;padding:17px!important}
+  body[data-admin-v79-section="students"] .students81-invite-form{grid-template-columns:1fr 1fr!important}
+  body[data-admin-v79-section="students"] .students81-invite-form button{grid-column:1/-1;min-height:44px}
+  body[data-admin-v79-section="students"] .students81-toolbar{grid-template-columns:1fr 1fr!important}
+  body[data-admin-v79-section="students"] .students81-search{grid-column:1/-1}
+  body[data-admin-v79-section="students"] .students81-row{grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"person status" "programs programs" "progress activity" "action action";gap:10px!important;padding:14px!important}
+  body[data-admin-v79-section="students"] .students81-person{grid-area:person}
+  body[data-admin-v79-section="students"] .students81-programs{grid-area:programs}
+  body[data-admin-v79-section="students"] .students81-progress{grid-area:progress}
+  body[data-admin-v79-section="students"] .students81-activity{grid-area:activity;text-align:right}
+  body[data-admin-v79-section="students"] .students81-row-end{display:contents}
+  body[data-admin-v79-section="students"] .students81-row-end .students81-status{grid-area:status;align-self:start;justify-self:end}
+  body[data-admin-v79-section="students"] .students81-row-end button{grid-area:action;width:100%;min-height:38px;border-radius:10px!important;background:#eef4f1!important;color:var(--v105-green)!important}
+  body[data-admin-v79-section="students"] .students81-record-head{grid-template-columns:1fr!important;background:linear-gradient(145deg,#103f36,#155247)!important}
+  body[data-admin-v79-section="students"] .students81-record-head>button:first-child{justify-self:start}
+  body[data-admin-v79-section="students"] .students81-record-person h3{color:#fff!important}
+  body[data-admin-v79-section="students"] .students81-assign{width:100%;min-height:42px}
+  body[data-admin-v79-section="students"] .students81-record-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body[data-admin-v79-section="students"] .students81-record-grid{grid-template-columns:1fr!important}
+}
+
+@media(max-width:560px){
+  .admin-v79-shell{padding:14px 10px 96px!important}
+  .admin-v79-top h1{font-size:31px!important}
+  .admin-v79-top p{font-size:11px!important}
+  .admin-v79-nav{top:54px;margin:0 -2px!important}
+  .admin-v79-nav button b{font-size:9px}
+  .admin-v79-nav button span{font-size:13px!important}
+
+  body[data-admin-v79-section="content"] .cms80-coursebar{padding:15px!important}
+  body[data-admin-v79-section="content"] .cms80-coursebar h2{font-size:27px!important}
+  body[data-admin-v79-section="content"] .cms80-course-copy{font-size:11px!important}
+  body[data-admin-v79-section="content"] .cms80-summary>div{min-height:74px!important;padding:11px!important}
+  body[data-admin-v79-section="content"] .cms80-summary strong{font-size:20px!important}
+  body[data-admin-v79-section="content"] .cms80-tabs button{flex-basis:150px;padding:10px!important}
+  body[data-admin-v79-section="content"] .cms80-module .module-admin-head{align-items:flex-start!important;flex-wrap:wrap}
+  body[data-admin-v79-section="content"] .cms80-module .module-admin-head>.admin-actions{width:100%;margin-left:0!important;justify-content:flex-start!important}
+  body[data-admin-v79-section="content"] .cms80-lesson-row{grid-template-columns:32px minmax(0,1fr)!important;align-items:start!important}
+  body[data-admin-v79-section="content"] .cms80-lesson-row .admin-actions{grid-column:1/-1!important;padding-left:42px;justify-content:flex-start!important;flex-wrap:wrap!important}
+  body[data-admin-v79-section="content"] .cms80-lesson-editor{padding:14px!important}
+  body[data-admin-v79-section="content"] .cms80-lesson-editor .editor-head{margin:-14px -14px 14px!important;padding:12px 14px!important;top:104px!important}
+  body[data-admin-v79-section="content"] .cms80-editor-group{padding:12px!important}
+  body[data-admin-v79-section="content"] .cms80-resource-row{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="content"] .cms80-resource-row .admin-actions{justify-content:flex-start!important}
+
+  body[data-admin-v79-section="students"] .students81-stats article{padding:12px!important;gap:8px!important}
+  body[data-admin-v79-section="students"] .students81-stats i{width:32px!important;height:32px!important}
+  body[data-admin-v79-section="students"] .students81-stats strong{font-size:20px!important}
+  body[data-admin-v79-section="students"] .students81-stats span{font-size:9px!important}
+  body[data-admin-v79-section="students"] .students81-invite-form{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="students"] .students81-invite-form button{grid-column:auto}
+  body[data-admin-v79-section="students"] .students81-directory{padding:14px!important}
+  body[data-admin-v79-section="students"] .students81-directory-head{align-items:flex-start!important;flex-direction:column!important;gap:4px!important}
+  body[data-admin-v79-section="students"] .students81-toolbar{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="students"] .students81-search{grid-column:auto}
+  body[data-admin-v79-section="students"] .students81-row{grid-template-columns:1fr auto!important;grid-template-areas:"person status" "programs programs" "progress progress" "activity activity" "action action"!important}
+  body[data-admin-v79-section="students"] .students81-activity{text-align:left!important;display:flex;align-items:center;gap:6px}
+  body[data-admin-v79-section="students"] .students81-activity span{margin-top:0!important}
+  body[data-admin-v79-section="students"] .students81-invite-row{grid-template-columns:1fr!important;gap:5px!important;padding:12px!important}
+  body[data-admin-v79-section="students"] .students81-invite-row>*{white-space:normal!important}
+  body[data-admin-v79-section="students"] .students81-record-stats{grid-template-columns:1fr 1fr!important}
+  body[data-admin-v79-section="students"] .students81-assessment-list>div,
+  body[data-admin-v79-section="students"] .students81-certificate-list>div{grid-template-columns:30px minmax(0,1fr)!important}
+  body[data-admin-v79-section="students"] .students81-assessment-list em,
+  body[data-admin-v79-section="students"] .students81-certificate-list em,
+  body[data-admin-v79-section="students"] .students81-assessment-list>div>b,
+  body[data-admin-v79-section="students"] .students81-certificate-list a{grid-column:2;justify-self:start}
+}
+
+@media(max-width:390px){
+  body[data-admin-v79-section="content"] .cms80-summary,
+  body[data-admin-v79-section="students"] .students81-stats,
+  body[data-admin-v79-section="students"] .students81-record-stats{grid-template-columns:1fr!important}
+}
