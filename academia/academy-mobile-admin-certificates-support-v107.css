@@ -1,0 +1,137 @@
+/* Academia Yamilet · Administración Certificados + Soporte v107 */
+:root{--v107-green:#123f35;--v107-deep:#0e3d33;--v107-gold:#b88a2c;--v107-ink:#243a32;--v107-muted:#728078;--v107-line:rgba(18,63,53,.11);--v107-soft:#f6f8f5;--v107-card:#fff}
+
+/* ---------- Certificados administrativos ---------- */
+body[data-admin-v79-section="certificates"] .cert84{gap:15px;--c84-green:var(--v107-green);--c84-green-dark:var(--v107-deep)}
+body[data-admin-v79-section="certificates"] .cert84-head h2,
+body[data-admin-v79-section="certificates"] .cert84-section-head h3,
+body[data-admin-v79-section="certificates"] .cert84-preview-card h3,
+body[data-admin-v79-section="certificates"] .cert84-drawer-head h2{font-family:Georgia,"Times New Roman",serif;font-weight:600;color:var(--v107-ink)}
+body[data-admin-v79-section="certificates"] .cert84-head p{max-width:680px;font-size:12px}
+body[data-admin-v79-section="certificates"] .cert84-stats article{min-height:82px;border-radius:13px}
+body[data-admin-v79-section="certificates"] .cert84-stats strong{font-family:Georgia,"Times New Roman",serif;font-weight:600}
+body[data-admin-v79-section="certificates"] .cert84-automation{border-radius:13px;padding:12px 14px}
+body[data-admin-v79-section="certificates"] .cert84-ready-card{border-radius:14px;box-shadow:0 8px 22px rgba(18,63,53,.035)}
+body[data-admin-v79-section="certificates"] .cert84-toolbar input,
+body[data-admin-v79-section="certificates"] .cert84-toolbar select{min-height:42px;border-radius:11px}
+body[data-admin-v79-section="certificates"] .cert84-row{border-radius:14px;box-shadow:0 6px 18px rgba(18,63,53,.025)}
+body[data-admin-v79-section="certificates"] .cert84-state{white-space:nowrap}
+body[data-admin-v79-section="certificates"] .cert84-modal{border-radius:22px}
+body[data-admin-v79-section="certificates"] .cert84-preview-card{border-radius:16px}
+body[data-admin-v79-section="certificates"] .cert84-preview-actions button,
+body[data-admin-v79-section="certificates"] .cert84-preview-actions a{min-height:42px;display:flex;align-items:center;justify-content:center}
+
+/* ---------- Soporte administrativo ---------- */
+body[data-admin-v79-section="support"] .support86{gap:15px;--s86-green:var(--v107-green);--s86-dark:var(--v107-deep)}
+body[data-admin-v79-section="support"] .support86-head h2,
+body[data-admin-v79-section="support"] .support86-section-head h3,
+body[data-admin-v79-section="support"] .support86-focus h3,
+body[data-admin-v79-section="support"] .support86-modal>header h2{font-family:Georgia,"Times New Roman",serif;font-weight:600;color:var(--v107-ink)}
+body[data-admin-v79-section="support"] .support86-head p{max-width:680px;font-size:12px}
+body[data-admin-v79-section="support"] .support86-stats article{min-height:82px;border-radius:13px}
+body[data-admin-v79-section="support"] .support86-stats strong{font-family:Georgia,"Times New Roman",serif;font-weight:600}
+body[data-admin-v79-section="support"] .support86-focus{border-radius:14px;box-shadow:0 8px 22px rgba(18,63,53,.035)}
+body[data-admin-v79-section="support"] .support86-toolbar input,
+body[data-admin-v79-section="support"] .support86-toolbar select{min-height:42px;border-radius:11px}
+body[data-admin-v79-section="support"] .support86-row{border-radius:14px;box-shadow:0 6px 18px rgba(18,63,53,.025)}
+body[data-admin-v79-section="support"] .support86-modal{border-radius:22px}
+body[data-admin-v79-section="support"] .support86-message-list article{border-radius:14px}
+body[data-admin-v79-section="support"] .support86-reply{border-radius:14px}
+
+@media(max-width:900px){
+  /* Certificados: filas administrativas como tarjetas */
+  body[data-admin-v79-section="certificates"] .cert84-row{
+    grid-template-columns:minmax(0,1fr) auto!important;
+    gap:10px 12px!important;
+    padding:15px!important;
+  }
+  body[data-admin-v79-section="certificates"] .cert84-person{grid-column:1/2}
+  body[data-admin-v79-section="certificates"] .cert84-state{grid-column:2;grid-row:1;align-self:start}
+  body[data-admin-v79-section="certificates"] .cert84-course{grid-column:1/-1;padding-top:10px;border-top:1px solid var(--v107-line)}
+  body[data-admin-v79-section="certificates"] .cert84-progress-cell{grid-column:1/-1;padding:10px 0}
+  body[data-admin-v79-section="certificates"] .cert84-row-actions{grid-column:1/-1!important;justify-content:stretch!important}
+  body[data-admin-v79-section="certificates"] .cert84-row-actions button{flex:1;min-height:40px}
+  body[data-admin-v79-section="certificates"] .cert84-preview-layout,
+  body[data-admin-v79-section="certificates"] .cert84-drawer-grid{grid-template-columns:1fr!important}
+
+  /* Soporte: bandeja como tarjetas */
+  body[data-admin-v79-section="support"] .support86-row{
+    grid-template-columns:minmax(0,1fr) auto!important;
+    gap:10px 12px!important;
+    padding:15px!important;
+  }
+  body[data-admin-v79-section="support"] .support86-person{grid-column:1}
+  body[data-admin-v79-section="support"] .support86-status{grid-column:2;grid-row:1;align-self:start;white-space:nowrap}
+  body[data-admin-v79-section="support"] .support86-case{grid-column:1/-1;padding-top:9px;border-top:1px solid var(--v107-line)}
+  body[data-admin-v79-section="support"] .support86-case h4{font-size:13px}
+  body[data-admin-v79-section="support"] .support86-case p{font-size:9.5px;line-height:1.45}
+  body[data-admin-v79-section="support"] .support86-activity{grid-column:1/-1;padding:9px 11px;border-radius:10px;background:#f7f9f7}
+  body[data-admin-v79-section="support"] .support86-row>button{grid-column:1/-1!important;justify-self:stretch!important;min-height:40px}
+  body[data-admin-v79-section="support"] .support86-detail-grid{grid-template-columns:1fr!important}
+}
+
+@media(max-width:760px){
+  /* Certificados */
+  body[data-admin-v79-section="certificates"] .cert84-head{gap:13px}
+  body[data-admin-v79-section="certificates"] .cert84-head h2{font-size:27px}
+  body[data-admin-v79-section="certificates"] .cert84-head-actions{width:100%;display:grid!important;grid-template-columns:1fr 1fr}
+  body[data-admin-v79-section="certificates"] .cert84-head-actions>*{width:100%;min-height:42px;text-align:center}
+  body[data-admin-v79-section="certificates"] .cert84-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}
+  body[data-admin-v79-section="certificates"] .cert84-stats article{min-height:88px;padding:13px}
+  body[data-admin-v79-section="certificates"] .cert84-automation{grid-template-columns:36px minmax(0,1fr)!important;gap:10px}
+  body[data-admin-v79-section="certificates"] .cert84-automation>b{grid-column:2!important}
+  body[data-admin-v79-section="certificates"] .cert84-ready-grid{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="certificates"] .cert84-ready-actions{display:grid!important;grid-template-columns:1fr 1fr}
+  body[data-admin-v79-section="certificates"] .cert84-ready-actions button{min-height:40px}
+  body[data-admin-v79-section="certificates"] .cert84-toolbar{grid-template-columns:1fr!important;gap:7px}
+  body[data-admin-v79-section="certificates"] .cert84-overlay{padding:0!important;align-items:stretch!important}
+  body[data-admin-v79-section="certificates"] .cert84-modal{width:100%!important;max-width:none!important;height:100dvh!important;max-height:none!important;border:0!important;border-radius:0!important}
+  body[data-admin-v79-section="certificates"] .cert84-modal-close{position:sticky!important;top:10px!important;margin:10px 10px -44px 0!important}
+  body[data-admin-v79-section="certificates"] .cert84-preview-layout{padding:56px 12px 24px!important;gap:12px}
+  body[data-admin-v79-section="certificates"] .cert84-certificate{min-height:390px!important;padding:22px 16px!important;border-width:9px!important}
+  body[data-admin-v79-section="certificates"] .cert84-certificate:before,
+  body[data-admin-v79-section="certificates"] .cert84-certificate:after{width:52px}
+  body[data-admin-v79-section="certificates"] .cert84-certificate h2{font-size:24px!important;margin-top:28px!important}
+  body[data-admin-v79-section="certificates"] .cert84-certificate h3{font-size:18px!important}
+  body[data-admin-v79-section="certificates"] .cert84-cert-meta{grid-template-columns:1fr!important;margin-top:24px!important}
+  body[data-admin-v79-section="certificates"] .cert84-preview-actions{position:sticky;bottom:0;margin:12px -17px -17px;padding:10px 17px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--v107-line);backdrop-filter:blur(12px)}
+  body[data-admin-v79-section="certificates"] .cert84-drawer{padding:54px 14px 24px!important}
+  body[data-admin-v79-section="certificates"] .cert84-drawer-head{display:grid!important;gap:10px}
+
+  /* Soporte */
+  body[data-admin-v79-section="support"] .support86-head{gap:13px}
+  body[data-admin-v79-section="support"] .support86-head h2{font-size:27px}
+  body[data-admin-v79-section="support"] .support86-head>button{width:100%;min-height:42px}
+  body[data-admin-v79-section="support"] .support86-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}
+  body[data-admin-v79-section="support"] .support86-stats article{min-height:88px;padding:13px}
+  body[data-admin-v79-section="support"] .support86-focus{grid-template-columns:1fr!important;padding:15px}
+  body[data-admin-v79-section="support"] .support86-focus>button{width:100%;min-height:42px;justify-self:stretch!important}
+  body[data-admin-v79-section="support"] .support86-toolbar{grid-template-columns:1fr!important;gap:7px}
+  body[data-admin-v79-section="support"] .support86-overlay{padding:0!important;align-items:stretch!important}
+  body[data-admin-v79-section="support"] .support86-modal{width:100%!important;max-width:none!important;height:100dvh!important;max-height:none!important;border:0!important;border-radius:0!important;display:flex;flex-direction:column;overflow:hidden!important}
+  body[data-admin-v79-section="support"] .support86-close{position:absolute!important;top:10px!important;right:10px!important;margin:0!important}
+  body[data-admin-v79-section="support"] .support86-modal>header{flex:0 0 auto;padding:18px 58px 14px 16px!important}
+  body[data-admin-v79-section="support"] .support86-modal>header h2{font-size:22px}
+  body[data-admin-v79-section="support"] .support86-detail-grid{flex:1;min-height:0;overflow:auto;padding:10px!important;gap:10px}
+  body[data-admin-v79-section="support"] .support86-detail-card{border-radius:13px}
+  body[data-admin-v79-section="support"] .support86-conversation{min-height:0}
+  body[data-admin-v79-section="support"] .support86-message-list{max-height:none!important;min-height:240px;overflow:visible!important;padding:0 2px}
+  body[data-admin-v79-section="support"] .support86-message-list article{max-width:92%!important;padding:11px 12px}
+  body[data-admin-v79-section="support"] .support86-message-list p{font-size:11px;line-height:1.55}
+  body[data-admin-v79-section="support"] .support86-reply{position:sticky;bottom:0;z-index:4;margin:0 -10px -10px;padding:11px 12px calc(11px + env(safe-area-inset-bottom));border-radius:14px 14px 0 0;background:rgba(255,255,255,.97);box-shadow:0 -10px 26px rgba(18,63,53,.08);backdrop-filter:blur(12px)}
+  body[data-admin-v79-section="support"] .support86-reply textarea{min-height:92px;font-size:12px}
+  body[data-admin-v79-section="support"] .support86-reply>div{display:grid!important;grid-template-columns:1fr;gap:8px!important}
+  body[data-admin-v79-section="support"] .support86-reply>div label{width:100%;margin:0!important}
+  body[data-admin-v79-section="support"] .support86-reply>div button{width:100%;min-height:42px}
+}
+
+@media(max-width:420px){
+  body[data-admin-v79-section="certificates"] .cert84-stats,
+  body[data-admin-v79-section="support"] .support86-stats{grid-template-columns:1fr 1fr!important}
+  body[data-admin-v79-section="certificates"] .cert84-ready-actions{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="certificates"] .cert84-row{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="certificates"] .cert84-state{grid-column:1!important;grid-row:auto!important;justify-self:start}
+  body[data-admin-v79-section="certificates"] .cert84-row-actions{display:grid!important;grid-template-columns:1fr!important}
+  body[data-admin-v79-section="support"] .support86-row{grid-template-columns:1fr!important}
+  body[data-admin-v79-section="support"] .support86-status{grid-column:1!important;grid-row:auto!important;justify-self:start}
+}
