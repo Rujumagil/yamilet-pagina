@@ -43,7 +43,9 @@ assert(admin.includes("id === 'operations' && currentRole === 'instructor'"), 'I
 assert(admin.includes("section === 'operations' && ctx.role === 'instructor'"), 'Instructor direct operations route guard is missing');
 assert(admin.includes("go('overview')"), 'Restricted admin route redirect is missing');
 
-assert(index.includes('name="academy-build" content="v89-hardening"'), 'v89 build marker is missing');
+assert(index.includes('name="academy-build" content="v91-visuals"'), 'v91 visual build marker is missing');
+assert(index.includes('academy-visuals-v91.css?v=91'), 'v91 visual stylesheet is missing');
+assert(index.includes('academy-dashboard.js?v=91'), 'v91 dashboard runtime is missing');
 assert(!index.includes('academy-sales-admin.js'), 'Retired sales runtime is still loaded');
 assert(!index.includes('academy-assessment-review.js'), 'Retired assessment review runtime is still loaded');
 assert(!index.includes('tus-js-client@'), 'TUS must not load globally for students');
@@ -51,4 +53,4 @@ assert(!index.includes('academy-video-admin-v62.js'), 'Video admin must not load
 assert(!index.includes('academy-video-cloudflare-manual-v64.js'), 'Cloudflare admin helper must not load globally for students');
 assert(index.includes('academy-content-runtime-v80.js'), 'Lazy content runtime loader is missing');
 
-console.log(`Navigation smoke v89 passed: ${Object.keys(publicRoutes).length} public routes, ${adminSections.length} admin sections, deep course/lesson fallbacks and role guards verified.`);
+console.log(`Navigation smoke v91 passed: ${Object.keys(publicRoutes).length} public routes, ${adminSections.length} admin sections, deep course/lesson fallbacks, role guards and visual shell verified.`);
