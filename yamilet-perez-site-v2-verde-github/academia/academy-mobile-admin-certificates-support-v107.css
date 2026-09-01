@@ -135,3 +135,260 @@ body[data-admin-v79-section="support"] .support86-reply{border-radius:14px}
   body[data-admin-v79-section="support"] .support86-row{grid-template-columns:1fr!important}
   body[data-admin-v79-section="support"] .support86-status{grid-column:1!important;grid-row:auto!important;justify-self:start}
 }
+
+/* ---------- Acceso Academia Yamilet · refresh visual v109 ---------- */
+html body:not(:has(.dashboard:not(.hidden))){
+  background:
+    radial-gradient(circle at 8% 12%,rgba(184,138,44,.055),transparent 24%),
+    radial-gradient(circle at 88% 88%,rgba(18,63,53,.055),transparent 28%),
+    #f5f8f6!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view]{
+  width:min(1180px,calc(100% - 40px))!important;
+  min-height:calc(100vh - 82px)!important;
+  grid-template-columns:minmax(0,1.18fr) minmax(390px,.82fr)!important;
+  gap:38px!important;
+  align-items:stretch!important;
+  padding:42px 0 54px!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card{
+  position:relative!important;
+  min-height:640px!important;
+  padding:48px 46px 38px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+  border-radius:28px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  background:#123f35!important;
+  box-shadow:0 26px 60px rgba(18,63,53,.13)!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card.academy-auth-visual::after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  background:linear-gradient(90deg,rgba(8,48,40,.98) 0%,rgba(10,55,46,.92) 35%,rgba(12,60,50,.68) 54%,rgba(12,60,50,.20) 76%,rgba(12,60,50,.03) 100%)!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card .academy-auth-portrait{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center top!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card>*:not(.academy-auth-portrait){
+  position:relative!important;
+  z-index:2!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card .kicker{
+  margin:0 0 14px!important;
+  color:#f0c965!important;
+  font-size:.68rem!important;
+  line-height:1.2!important;
+  letter-spacing:.19em!important;
+  font-weight:850!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card h1{
+  max-width:580px!important;
+  margin:0 0 22px!important;
+  color:#fffaf0!important;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  font-size:clamp(3rem,5vw,4.45rem)!important;
+  line-height:.98!important;
+  letter-spacing:-.055em!important;
+  font-weight:760!important;
+  text-shadow:0 2px 22px rgba(0,0,0,.15)!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card h1 span{
+  display:block!important;
+  color:#fffaf0!important;
+  white-space:nowrap!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card>p{
+  max-width:390px!important;
+  margin:0!important;
+  color:rgba(255,255,255,.80)!important;
+  font-size:.94rem!important;
+  line-height:1.72!important;
+  font-weight:430!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card .features{
+  margin-top:auto!important;
+  padding-top:34px!important;
+  display:flex!important;
+  gap:9px!important;
+  flex-wrap:wrap!important;
+  max-width:470px!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card .features span{
+  padding:9px 13px!important;
+  border-radius:999px!important;
+  border:1px solid rgba(255,255,255,.24)!important;
+  background:rgba(255,255,255,.88)!important;
+  color:#123f35!important;
+  box-shadow:0 8px 20px rgba(3,30,24,.10)!important;
+  font-size:.69rem!important;
+  line-height:1!important;
+  font-weight:760!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card{
+  position:relative!important;
+  min-height:640px!important;
+  padding:43px 40px 34px!important;
+  border-radius:28px!important;
+  background:rgba(255,255,255,.97)!important;
+  border:1px solid rgba(18,63,53,.10)!important;
+  box-shadow:0 26px 62px rgba(18,63,53,.10)!important;
+  backdrop-filter:none!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card>.login-logo{
+  display:none!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card::before{
+  content:""!important;
+  display:block!important;
+  width:172px!important;
+  height:48px!important;
+  margin:0 0 25px!important;
+  background:url('../imagenes-academia-yamilet-final/03-yamilet-logo-header.png') left center/contain no-repeat!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card>.kicker{
+  margin:0 0 10px!important;
+  color:#b37f20!important;
+  font-size:.65rem!important;
+  letter-spacing:.18em!important;
+  font-weight:850!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card h2{
+  margin:0 0 11px!important;
+  color:#17251f!important;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  font-size:clamp(1.8rem,2.4vw,2.25rem)!important;
+  line-height:1.08!important;
+  letter-spacing:-.04em!important;
+  font-weight:760!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card>.muted{
+  margin:0!important;
+  color:#6b7771!important;
+  font-size:.88rem!important;
+  line-height:1.6!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card form{
+  display:grid!important;
+  gap:15px!important;
+  margin-top:24px!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card label{
+  gap:8px!important;
+  color:#263c33!important;
+  font-size:.72rem!important;
+  font-weight:780!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card input{
+  min-height:48px!important;
+  padding:0 15px!important;
+  border:1px solid rgba(18,63,53,.16)!important;
+  border-radius:13px!important;
+  background:#f5f8f6!important;
+  color:#17251f!important;
+  box-shadow:none!important;
+  font-size:.86rem!important;
+  font-weight:550!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card input:focus{
+  border-color:rgba(18,63,53,.52)!important;
+  background:#fff!important;
+  box-shadow:0 0 0 4px rgba(18,63,53,.07)!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card input:-webkit-autofill,
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card input:-webkit-autofill:hover,
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card input:-webkit-autofill:focus{
+  -webkit-text-fill-color:#17251f!important;
+  -webkit-box-shadow:0 0 0 1000px #f5f8f6 inset!important;
+  transition:background-color 9999s ease-out 0s!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card .btn.primary{
+  width:100%!important;
+  min-height:48px!important;
+  margin-top:2px!important;
+  border-radius:13px!important;
+  background:linear-gradient(135deg,#123f35,#1b5547)!important;
+  color:#fff!important;
+  border:1px solid transparent!important;
+  box-shadow:0 11px 24px rgba(18,63,53,.18)!important;
+  font-size:.78rem!important;
+  font-weight:820!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card .auth-actions{
+  display:grid!important;
+  gap:11px!important;
+  margin-top:11px!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card .btn.magic{
+  width:100%!important;
+  min-height:45px!important;
+  margin:0!important;
+  border-radius:13px!important;
+  border:1px solid rgba(18,63,53,.24)!important;
+  background:#fff!important;
+  color:#123f35!important;
+  box-shadow:none!important;
+  font-size:.76rem!important;
+  font-weight:760!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card .text-action{
+  justify-self:center!important;
+  color:#123f35!important;
+  font-size:.72rem!important;
+  font-weight:760!important;
+  text-underline-offset:3px!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card>.text-link{
+  display:inline-block!important;
+  margin-top:17px!important;
+  color:#123f35!important;
+  font-size:.72rem!important;
+  font-weight:760!important;
+  text-decoration:none!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card>.text-link:hover{text-decoration:underline!important}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card .status{
+  min-height:14px!important;
+  margin:10px 0 0!important;
+}
+html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card .fine{
+  margin:10px 0 0!important;
+  padding-top:14px!important;
+  border-top:1px solid rgba(18,63,53,.08)!important;
+  color:#7b8681!important;
+  font-size:.66rem!important;
+  line-height:1.55!important;
+}
+
+@media(max-width:920px){
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view]{
+    grid-template-columns:1fr!important;
+    gap:22px!important;
+    width:min(720px,calc(100% - 30px))!important;
+    padding:28px 0 44px!important;
+  }
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card,
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card{min-height:auto!important}
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card{height:470px!important;padding:38px 34px!important}
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card{padding:38px 34px 32px!important}
+}
+
+@media(max-width:580px){
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view]{width:min(100% - 22px,520px)!important;padding:16px 0 32px!important}
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card{height:390px!important;padding:30px 24px 24px!important;border-radius:22px!important}
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card h1{font-size:clamp(2.55rem,13vw,3.6rem)!important}
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card h1 span{white-space:normal!important}
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card>p{max-width:300px!important;font-size:.82rem!important;line-height:1.55!important}
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card .features{padding-top:20px!important;gap:7px!important}
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .welcome-card .features span{padding:8px 10px!important;font-size:.62rem!important}
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card{padding:32px 22px 28px!important;border-radius:22px!important}
+  html body:not(:has(.dashboard:not(.hidden))) .auth-shell[data-auth-view] .login-card::before{width:156px!important;height:44px!important;margin-bottom:21px!important}
+}
