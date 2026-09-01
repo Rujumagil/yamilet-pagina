@@ -186,7 +186,7 @@ async function streamUpload(request, env) {
   const directUpload = await env.STREAM.createDirectUpload({
     maxDurationSeconds,
     creator: `yamilet:${user.id}`,
-    requireSignedURLs: false,
+    requireSignedURLs: true,
     meta: {
       name: `YAMILET · ${courseTitle || 'Curso'} · ${lessonTitle || 'Lección'}`.slice(0, 240),
       project: 'yamilet',
@@ -209,7 +209,7 @@ async function streamUpload(request, env) {
     video_uid: directUpload.id,
     upload_url: directUpload.uploadURL,
     max_file_size_bytes: 200 * 1024 * 1024,
-    require_signed_urls: false,
+    require_signed_urls: true,
   });
 }
 
