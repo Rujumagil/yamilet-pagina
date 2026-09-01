@@ -1,0 +1,167 @@
+/* Academia Yamilet · Registro público v109 */
+.auth-shell[data-auth-view] .login-card .academy-register-entry{
+  margin-top:18px;
+  padding:16px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:14px;
+  align-items:center;
+  border:1px solid rgba(18,63,53,.10);
+  border-radius:16px;
+  background:linear-gradient(135deg,#f4f8f5 0%,#fbfcfb 100%);
+}
+.auth-shell[data-auth-view] .academy-register-entry-copy{min-width:0}
+.auth-shell[data-auth-view] .academy-register-entry-copy>span,
+.auth-shell[data-auth-view] .academy-register-head>span{
+  display:block;
+  margin-bottom:5px;
+  color:#b27f24;
+  font-size:.57rem;
+  line-height:1.2;
+  letter-spacing:.16em;
+  font-weight:850;
+}
+.auth-shell[data-auth-view] .academy-register-entry-copy>strong{
+  display:block;
+  color:#183128;
+  font-size:.84rem;
+  line-height:1.25;
+  font-weight:780;
+}
+.auth-shell[data-auth-view] .academy-register-entry-copy>p{
+  margin:5px 0 0;
+  color:#6d7b75;
+  font-size:.66rem;
+  line-height:1.45;
+}
+.auth-shell[data-auth-view] .academy-register-open,
+.auth-shell[data-auth-view] .academy-register-submit{
+  min-height:42px;
+  padding:0 15px;
+  border:0;
+  border-radius:12px;
+  background:#123f35;
+  color:#fff;
+  font:inherit;
+  font-size:.72rem;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 8px 18px rgba(18,63,53,.13);
+}
+.auth-shell[data-auth-view] .academy-register-open:hover,
+.auth-shell[data-auth-view] .academy-register-submit:hover{background:#174b3f}
+.auth-shell[data-auth-view] .academy-register-panel{
+  margin-top:18px;
+  padding-top:19px;
+  border-top:1px solid rgba(18,63,53,.10);
+}
+.auth-shell[data-auth-view] .academy-register-panel[hidden],
+.auth-shell[data-auth-view] .academy-register-entry[hidden]{display:none!important}
+.auth-shell[data-auth-view] .academy-register-head h3{
+  margin:0 0 7px!important;
+  color:#17251f!important;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  font-size:1.35rem!important;
+  line-height:1.1!important;
+  letter-spacing:-.03em!important;
+  font-weight:760!important;
+}
+.auth-shell[data-auth-view] .academy-register-head p{
+  margin:0;
+  color:#6d7b75;
+  font-size:.76rem;
+  line-height:1.55;
+}
+.auth-shell[data-auth-view] .academy-register-form{
+  display:grid!important;
+  gap:13px!important;
+  margin-top:17px!important;
+}
+.auth-shell[data-auth-view] .academy-register-form label{
+  display:grid;
+  gap:7px;
+  color:#263c33;
+  font-size:.7rem;
+  font-weight:770;
+}
+.auth-shell[data-auth-view] .academy-register-form input[type="text"],
+.auth-shell[data-auth-view] .academy-register-form input[type="email"],
+.auth-shell[data-auth-view] .academy-register-form input[type="password"]{
+  min-height:46px!important;
+  padding:0 14px!important;
+  border:1px solid rgba(18,63,53,.16)!important;
+  border-radius:12px!important;
+  background:#f5f8f6!important;
+  color:#17251f!important;
+  box-shadow:none!important;
+  font-size:.84rem!important;
+}
+.auth-shell[data-auth-view] .academy-register-form input:focus{
+  border-color:rgba(18,63,53,.52)!important;
+  background:#fff!important;
+  box-shadow:0 0 0 4px rgba(18,63,53,.07)!important;
+}
+.auth-shell[data-auth-view] .academy-register-passwords{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+}
+.auth-shell[data-auth-view] .academy-register-check{
+  grid-template-columns:18px minmax(0,1fr)!important;
+  align-items:start!important;
+  gap:9px!important;
+  padding:11px 12px;
+  border-radius:12px;
+  background:#f7f9f7;
+  color:#607169!important;
+  font-size:.64rem!important;
+  line-height:1.45;
+  font-weight:620!important;
+}
+.auth-shell[data-auth-view] .academy-register-check input{
+  width:16px!important;
+  height:16px!important;
+  min-height:0!important;
+  margin:1px 0 0!important;
+  padding:0!important;
+  accent-color:#123f35;
+}
+.auth-shell[data-auth-view] .academy-register-submit{
+  width:100%;
+  min-height:47px;
+  margin-top:1px;
+}
+.auth-shell[data-auth-view] .academy-register-submit:disabled{opacity:.62;cursor:wait}
+.auth-shell[data-auth-view] .academy-register-status{
+  min-height:18px;
+  margin:0;
+  color:#9a4b3f;
+  font-size:.69rem;
+  line-height:1.5;
+  font-weight:700;
+}
+.auth-shell[data-auth-view] .academy-register-status.ok{color:#28704f}
+.auth-shell[data-auth-view] .academy-register-back{
+  justify-self:center;
+  border:0;
+  background:transparent;
+  color:#123f35;
+  font:inherit;
+  font-size:.7rem;
+  font-weight:760;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
+.auth-shell[data-auth-view] .login-card.academy-registration-open{
+  min-height:760px!important;
+}
+
+@media(max-width:620px){
+  .auth-shell[data-auth-view] .login-card .academy-register-entry{
+    grid-template-columns:1fr;
+  }
+  .auth-shell[data-auth-view] .academy-register-open{width:100%}
+  .auth-shell[data-auth-view] .academy-register-passwords{grid-template-columns:1fr}
+  .auth-shell[data-auth-view] .login-card.academy-registration-open{min-height:auto!important}
+}
