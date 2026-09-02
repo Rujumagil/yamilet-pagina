@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='109.0.0';
+  const VERSION='110.0.0';
   let loading=null,loaded=false,timer=null;
   const $=(s,r=document)=>r.querySelector(s);
 
@@ -21,6 +21,23 @@
     }
   }
 
+  function loadPendingRegistrationAdminAssets(){
+    if(!$('link[data-academy-pending-v110]')){
+      const link=document.createElement('link');
+      link.rel='stylesheet';
+      link.href='./academy-pending-registrations-v110.css?v=110';
+      link.dataset.academyPendingV110='true';
+      document.head.appendChild(link);
+    }
+    if(!$('script[data-academy-pending-v110]')){
+      const script=document.createElement('script');
+      script.src='./academy-pending-registrations-v110.js?v=110';
+      script.defer=true;
+      script.dataset.academyPendingV110='true';
+      document.body.appendChild(script);
+    }
+  }
+
   function isRoute(){const p=String(location.hash||'').replace(/^#/,'').split('/').filter(Boolean);return p[0]==='admin'&&p[1]==='operations';}
   function dashboardReady(){const d=$('[data-dashboard]');return !!d&&!d.classList.contains('hidden')&&!!$('[data-shell-page="admin"]');}
   function cleanLegacy(){if(!isRoute())return;$('[data-commerce-host]')?.remove();$('[data-academy-ops]')?.remove();}
@@ -34,6 +51,7 @@
   function schedule(delay=100){clearTimeout(timer);timer=setTimeout(async()=>{if(!isRoute()||!dashboardReady())return;cleanLegacy();await loadAdmin();if(loaded&&!$('[data-ops87-root]'))remount();},delay);}
   function start(){
     loadPublicRegistrationAssets();
+    loadPendingRegistrationAdminAssets();
     document.addEventListener('click',e=>{if(e.target.closest('[data-admin-v79-go="operations"],a[href="#admin/operations"]'))schedule(120);},true);
     window.addEventListener('hashchange',()=>schedule(90));
     window.addEventListener('popstate',()=>schedule(90));
