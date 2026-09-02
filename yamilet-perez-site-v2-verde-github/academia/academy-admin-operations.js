@@ -1,39 +1,39 @@
 (() => {
   'use strict';
-  const VERSION='110.0.0';
+  const VERSION='111.0.0';
   let loading=null,loaded=false,timer=null;
   const $=(s,r=document)=>r.querySelector(s);
 
   function loadPublicRegistrationAssets(){
-    if(!$('link[data-academy-registration-v109]')){
+    if(!$('link[data-academy-registration-v111]')){
       const link=document.createElement('link');
       link.rel='stylesheet';
-      link.href='./academy-registration-v109.css?v=109';
-      link.dataset.academyRegistrationV109='true';
+      link.href='./academy-registration-v109.css?v=111';
+      link.dataset.academyRegistrationV111='true';
       document.head.appendChild(link);
     }
-    if(!$('script[data-academy-registration-v109]')){
+    if(!$('script[data-academy-registration-v111]')){
       const script=document.createElement('script');
-      script.src='./academy-registration-v109.js?v=109';
+      script.src='./academy-registration-v111.js?v=111';
       script.defer=true;
-      script.dataset.academyRegistrationV109='true';
+      script.dataset.academyRegistrationV111='true';
       document.body.appendChild(script);
     }
   }
 
   function loadPendingRegistrationAdminAssets(){
-    if(!$('link[data-academy-pending-v110]')){
+    if(!$('link[data-academy-pending-v111]')){
       const link=document.createElement('link');
       link.rel='stylesheet';
-      link.href='./academy-pending-registrations-v110.css?v=110';
-      link.dataset.academyPendingV110='true';
+      link.href='./academy-pending-registrations-v110.css?v=111';
+      link.dataset.academyPendingV111='true';
       document.head.appendChild(link);
     }
-    if(!$('script[data-academy-pending-v110]')){
+    if(!$('script[data-academy-pending-v111]')){
       const script=document.createElement('script');
-      script.src='./academy-pending-registrations-v110.js?v=110';
+      script.src='./academy-pending-registrations-v111.js?v=111';
       script.defer=true;
-      script.dataset.academyPendingV110='true';
+      script.dataset.academyPendingV111='true';
       document.body.appendChild(script);
     }
   }
