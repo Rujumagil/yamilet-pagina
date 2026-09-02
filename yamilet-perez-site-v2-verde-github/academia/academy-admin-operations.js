@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='111.0.0';
+  const VERSION='112.0.0';
   let loading=null,loaded=false,timer=null;
   const $=(s,r=document)=>r.querySelector(s);
 
@@ -38,6 +38,23 @@
     }
   }
 
+  function loadStudentDeletionAssets(){
+    if(!$('link[data-academy-student-delete-v112]')){
+      const link=document.createElement('link');
+      link.rel='stylesheet';
+      link.href='./academy-student-delete-v112.css?v=112';
+      link.dataset.academyStudentDeleteV112='true';
+      document.head.appendChild(link);
+    }
+    if(!$('script[data-academy-student-delete-v112]')){
+      const script=document.createElement('script');
+      script.src='./academy-student-delete-v112.js?v=112';
+      script.defer=true;
+      script.dataset.academyStudentDeleteV112='true';
+      document.body.appendChild(script);
+    }
+  }
+
   function isRoute(){const p=String(location.hash||'').replace(/^#/,'').split('/').filter(Boolean);return p[0]==='admin'&&p[1]==='operations';}
   function dashboardReady(){const d=$('[data-dashboard]');return !!d&&!d.classList.contains('hidden')&&!!$('[data-shell-page="admin"]');}
   function cleanLegacy(){if(!isRoute())return;$('[data-commerce-host]')?.remove();$('[data-academy-ops]')?.remove();}
@@ -52,6 +69,7 @@
   function start(){
     loadPublicRegistrationAssets();
     loadPendingRegistrationAdminAssets();
+    loadStudentDeletionAssets();
     document.addEventListener('click',e=>{if(e.target.closest('[data-admin-v79-go="operations"],a[href="#admin/operations"]'))schedule(120);},true);
     window.addEventListener('hashchange',()=>schedule(90));
     window.addEventListener('popstate',()=>schedule(90));
