@@ -1,11 +1,11 @@
 (() => {
   'use strict';
 
-  const VERSION='117.0.0';
+  const VERSION='118.0.0';
   const CONFIG_ENDPOINT='https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
   const $=(s,r=document)=>r.querySelector(s);
   const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const esc=(v='')=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const esc=(v='')=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]||c));
 
   let sb=null;
   let workspace=null;
@@ -27,9 +27,8 @@
 
   const fmt=value=>{
     if(!value)return 'Sin fecha';
-    try{
-      return new Intl.DateTimeFormat('es-MX',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(value));
-    }catch{return 'Sin fecha';}
+    try{return new Intl.DateTimeFormat('es-MX',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(value));}
+    catch{return 'Sin fecha';}
   };
 
   const defaultCourseId=()=>courses.find(c=>/método\s+mes|metodo\s+mes/i.test(c.title||''))?.id||courses.find(c=>c.status==='published')?.id||courses[0]?.id||'';
@@ -90,27 +89,20 @@
     if(!studentCard)return false;
 
     const small=$('small',studentCard);
-    if(small){
-      small.innerHTML=`con acceso activo · <b>${pending.length}</b> registro${pending.length===1?'':'s'} pendiente${pending.length===1?'':'s'}`;
-    }
+    if(small)small.innerHTML=`con acceso activo · <b>${pending.length}</b> registro${pending.length===1?'':'s'} pendiente${pending.length===1?'':'s'}`;
     studentCard.dataset.pendingOverview='true';
     studentCard.style.cursor='pointer';
     studentCard.title=pending.length?'Abrir registros pendientes':'Abrir estudiantes';
     studentCard.onclick=()=>{location.hash='#admin/students';};
 
     let banner=$('[data-pending-overview-banner]',root);
-    if(!pending.length){
-      banner?.remove();
-      return true;
-    }
-
+    if(!pending.length){banner?.remove();return true;}
     if(!banner){
       banner=document.createElement('section');
       banner.className='admin-v79-section-head pending117-overview';
       banner.dataset.pendingOverviewBanner='true';
       const live=$('.admin-v79-live-grid',root);
-      if(live)live.insertAdjacentElement('beforebegin',banner);
-      else root.appendChild(banner);
+      if(live)live.insertAdjacentElement('beforebegin',banner);else root.appendChild(banner);
     }
 
     const latest=pending[0]||{};
@@ -120,17 +112,44 @@
     return true;
   }
 
+  function visibleAdminModule(){
+    const page=$('[data-shell-page="admin"]');
+    if(!page||page.classList.contains('hidden'))return null;
+    return $('[data-admin-v79-module]',page);
+  }
+
   function panelHost(){
-    const root=$('[data-students81]');
-    if(!root)return null;
-    let panel=$('[data-pending111]',root);
+    if(!isStudents())return null;
+
+    const nativeRoot=$('[data-students81]');
+    if(nativeRoot){
+      let panel=$('[data-pending111]',nativeRoot);
+      if(!panel){
+        panel=document.createElement('section');
+        panel.className='pending110';
+        panel.dataset.pending111='true';
+        panel.dataset.pendingHost='native';
+        const directory=$('.students81-directory',nativeRoot);
+        if(directory)directory.insertAdjacentElement('beforebegin',panel);else nativeRoot.prepend(panel);
+      }
+      return panel;
+    }
+
+    const module=visibleAdminModule();
+    if(!module)return null;
+    let panel=$('[data-pending111]',module);
     if(!panel){
       panel=document.createElement('section');
-      panel.className='pending110';
+      panel.className='pending110 pending118-fallback';
       panel.dataset.pending111='true';
-      const directory=$('.students81-directory',root);
-      if(directory)directory.insertAdjacentElement('beforebegin',panel);
-      else root.appendChild(panel);
+      panel.dataset.pendingHost='fallback';
+      module.innerHTML='';
+      module.appendChild(panel);
+      const note=document.createElement('div');
+      note.className='pending110-empty';
+      note.dataset.pendingDirectoryNote='true';
+      note.innerHTML='<span>i</span><div><strong>Directorio académico</strong><p>Los registros pendientes ya están disponibles. El directorio de estudiantes activos se cargará debajo cuando termine de iniciar su herramienta.</p></div>';
+      module.appendChild(note);
     }
     return panel;
   }
@@ -150,7 +169,7 @@
     const accounts=pending.filter(x=>!!x.account_created).length;
     const defaultId=defaultCourseId();
 
-    panel.innerHTML=`<div class="pending110-head"><div><span>NUEVOS REGISTROS</span><h3>Pendientes de inscripción</h3><p>Toda solicitud enviada desde el registro público aparece aquí inmediatamente, incluso si la cuenta todavía está por crearse o confirmar.</p></div><div class="pending110-head-actions"><span><b>${pending.length}</b> pendientes</span><button type="button" data-pending111-refresh>Actualizar</button></div></div>
+    panel.innerHTML=`<div class="pending110-head"><div><span>NUEVOS REGISTROS</span><h3>Pendientes de inscripción</h3><p>Toda solicitud enviada desde el registro público aparece aquí inmediatamente, aunque el directorio general todavía esté cargando.</p></div><div class="pending110-head-actions"><span><b>${pending.length}</b> pendientes</span><button type="button" data-pending111-refresh>Actualizar</button></div></div>
       <div class="pending110-summary"><span><b>${pending.length}</b> solicitudes recibidas</span><span><b>${accounts}</b> cuentas creadas</span><span><b>${confirmed}</b> correos confirmados</span></div>
       <div class="pending110-list">${pending.length?pending.map(item=>`<article class="pending110-card" data-pending-request="${esc(item.request_id||'')}" data-pending-user="${esc(item.user_id||'')}">
         <div class="pending110-person"><div class="pending110-avatar">${esc((item.full_name||item.email||'?').trim().slice(0,1).toUpperCase())}</div><div><strong>${esc(item.full_name||'Nueva alumna')}</strong><span>${esc(item.email||'')}</span><small>Registro: ${esc(fmt(item.registered_at))}</small></div></div>
@@ -181,10 +200,10 @@
       if(error)throw error;
       status.className='ok';
       status.textContent='Curso activado correctamente.';
-      await window.ACADEMIA_YAMILET_STUDENTS?.refresh?.();
       await refresh(true);
+      setTimeout(()=>window.ACADEMIA_YAMILET_STUDENTS?.refresh?.(),120);
     }catch(error){
-      console.warn('Academia Yamilet pending registration activation v117',error);
+      console.warn('Academia Yamilet pending registration activation v118',error);
       status.className='error';
       status.textContent=String(error?.message||'').toLowerCase().includes('duplicate')?'Esta persona ya tiene ese curso asignado.':'No fue posible activar el curso.';
       button.disabled=false;
@@ -207,10 +226,10 @@
       renderCurrent();
       return true;
     }catch(error){
-      console.warn('Academia Yamilet pending registrations v117',error);
+      console.warn('Academia Yamilet pending registrations v118',error);
       if(isStudents()){
         const host=panelHost();
-        if(host)host.innerHTML='<div class="pending110-error"><strong>No fue posible cargar los nuevos registros.</strong><span>Verifica que tu sesión administrativa siga activa.</span></div>';
+        if(host)host.innerHTML='<div class="pending110-error"><strong>No fue posible cargar los nuevos registros.</strong><span>La sesión administrativa está activa, pero falló la consulta de pendientes. Pulsa Actualizar para reintentar.</span></div>';
       }
       return false;
     }finally{
@@ -223,10 +242,7 @@
     clearTimeout(timer);
     timer=setTimeout(()=>{
       if(!supported())return;
-      if(dataLoaded&&!force){
-        renderCurrent();
-        return;
-      }
+      if(dataLoaded&&!force){renderCurrent();return;}
       refresh(force);
     },delay);
   }
@@ -238,10 +254,7 @@
       if(!root)return false;
       return !findStudentCard(root)?.dataset.pendingOverview || (pending.length>0&&!$('[data-pending-overview-banner]',root));
     }
-    if(isStudents()){
-      const root=$('[data-students81]');
-      return !!root&&!$('[data-pending111]',root);
-    }
+    if(isStudents())return !$('[data-pending111]');
     return false;
   }
 
@@ -249,18 +262,13 @@
     const observer=new MutationObserver(()=>{
       if(!supported()||!needsRestore())return;
       requestAnimationFrame(()=>{
-        if(dataLoaded)renderCurrent();
-        else schedule(60,false);
+        if(dataLoaded)renderCurrent();else schedule(60,false);
       });
     });
     observer.observe(document.body,{childList:true,subtree:true});
 
-    window.addEventListener('hashchange',()=>{
-      if(supported())schedule(120,true);
-    });
-    window.addEventListener('pageshow',()=>{
-      if(supported())schedule(180,true);
-    });
+    window.addEventListener('hashchange',()=>{if(supported())schedule(120,true);});
+    window.addEventListener('pageshow',()=>{if(supported())schedule(180,true);});
 
     document.addEventListener('click',event=>{
       if(event.target.closest('[data-admin-v79-go="students"],a[href="#admin/students"]'))setTimeout(()=>schedule(80,true),120);
