@@ -1,13 +1,14 @@
 (() => {
   'use strict';
 
-  const VERSION = '120.0.0';
+  const VERSION = '120.1.0';
   const $ = (selector, root = document) => root.querySelector(selector);
   const state = {
     agenda: { loading: null, loaded: false },
     support: { loading: null, loaded: false }
   };
   let operationsGuarded = false;
+  let agendaGuarded = false;
 
   function section() {
     const parts = String(location.hash || '').replace(/^#/, '').split('/').filter(Boolean);
@@ -49,6 +50,19 @@
     operationsGuarded = true;
   }
 
+  function guardAgenda() {
+    if (agendaGuarded || !window.ACADEMIA_YAMILET_AGENDA_ADMIN_V85?.render) return;
+    const original = window.ACADEMIA_YAMILET_AGENDA_ADMIN_V85.render.bind(window.ACADEMIA_YAMILET_AGENDA_ADMIN_V85);
+    window.ACADEMIA_YAMILET_AGENDA_ADMIN_V85.render = (...args) => {
+      if (section() !== 'agenda') return Promise.resolve(false);
+      // Hotfixes heredados todavía pueden intentar abrir Agenda varias veces.
+      // Si la vista ya está cargando o montada, esos intentos son ignorados.
+      if (agendaReady()) return Promise.resolve(true);
+      return original(...args);
+    };
+    agendaGuarded = true;
+  }
+
   function runtimeConfig(kind) {
     if (kind === 'agenda') {
       return {
@@ -71,6 +85,7 @@
     const cfg = runtimeConfig(kind);
     if (cfg.ready()) {
       item.loaded = true;
+      if (kind === 'agenda') guardAgenda();
       return Promise.resolve({ ok: true, fresh: false });
     }
     if (item.loading) return item.loading;
@@ -80,6 +95,7 @@
       if (existing) {
         if (cfg.ready() || existing.dataset.loaded === 'true') {
           item.loaded = cfg.ready();
+          if (kind === 'agenda' && item.loaded) guardAgenda();
           resolve({ ok: item.loaded, fresh: false });
           return;
         }
@@ -88,6 +104,7 @@
           if (settled) return;
           settled = true;
           item.loaded = !!ok;
+          if (kind === 'agenda' && item.loaded) guardAgenda();
           resolve({ ok: !!ok, fresh: false });
         };
         existing.addEventListener('load', () => {
@@ -106,6 +123,7 @@
       script.addEventListener('load', () => {
         script.dataset.loaded = 'true';
         item.loaded = cfg.ready();
+        if (kind === 'agenda' && item.loaded) guardAgenda();
         resolve({ ok: item.loaded, fresh: true });
       }, { once: true });
       script.addEventListener('error', () => resolve({ ok: false, fresh: true }), { once: true });
@@ -121,9 +139,10 @@
     if (section() !== 'agenda') return false;
     const result = await ensureRuntime('agenda');
     if (!result.ok || section() !== 'agenda') return false;
+    guardAgenda();
 
-    // La versión v85 se auto-renderiza al cargarse por primera vez. Evitamos
-    // disparar un segundo render mientras esa primera consulta está en curso.
+    // La Agenda se auto-renderiza al cargar el runtime por primera vez. Si ya
+    // existe la vista o su loader, no generamos otra consulta ni otro montaje.
     if (!force && agendaReady()) return true;
 
     const renderer = window.ACADEMIA_YAMILET_AGENDA_ADMIN_V85?.render;
@@ -152,8 +171,8 @@
   }
 
   // academy-admin.js es el único router. Este puente sólo carga el runtime
-  // solicitado; no observa el DOM, no reintenta por intervalos y no vuelve a
-  // renderizar administración por su cuenta.
+  // solicitado; no observa el DOM, no ejecuta intervalos y no reconstruye el
+  // panel administrativo por su cuenta.
   window.ACADEMIA_YAMILET_EVENT_ADMIN = Object.freeze({
     version: VERSION,
     load: () => openCurrent(false),
