@@ -54,12 +54,12 @@ assert(admin.includes("id === 'operations' && currentRole === 'instructor'"), 'I
 assert(admin.includes("section === 'operations' && ctx.role === 'instructor'"), 'Instructor direct operations route guard is missing');
 assert(admin.includes("go('overview')"), 'Restricted admin route redirect is missing');
 
-assert(index.includes('name="academy-build" content="v108-stable"'), 'v108 build marker is missing');
-assert(index.includes('manifest.webmanifest?v=108'), 'v108 manifest cache-bust is missing');
-assert(index.includes('academy-visuals-v91.css?v=108'), 'v108 visual stylesheet cache-bust is missing');
-assert(index.includes('academy-dashboard.js?v=108'), 'v108 dashboard runtime cache-bust is missing');
-assert(index.includes('academy-pwa-v57.js?v=108'), 'v108 PWA runtime cache-bust is missing');
-assert(index.includes('academy-hash-router-v70.js?v=108'), 'v108 router cache-bust is missing');
+assert(index.includes('name="academy-build" content="v109-admin-routing"'), 'v109 build marker is missing');
+assert(index.includes('manifest.webmanifest?v=108'), 'manifest cache-bust is missing');
+assert(index.includes('academy-visuals-v91.css?v=108'), 'visual stylesheet cache-bust is missing');
+assert(index.includes('academy-dashboard.js?v=108'), 'dashboard runtime cache-bust is missing');
+assert(index.includes('academy-pwa-v57.js?v=109'), 'v109 PWA runtime cache-bust is missing');
+assert(index.includes('academy-hash-router-v70.js?v=108'), 'router cache-bust is missing');
 assert(!index.includes('academy-sales-admin.js'), 'Retired sales runtime is still loaded');
 assert(!index.includes('academy-assessment-review.js'), 'Retired assessment review runtime is still loaded');
 assert(!index.includes('tus-js-client@'), 'TUS must not load globally for students');
@@ -76,4 +76,4 @@ assert(!visuals.includes('../../imagenes-academia-yamilet-final'), 'Visual style
 assert(legacyAdmin.includes("target.hash = '#admin'"), 'Legacy admin route does not redirect to the official panel');
 assert(!legacyAdmin.includes('admin-v34.js'), 'Legacy admin runtime is still active');
 
-console.log(`Navigation smoke v108 passed: ${Object.keys(publicRoutes).length} public routes/aliases, ${adminSections.length} admin sections, deep routes, PWA baseline, legacy admin redirect, role guards and visual paths verified.`);
+console.log(`Navigation smoke v109 passed: ${Object.keys(publicRoutes).length} public routes/aliases, ${adminSections.length} admin sections, deep routes, PWA baseline, legacy admin redirect, role guards and visual paths verified.`);
