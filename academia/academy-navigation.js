@@ -38,6 +38,11 @@
     const buttons = [...nav.querySelectorAll('.shell-nav-item[data-shell-route]')];
     if (!buttons.length || !buttons.some(button => button.dataset.shellRoute === 'home')) return retry();
 
+    // Conservamos los controles administrativos originales porque otros módulos
+    // todavía los usan como disparadores internos para inicializar contenido,
+    // alumnas y reservas. Se mantienen ocultos, pero no se eliminan del DOM.
+    const legacyAdminControls = [...nav.querySelectorAll('[data-content-admin-nav],[data-students-admin-nav],[data-scroll-bookings]')];
+
     const byRoute = new Map(buttons.map(button => [button.dataset.shellRoute, button]));
     const fragment = document.createDocumentFragment();
 
@@ -63,7 +68,12 @@
       fragment.appendChild(section);
     });
 
-    nav.replaceChildren(fragment);
+    nav.replaceChildren(fragment, ...legacyAdminControls);
+    legacyAdminControls.forEach(button => {
+      button.classList.add('hidden');
+      button.setAttribute('aria-hidden', 'true');
+      button.tabIndex = -1;
+    });
     nav.dataset.professionalAcademyNav = 'true';
   }
 
@@ -79,7 +89,21 @@
         if (breadcrumb) breadcrumb.textContent = 'Catálogo de cursos';
       }, 0);
     }
-  });
+
+    // El shell administrativo oculta #reservas con !important. Cuando se abre
+    // "Clase gratuita" forzamos el panel visible después de que actúe el router.
+    if (event.target.closest('[data-admin-target="bookings"]')) {
+      window.setTimeout(() => {
+        const panel = document.querySelector('#reservas');
+        if (!panel) return;
+        panel.classList.remove('hidden');
+        panel.style.setProperty('display', 'block', 'important');
+        panel.style.setProperty('grid-column', '1 / -1', 'important');
+        panel.style.setProperty('grid-row', 'auto', 'important');
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 0);
+    }
+  }, true);
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', organizeNavigation, { once: true });
   else organizeNavigation();
