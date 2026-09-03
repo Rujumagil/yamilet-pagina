@@ -1,129 +1,262 @@
 (() => {
   'use strict';
-  const VERSION = '83.0.0';
-  let loading = null;
-  let loaded = false;
-  let reviewLoading = null;
-  let reviewLoaded = false;
-  let timer = null;
+
+  const VERSION = '120.0.0';
   const $ = (selector, root = document) => root.querySelector(selector);
 
-  function isRoute(){
+  let builderLoading = null;
+  let reviewLoading = null;
+  let builderLoaded = false;
+  let reviewLoaded = false;
+  let externalRenderWrapped = false;
+  let originalExternalRender = null;
+
+  function isRoute() {
     const parts = String(location.hash || '').replace(/^#/, '').split('/').filter(Boolean);
     return parts[0] === 'admin' && parts[1] === 'evaluations';
   }
 
-  function dashboardReady(){
-    const dashboard = $('[data-dashboard]');
-    return !!dashboard && !dashboard.classList.contains('hidden') && !!$('[data-shell-page="admin"]');
+  function adminPage() {
+    return $('[data-shell-page="admin"]');
   }
 
-  function remount(){
-    if(!isRoute()) return;
-    [40,180,420,900].forEach(delay => setTimeout(() => {
-      window.ACADEMIA_YAMILET_ADMIN?.render?.();
-      window.ACADEMIA_YAMILET_ASSESSMENT_ADMIN?.render?.();
-    },delay));
+  function adminModule() {
+    const page = adminPage();
+    return page ? $('[data-admin-v79-module]', page) : null;
   }
 
-  function loadReviewIntegration(){
-    if(reviewLoaded){ window.ACADEMIA_YAMILET_ASSESSMENT_REVIEW_V83?.refresh?.(); return Promise.resolve(true); }
-    if(reviewLoading) return reviewLoading;
-    reviewLoading = new Promise(resolve => {
-      const existing = $('script[data-assessment-review-runtime-v83]');
-      if(existing){
-        if(existing.dataset.loaded === 'true'){ reviewLoaded = true; resolve(true); return; }
-        existing.addEventListener('load',() => { reviewLoaded = true; existing.dataset.loaded = 'true'; resolve(true); },{once:true});
-        existing.addEventListener('error',() => resolve(false),{once:true});
-        return;
-      }
+  function assessmentHost() {
+    const page = adminPage();
+    return page ? $('[data-assessment-admin-host]', page) : null;
+  }
+
+  function ensureHost() {
+    if (!isRoute()) return null;
+    const module = adminModule();
+    if (!module) return null;
+
+    let host = assessmentHost();
+    if (!host) {
+      host = document.createElement('div');
+      host.dataset.assessmentAdminHost = 'true';
+      host.innerHTML = '<section class="assess82 assess82-loading"><span></span><strong>Preparando constructor de evaluaciones…</strong><small>Cargando cursos, preguntas e intentos.</small></section>';
+    }
+
+    if (host.parentElement !== module) {
+      module.innerHTML = '';
+      module.appendChild(host);
+    }
+    host.style.setProperty('display', 'block', 'important');
+    return host;
+  }
+
+  function builderBusyOrReady() {
+    const host = assessmentHost();
+    if (!host) return false;
+    return !!host.querySelector('.assess82-loading,[data-assessment-admin],.assess82-error');
+  }
+
+  function builderReady() {
+    const host = assessmentHost();
+    return !!host?.querySelector('[data-assessment-admin]');
+  }
+
+  function moveHost() {
+    if (!isRoute()) return false;
+    const module = adminModule();
+    const host = assessmentHost();
+    if (!module || !host) return false;
+    if (host.parentElement !== module) {
+      module.innerHTML = '';
+      module.appendChild(host);
+    }
+    host.style.setProperty('display', 'block', 'important');
+    return true;
+  }
+
+  function loadScript(src, attr, globalCheck = null) {
+    if (globalCheck?.()) return Promise.resolve(true);
+    const existing = $(`script[${attr}]`);
+    if (existing) {
+      if (existing.dataset.loaded === 'true' || globalCheck?.()) return Promise.resolve(true);
+      return new Promise(resolve => {
+        existing.addEventListener('load', () => {
+          existing.dataset.loaded = 'true';
+          resolve(true);
+        }, {once:true});
+        existing.addEventListener('error', () => resolve(false), {once:true});
+      });
+    }
+
+    return new Promise(resolve => {
       const script = document.createElement('script');
-      script.src = './academy-assessment-review-v83.js?v=83';
+      script.src = src;
       script.async = true;
-      script.dataset.assessmentReviewRuntimeV83 = 'true';
-      script.addEventListener('load',() => {
-        reviewLoaded = true;
+      script.setAttribute(attr, 'true');
+      script.addEventListener('load', () => {
         script.dataset.loaded = 'true';
-        window.ACADEMIA_YAMILET_ASSESSMENT_REVIEW_V83?.refresh?.();
         resolve(true);
-      },{once:true});
-      script.addEventListener('error',() => resolve(false),{once:true});
+      }, {once:true});
+      script.addEventListener('error', () => resolve(false), {once:true});
       document.body.appendChild(script);
-    }).finally(() => { reviewLoading = null; });
+    });
+  }
+
+  function waitForBuilder(timeout = 450) {
+    if (builderReady()) return Promise.resolve(true);
+    const host = ensureHost();
+    if (!host) return Promise.resolve(false);
+
+    return new Promise(resolve => {
+      let settled = false;
+      const finish = value => {
+        if (settled) return;
+        settled = true;
+        observer.disconnect();
+        clearTimeout(timer);
+        resolve(value);
+      };
+      const observer = new MutationObserver(() => {
+        if (builderReady()) finish(true);
+      });
+      observer.observe(host, {childList:true, subtree:true});
+      const timer = setTimeout(() => finish(builderReady()), timeout);
+    });
+  }
+
+  function guardExternalRender() {
+    const api = window.ACADEMIA_YAMILET_ASSESSMENT_ADMIN;
+    if (!api?.render) return false;
+    if (externalRenderWrapped) return true;
+
+    originalExternalRender = api.render.bind(api);
+    api.render = (...args) => {
+      if (!isRoute()) return Promise.resolve(false);
+      moveHost();
+      if (builderBusyOrReady()) return Promise.resolve(true);
+      return Promise.resolve(originalExternalRender(...args)).finally(moveHost);
+    };
+    externalRenderWrapped = true;
+    return true;
+  }
+
+  async function renderBuilderIfNeeded() {
+    if (!isRoute()) return false;
+    ensureHost();
+    guardExternalRender();
+
+    if (builderReady()) {
+      moveHost();
+      return true;
+    }
+
+    const autoRendered = await waitForBuilder(450);
+    if (autoRendered) {
+      moveHost();
+      return true;
+    }
+
+    const renderer = originalExternalRender || window.ACADEMIA_YAMILET_ASSESSMENT_ADMIN?.render?.bind(window.ACADEMIA_YAMILET_ASSESSMENT_ADMIN);
+    if (!renderer) return false;
+    await renderer();
+    moveHost();
+    return builderReady() || !!assessmentHost()?.querySelector('.assess82-error');
+  }
+
+  async function loadBuilder() {
+    if (!isRoute()) return false;
+    ensureHost();
+
+    if (builderLoaded && window.ACADEMIA_YAMILET_ASSESSMENT_ADMIN) {
+      guardExternalRender();
+      return renderBuilderIfNeeded();
+    }
+    if (builderLoading) return builderLoading;
+
+    builderLoading = (async () => {
+      const ready = await loadScript(
+        './academy-assessment-admin.js?v=120',
+        'data-assessment-runtime-v120',
+        () => !!window.ACADEMIA_YAMILET_ASSESSMENT_ADMIN
+      );
+      if (!ready) return false;
+      builderLoaded = true;
+      guardExternalRender();
+      return renderBuilderIfNeeded();
+    })().catch(error => {
+      console.error('Academia Yamilet assessment runtime v120', error);
+      const host = ensureHost();
+      if (host) {
+        host.innerHTML = '<section class="assess82 assess82-error"><strong>No fue posible abrir Evaluaciones</strong><span>La sesión sigue activa. Intenta cargar nuevamente esta herramienta.</span><button type="button" data-assess120-retry>Reintentar</button></section>';
+        $('[data-assess120-retry]', host)?.addEventListener('click', () => {
+          builderLoaded = false;
+          loadBuilder();
+        }, {once:true});
+      }
+      return false;
+    }).finally(() => {
+      builderLoading = null;
+    });
+
+    return builderLoading;
+  }
+
+  async function loadReviewIntegration() {
+    if (!isRoute()) return false;
+    if (reviewLoaded && window.ACADEMIA_YAMILET_ASSESSMENT_REVIEW_V83) {
+      window.ACADEMIA_YAMILET_ASSESSMENT_REVIEW_V83.refresh?.();
+      return true;
+    }
+    if (reviewLoading) return reviewLoading;
+
+    reviewLoading = (async () => {
+      const ready = await loadScript(
+        './academy-assessment-review-v83.js?v=120',
+        'data-assessment-review-runtime-v120',
+        () => !!window.ACADEMIA_YAMILET_ASSESSMENT_REVIEW_V83
+      );
+      if (!ready) return false;
+      reviewLoaded = true;
+      window.ACADEMIA_YAMILET_ASSESSMENT_REVIEW_V83?.refresh?.();
+      return true;
+    })().catch(error => {
+      console.warn('Academia Yamilet assessment review v120', error);
+      return false;
+    }).finally(() => {
+      reviewLoading = null;
+    });
+
     return reviewLoading;
   }
 
-  function loadBuilder(){
-    if(loaded){ remount(); return Promise.resolve(true); }
-    if(loading) return loading;
-    loading = new Promise(resolve => {
-      const existing = $('script[data-assessment-runtime-v82]');
-      if(existing){
-        if(existing.dataset.loaded === 'true'){ loaded = true; remount(); resolve(true); return; }
-        existing.addEventListener('load',() => { loaded = true; existing.dataset.loaded = 'true'; remount(); resolve(true); },{once:true});
-        existing.addEventListener('error',() => resolve(false),{once:true});
-        return;
-      }
-      const page = $('[data-shell-page="admin"]');
-      if(page && !$('[data-assessment-admin-host]',page)){
-        const host = document.createElement('div');
-        host.dataset.assessmentAdminHost = 'true';
-        host.innerHTML = '<section class="assess82 assess82-loading"><span></span><strong>Preparando constructor de evaluaciones…</strong><small>Cargando herramienta académica.</small></section>';
-        page.appendChild(host);
-      }
-      const script = document.createElement('script');
-      script.src = './academy-assessment-admin.js?v=82';
-      script.async = true;
-      script.dataset.assessmentRuntimeV82 = 'true';
-      script.addEventListener('load',() => { loaded = true; script.dataset.loaded = 'true'; remount(); resolve(true); },{once:true});
-      script.addEventListener('error',() => {
-        const host = $('[data-assessment-admin-host]');
-        if(host) host.innerHTML = '<section class="assess82 assess82-error"><strong>No fue posible abrir Evaluaciones</strong><span>Recarga la Academia e intenta nuevamente.</span></section>';
-        resolve(false);
-      },{once:true});
-      document.body.appendChild(script);
-    }).finally(() => { loading = null; });
-    return loading;
+  async function load() {
+    if (!isRoute()) return false;
+    const ready = await loadBuilder();
+    if (!ready) return false;
+    void loadReviewIntegration();
+    return true;
   }
 
-  function schedule(delay = 100){
-    clearTimeout(timer);
-    timer = setTimeout(async () => {
-      if(!isRoute() || !dashboardReady()) return;
-      const ready = await loadBuilder();
-      if(ready) await loadReviewIntegration();
-    },delay);
-  }
-
-  function restoreSearchFocus(position){
-    setTimeout(() => {
+  function restoreSearchFocus(position) {
+    requestAnimationFrame(() => {
+      if (!isRoute()) return;
       const input = $('[data-assess82-search]');
-      if(!input || !isRoute()) return;
+      if (!input) return;
       input.focus({preventScroll:true});
-      if(Number.isInteger(position) && input.setSelectionRange) input.setSelectionRange(position,position);
-    },0);
-  }
-
-  function start(){
-    document.addEventListener('click',event => {
-      if(event.target.closest('[data-admin-v79-go="evaluations"],a[href="#admin/evaluations"]')) schedule(120);
-    },true);
-    document.addEventListener('input',event => {
-      if(!event.target.matches?.('[data-assess82-search]')) return;
-      restoreSearchFocus(event.target.selectionStart);
-    },true);
-    window.addEventListener('hashchange',() => schedule(100));
-    window.addEventListener('popstate',() => schedule(100));
-    window.addEventListener('pageshow',() => schedule(180));
-    const observer = new MutationObserver(() => {
-      if(isRoute() && dashboardReady() && (!loaded || !reviewLoaded)) schedule(80);
+      if (Number.isInteger(position) && input.setSelectionRange) {
+        try { input.setSelectionRange(position, position); } catch {}
+      }
     });
-    observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
-    [300,800,1500].forEach(delay => setTimeout(() => schedule(0),delay));
   }
 
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start,{once:true});
-  else start();
+  document.addEventListener('input', event => {
+    if (!event.target.matches?.('[data-assess82-search]')) return;
+    restoreSearchFocus(event.target.selectionStart);
+  }, true);
 
-  window.ACADEMIA_YAMILET_ASSESSMENT_RUNTIME = {version:VERSION,load:async () => { const ready = await loadBuilder(); if(ready) await loadReviewIntegration(); return ready; }};
+  window.ACADEMIA_YAMILET_ASSESSMENT_RUNTIME = Object.freeze({
+    version: VERSION,
+    load,
+    mount: moveHost
+  });
 })();
