@@ -1,17 +1,18 @@
 (() => {
   'use strict';
 
-  const VERSION = '89.0.0';
-  let contentLoading = null;
-  let contentLoaded = false;
-  let timer = null;
-  let studentsRuntimeLoading = null;
-  let studentsRuntimeLoaded = false;
-  let studentsTimer = null;
-
+  const VERSION = '118.0.0';
+  const CONTENT_READY_TIMEOUT = 12000;
   const $ = (selector, root = document) => root.querySelector(selector);
 
-  function routeParts(){
+  let contentLoading = null;
+  let contentLoaded = false;
+  let contentReadyPromise = null;
+  let videoStackLoading = null;
+  let studentsRuntimeLoading = null;
+  let studentsRuntimeLoaded = false;
+
+  function routeParts() {
     return String(location.hash || '').replace(/^#/, '').split('/').filter(Boolean);
   }
 
@@ -20,19 +21,9 @@
     return parts[0] === 'admin' && parts[1] === 'content';
   }
 
-  function isStudentsRoute(){
+  function isStudentsRoute() {
     const parts = routeParts();
     return parts[0] === 'admin' && parts[1] === 'students';
-  }
-
-  function dashboardReady() {
-    const dashboard = $('[data-dashboard]');
-    return !!dashboard && !dashboard.classList.contains('hidden') && !!$('[data-content-admin-root]');
-  }
-
-  function studentsDashboardReady(){
-    const dashboard = $('[data-dashboard]');
-    return !!dashboard && !dashboard.classList.contains('hidden') && !!$('[data-students-admin-root]');
   }
 
   function ensureStyle(href, attr) {
@@ -49,89 +40,155 @@
     const selector = `script[${attr}]`;
     const existing = $(selector);
     if (existing) {
-      if (existing.dataset.loaded === 'true') return Promise.resolve(true);
+      if (existing.dataset.loaded === 'true' || globalCheck?.()) return Promise.resolve(true);
       return new Promise(resolve => {
-        existing.addEventListener('load', () => { existing.dataset.loaded = 'true'; resolve(true); }, {once:true});
-        existing.addEventListener('error', () => resolve(false), {once:true});
+        const done = ok => resolve(ok);
+        existing.addEventListener('load', () => {
+          existing.dataset.loaded = 'true';
+          done(true);
+        }, {once:true});
+        existing.addEventListener('error', () => done(false), {once:true});
       });
     }
+
     return new Promise(resolve => {
       const script = document.createElement('script');
       script.src = src;
       script.async = true;
       script.setAttribute(attr, 'true');
-      script.addEventListener('load', () => { script.dataset.loaded = 'true'; resolve(true); }, {once:true});
+      script.addEventListener('load', () => {
+        script.dataset.loaded = 'true';
+        resolve(true);
+      }, {once:true});
       script.addEventListener('error', () => resolve(false), {once:true});
       document.body.appendChild(script);
     });
   }
 
-  function remountContent() {
-    if (!isContentRoute()) return;
-    [40,180,520,980,1600].forEach(delay => setTimeout(() => {
-      window.ACADEMIA_YAMILET_ADMIN?.render?.();
-      window.ACADEMIA_YAMILET_CONTENT_CMS?.enhance?.();
-    }, delay));
+  function contentRootReady() {
+    const root = $('[data-content-admin-root]');
+    return !!root && !!$('.admin-toolbar', root) && !!$('.course-admin-summary', root);
   }
 
-  async function loadContentStack() {
-    if (contentLoaded) {
-      remountContent();
+  function waitForContentReady(timeout = CONTENT_READY_TIMEOUT) {
+    if (contentRootReady()) return Promise.resolve(true);
+    if (contentReadyPromise) return contentReadyPromise;
+
+    contentReadyPromise = new Promise(resolve => {
+      const root = $('[data-content-admin-root]');
+      if (!root) {
+        resolve(false);
+        return;
+      }
+
+      let settled = false;
+      const finish = value => {
+        if (settled) return;
+        settled = true;
+        observer.disconnect();
+        clearTimeout(timeoutId);
+        resolve(value);
+      };
+      const observer = new MutationObserver(() => {
+        if (contentRootReady()) finish(true);
+      });
+      observer.observe(root, {childList:true, subtree:true});
+      const timeoutId = setTimeout(() => finish(contentRootReady()), timeout);
+    }).finally(() => {
+      contentReadyPromise = null;
+    });
+
+    return contentReadyPromise;
+  }
+
+  function showContentError(message = 'No fue posible abrir el editor de contenido.') {
+    const root = $('[data-content-admin-root]');
+    if (!root) return;
+    root.innerHTML = `<div class="cms80-runtime-error"><strong>${message}</strong><span>La sesión sigue disponible. Puedes intentar cargar nuevamente esta sección.</span><button type="button" data-content-runtime-retry>Reintentar</button></div>`;
+    $('[data-content-runtime-retry]', root)?.addEventListener('click', () => {
+      contentLoaded = false;
+      loadContentStack(true);
+    }, {once:true});
+  }
+
+  function enhanceContent() {
+    if (!isContentRoute()) return false;
+    return !!window.ACADEMIA_YAMILET_CONTENT_CMS?.enhance?.();
+  }
+
+  function loadVideoStack() {
+    if (videoStackLoading) return videoStackLoading;
+    videoStackLoading = (async () => {
+      const tusReady = await loadScript(
+        'https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js',
+        'data-content-tus-v118',
+        () => !!window.tus
+      );
+      if (!tusReady) console.warn('Academia Yamilet v118: TUS no disponible; la vinculación manual de Stream sigue disponible.');
+
+      await Promise.allSettled([
+        loadScript('./academy-video-admin-v62.js?v=62', 'data-video-admin-runtime-v118'),
+        loadScript('./academy-video-cloudflare-manual-v64.js?v=64', 'data-video-manual-runtime-v118')
+      ]);
+      return true;
+    })().catch(error => {
+      console.warn('Academia Yamilet video stack v118', error);
+      return false;
+    }).finally(() => {
+      videoStackLoading = null;
+    });
+    return videoStackLoading;
+  }
+
+  async function loadContentStack(force = false) {
+    if (!isContentRoute() && !force) return false;
+    if (contentLoaded && !force) {
+      enhanceContent();
+      void loadVideoStack();
       return true;
     }
     if (contentLoading) return contentLoading;
 
     contentLoading = (async () => {
-      ensureStyle('./content-admin-p15.css?v=89', 'data-content-admin-style-v89');
-      ensureStyle('./academy-content-cms-v80.css?v=80', 'data-content-cms-style-v80');
+      ensureStyle('./content-admin-p15.css?v=89', 'data-content-admin-style-v118');
+      ensureStyle('./academy-content-cms-v80.css?v=80', 'data-content-cms-style-v118');
 
       const root = $('[data-content-admin-root]');
       if (root && !root.children.length) {
-        root.innerHTML = '<div class="cms80-runtime-loading"><span></span><strong>Preparando editor de contenido…</strong><small>Cargando únicamente las herramientas administrativas necesarias.</small></div>';
+        root.innerHTML = '<div class="cms80-runtime-loading"><span></span><strong>Preparando editor de contenido…</strong><small>Cargando estructura, lecciones y recursos.</small></div>';
       }
 
-      const tusReady = await loadScript(
-        'https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js',
-        'data-content-tus-v89',
-        () => !!window.tus
-      );
-      if (!tusReady) console.warn('Academia Yamilet v89: TUS no disponible; la vinculación manual de Stream sigue disponible.');
-
-      const cmsReady = await loadScript(
-        './academy-content-cms-v80.js?v=80',
-        'data-content-cms-runtime-v80',
-        () => !!window.ACADEMIA_YAMILET_CONTENT_CMS
-      );
-      if (!cmsReady) return false;
-
-      const editorReady = await loadScript(
-        './content-admin-p15.js?v=89',
-        'data-content-admin-runtime-v89'
-      );
-      if (!editorReady) return false;
-
-      await Promise.all([
-        loadScript('./academy-video-admin-v62.js?v=62', 'data-video-admin-runtime-v89'),
-        loadScript('./academy-video-cloudflare-manual-v64.js?v=64', 'data-video-manual-runtime-v89')
+      const [cmsReady, editorReady] = await Promise.all([
+        loadScript(
+          './academy-content-cms-v80.js?v=118',
+          'data-content-cms-runtime-v118',
+          () => !!window.ACADEMIA_YAMILET_CONTENT_CMS
+        ),
+        loadScript('./content-admin-p15.js?v=118', 'data-content-admin-runtime-v118')
       ]);
 
+      if (!cmsReady || !editorReady) return false;
+
+      const ready = await waitForContentReady();
+      if (!ready) return false;
+
       contentLoaded = true;
-      remountContent();
+      enhanceContent();
+      void loadVideoStack();
       return true;
     })().catch(error => {
-      console.error('Academia Yamilet content runtime v89', error);
+      console.error('Academia Yamilet content runtime v118', error);
       return false;
-    }).finally(() => { contentLoading = null; });
+    }).finally(() => {
+      contentLoading = null;
+    });
 
     const ready = await contentLoading;
-    if (!ready) {
-      const rootNode = $('[data-content-admin-root]');
-      if (rootNode) rootNode.innerHTML = '<div class="cms80-runtime-error"><strong>No fue posible abrir el editor</strong><span>Recarga la Academia e intenta nuevamente.</span></div>';
-    }
+    if (!ready) showContentError();
     return ready;
   }
 
-  function ensureStudentsStyle(){
+  function ensureStudentsStyle() {
     if ($('link[data-students81-style]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -140,88 +197,40 @@
     document.head.appendChild(link);
   }
 
-  function loadStudentsRuntime(){
+  async function loadStudentsRuntime() {
+    if (!isStudentsRoute()) return false;
     ensureStudentsStyle();
-    if (studentsRuntimeLoaded) {
-      window.ACADEMIA_YAMILET_STUDENTS_RUNTIME?.load?.();
-      return Promise.resolve(true);
+
+    if (studentsRuntimeLoaded && window.ACADEMIA_YAMILET_STUDENTS_RUNTIME) {
+      await window.ACADEMIA_YAMILET_STUDENTS_RUNTIME.load?.();
+      return true;
     }
     if (studentsRuntimeLoading) return studentsRuntimeLoading;
-    studentsRuntimeLoading = new Promise(resolve => {
-      const existing = $('script[data-students81-bridge]');
-      if (existing) {
-        if (existing.dataset.loaded === 'true') {
-          studentsRuntimeLoaded = true;
-          window.ACADEMIA_YAMILET_STUDENTS_RUNTIME?.load?.();
-          resolve(true);
-          return;
-        }
-        existing.addEventListener('load',() => {
-          studentsRuntimeLoaded = true;
-          existing.dataset.loaded = 'true';
-          window.ACADEMIA_YAMILET_STUDENTS_RUNTIME?.load?.();
-          resolve(true);
-        },{once:true});
-        existing.addEventListener('error',() => resolve(false),{once:true});
-        return;
-      }
-      const script = document.createElement('script');
-      script.src = './academy-students-runtime-v81.js?v=81';
-      script.async = true;
-      script.dataset.students81Bridge = 'true';
-      script.addEventListener('load',() => {
-        studentsRuntimeLoaded = true;
-        script.dataset.loaded = 'true';
-        window.ACADEMIA_YAMILET_STUDENTS_RUNTIME?.load?.();
-        resolve(true);
-      },{once:true});
-      script.addEventListener('error',() => resolve(false),{once:true});
-      document.body.appendChild(script);
-    }).finally(() => { studentsRuntimeLoading = null; });
+
+    studentsRuntimeLoading = (async () => {
+      const ready = await loadScript(
+        './academy-students-runtime-v81.js?v=81',
+        'data-students81-bridge',
+        () => !!window.ACADEMIA_YAMILET_STUDENTS_RUNTIME
+      );
+      if (!ready) return false;
+      studentsRuntimeLoaded = true;
+      await window.ACADEMIA_YAMILET_STUDENTS_RUNTIME?.load?.();
+      return true;
+    })().catch(error => {
+      console.error('Academia Yamilet students bridge v118', error);
+      return false;
+    }).finally(() => {
+      studentsRuntimeLoading = null;
+    });
+
     return studentsRuntimeLoading;
   }
 
-  function schedule(delay = 100) {
-    clearTimeout(timer);
-    timer = setTimeout(async () => {
-      if (!isContentRoute() || !dashboardReady()) return;
-      const ready = await loadContentStack();
-      if (ready) window.ACADEMIA_YAMILET_CONTENT_CMS?.enhance?.();
-    }, delay);
-  }
-
-  function scheduleStudents(delay = 100){
-    clearTimeout(studentsTimer);
-    studentsTimer = setTimeout(async () => {
-      if (!isStudentsRoute() || !studentsDashboardReady()) return;
-      await loadStudentsRuntime();
-      window.ACADEMIA_YAMILET_STUDENTS_RUNTIME?.load?.();
-    },delay);
-  }
-
-  function scheduleCurrent(delay = 100){
-    if (isContentRoute()) schedule(delay);
-    if (isStudentsRoute()) scheduleStudents(delay);
-  }
-
-  function start() {
-    document.addEventListener('click', event => {
-      if (event.target.closest('[data-admin-v79-go="content"],[data-admin-v79-go-card="content"],[data-content-admin-nav]')) schedule(120);
-      if (event.target.closest('[data-admin-v79-go="students"],[data-admin-v79-go-card="students"],[data-students-admin-nav]')) scheduleStudents(120);
-    }, true);
-    window.addEventListener('hashchange', () => scheduleCurrent(100));
-    window.addEventListener('popstate', () => scheduleCurrent(100));
-    window.addEventListener('pageshow', () => scheduleCurrent(180));
-    const observer = new MutationObserver(() => {
-      if (isContentRoute() && dashboardReady() && !contentLoaded) schedule(80);
-      if (isStudentsRoute() && studentsDashboardReady() && !studentsRuntimeLoaded) scheduleStudents(80);
-    });
-    observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
-    [300,800,1600].forEach(delay => setTimeout(() => scheduleCurrent(0), delay));
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once:true});
-  else start();
-
-  window.ACADEMIA_YAMILET_CONTENT_RUNTIME = {version:VERSION,load:loadContentStack,loadStudents:loadStudentsRuntime};
+  window.ACADEMIA_YAMILET_CONTENT_RUNTIME = Object.freeze({
+    version: VERSION,
+    load: loadContentStack,
+    loadStudents: loadStudentsRuntime,
+    enhance: enhanceContent
+  });
 })();
