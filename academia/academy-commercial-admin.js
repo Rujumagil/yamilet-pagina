@@ -1,15 +1,99 @@
 (() => {
   'use strict';
-  const VERSION='88.0.0';
-  let loading=null,loaded=false,timer=null;
-  const $=(s,r=document)=>r.querySelector(s);
-  function isRoute(){const p=String(location.hash||'').replace(/^#/,'').split('/').filter(Boolean);return p[0]==='admin'&&p[1]==='settings';}
-  function dashboardReady(){const d=$('[data-dashboard]');return !!d&&!d.classList.contains('hidden')&&!!$('[data-shell-page="admin"]');}
-  function cleanLegacy(){if(!isRoute())return;$('[data-commerce-host]')?.remove();}
-  function remount(){if(!isRoute())return;cleanLegacy();[40,180,420,900].forEach(delay=>setTimeout(()=>{window.ACADEMIA_YAMILET_ADMIN?.render?.();setTimeout(()=>window.ACADEMIA_YAMILET_SETTINGS_ADMIN_V88?.render?.(),45);},delay));}
-  function load(){if(loaded){remount();return Promise.resolve(true);}if(loading)return loading;loading=new Promise(resolve=>{const existing=$('script[data-settings-runtime-v88]');if(existing){if(existing.dataset.loaded==='true'){loaded=true;remount();resolve(true);return;}existing.addEventListener('load',()=>{loaded=true;existing.dataset.loaded='true';remount();resolve(true);},{once:true});existing.addEventListener('error',()=>resolve(false),{once:true});return;}const s=document.createElement('script');s.src='./academy-settings-admin-v88.js?v=88';s.async=true;s.dataset.settingsRuntimeV88='true';s.addEventListener('load',()=>{loaded=true;s.dataset.loaded='true';remount();resolve(true);},{once:true});s.addEventListener('error',()=>resolve(false),{once:true});document.body.appendChild(s);}).finally(()=>loading=null);return loading;}
-  function schedule(delay=100){clearTimeout(timer);timer=setTimeout(async()=>{if(!isRoute()||!dashboardReady())return;cleanLegacy();await load();if(loaded&&!$('[data-settings88-root]'))remount();},delay);}
-  function start(){document.addEventListener('click',e=>{if(e.target.closest('[data-admin-v79-go="settings"],a[href="#admin/settings"]'))schedule(120);},true);window.addEventListener('hashchange',()=>schedule(90));window.addEventListener('popstate',()=>schedule(90));window.addEventListener('pageshow',()=>schedule(180));const o=new MutationObserver(()=>{if(isRoute()&&dashboardReady()&&(!loaded||!$('[data-settings88-root]')))schedule(80);});o.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','data-admin-v79-section']});[300,800,1500].forEach(d=>setTimeout(()=>schedule(0),d));}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-  window.ACADEMIA_YAMILET_COMMERCIAL_ADMIN={version:VERSION,render:()=>schedule(0),load};
+
+  const VERSION='123.0.0';
+  const $=(selector,root=document)=>root.querySelector(selector);
+  let loading=null;
+  let loaded=false;
+  let rendering=null;
+
+  function isRoute(){
+    const parts=String(location.hash||'').replace(/^#/,'').split('/').filter(Boolean);
+    return parts[0]==='admin'&&parts[1]==='settings';
+  }
+
+  function adminModule(){
+    const page=$('[data-shell-page="admin"]');
+    if(!page||page.classList.contains('hidden'))return null;
+    return $('[data-admin-v79-module]',page);
+  }
+
+  function settingsReady(){
+    const module=adminModule();
+    return !!module?.querySelector('[data-settings88-root], .settings88-loading');
+  }
+
+  function cleanLegacy(){
+    if(!isRoute())return;
+    $('[data-commerce-host]')?.remove();
+  }
+
+  async function renderCurrent(force=false){
+    if(!isRoute())return false;
+    cleanLegacy();
+    if(!force&&settingsReady())return true;
+    if(rendering&&!force)return rendering;
+    const renderer=window.ACADEMIA_YAMILET_SETTINGS_ADMIN_V88?.render;
+    if(!renderer)return false;
+    const promise=Promise.resolve(renderer(force)).then(value=>value!==false).finally(()=>{
+      if(rendering===promise)rendering=null;
+    });
+    rendering=promise;
+    return promise;
+  }
+
+  function load(){
+    if(!isRoute())return Promise.resolve(false);
+    cleanLegacy();
+    if(loaded&&window.ACADEMIA_YAMILET_SETTINGS_ADMIN_V88){
+      return renderCurrent(false);
+    }
+    if(loading)return loading;
+
+    loading=new Promise(resolve=>{
+      const existing=$('script[data-settings-runtime-v123]')||$('script[data-settings-runtime-v88]');
+      if(existing){
+        if(window.ACADEMIA_YAMILET_SETTINGS_ADMIN_V88){
+          loaded=true;
+          resolve(true);
+          return;
+        }
+        let settled=false;
+        const finish=async ok=>{
+          if(settled)return;
+          settled=true;
+          loaded=!!ok;
+          if(ok&&isRoute())await renderCurrent(false);
+          resolve(!!ok);
+        };
+        existing.addEventListener('load',()=>{existing.dataset.loaded='true';finish(!!window.ACADEMIA_YAMILET_SETTINGS_ADMIN_V88);},{once:true});
+        existing.addEventListener('error',()=>finish(false),{once:true});
+        setTimeout(()=>finish(!!window.ACADEMIA_YAMILET_SETTINGS_ADMIN_V88),1600);
+        return;
+      }
+
+      const script=document.createElement('script');
+      script.src='./academy-settings-admin-v88.js?v=123';
+      script.async=true;
+      script.dataset.settingsRuntimeV123='true';
+      script.addEventListener('load',async()=>{
+        script.dataset.loaded='true';
+        loaded=!!window.ACADEMIA_YAMILET_SETTINGS_ADMIN_V88;
+        if(loaded&&isRoute())await renderCurrent(false);
+        resolve(loaded);
+      },{once:true});
+      script.addEventListener('error',()=>resolve(false),{once:true});
+      document.body.appendChild(script);
+    }).finally(()=>{loading=null;});
+
+    return loading;
+  }
+
+  window.ACADEMIA_YAMILET_COMMERCIAL_ADMIN=Object.freeze({
+    version:VERSION,
+    load,
+    render:()=>renderCurrent(true)
+  });
+
+  if(isRoute())queueMicrotask(()=>load());
 })();
