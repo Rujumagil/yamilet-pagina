@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '118.0.0';
+  const VERSION = '119.0.0';
   const CONTENT_READY_TIMEOUT = 12000;
   const $ = (selector, root = document) => root.querySelector(selector);
 
@@ -209,8 +209,8 @@
 
     studentsRuntimeLoading = (async () => {
       const ready = await loadScript(
-        './academy-students-runtime-v81.js?v=81',
-        'data-students81-bridge',
+        './academy-students-runtime-v81.js?v=119',
+        'data-students119-bridge',
         () => !!window.ACADEMIA_YAMILET_STUDENTS_RUNTIME
       );
       if (!ready) return false;
@@ -218,7 +218,7 @@
       await window.ACADEMIA_YAMILET_STUDENTS_RUNTIME?.load?.();
       return true;
     })().catch(error => {
-      console.error('Academia Yamilet students bridge v118', error);
+      console.error('Academia Yamilet students bridge v119', error);
       return false;
     }).finally(() => {
       studentsRuntimeLoading = null;
