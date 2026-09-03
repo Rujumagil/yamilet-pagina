@@ -35,7 +35,7 @@ jobs:
           test "$count" -gt 0
           echo "Validated $count production JavaScript files."
 
-      - name: Validate current v108 stable architecture
+      - name: Validate current v109 admin architecture
         shell: bash
         run: |
           set -euo pipefail
@@ -62,11 +62,11 @@ jobs:
           for asset in "${required[@]}"; do test -s "$base/$asset" || { echo "Missing $asset" >&2; exit 1; }; done
           test -s "$base/admin/index.html"
           test -s yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png
-          grep -q 'name="academy-build" content="v108-stable"' "$base/index.html"
+          grep -q 'name="academy-build" content="v109-admin-routing"' "$base/index.html"
           grep -q 'manifest.webmanifest?v=108' "$base/index.html"
           grep -q 'academy-hash-router-v70.js?v=108' "$base/index.html"
           grep -q 'academy-dashboard.js?v=108' "$base/index.html"
-          grep -q 'academy-pwa-v57.js?v=108' "$base/index.html"
+          grep -q 'academy-pwa-v57.js?v=109' "$base/index.html"
           grep -q 'CACHE_NAME = `${CACHE_PREFIX}v108`' "$base/sw.js"
           grep -q "library: 'library'" "$base/academy-hash-router-v70.js"
           grep -q "resources: 'library'" "$base/academy-hash-router-v70.js"
@@ -188,7 +188,7 @@ jobs:
           rsync -a --delete "$visual_source" "$visual_public"
           install -D -m 0644 source/yamilet-perez-site-v2-verde-github/assets/logo-yamilet.png public/assets/logo-yamilet.png
 
-      - name: Verify synchronized v108 snapshot
+      - name: Verify synchronized v109 snapshot
         shell: bash
         run: |
           set -euo pipefail
@@ -205,7 +205,7 @@ jobs:
           test -s public/imagenes-academia-yamilet-final/05-academia-hero-desktop.webp
           test -s public/imagenes-academia-yamilet-final/07-academia-hero-mobile.webp
           test -s public/imagenes-academia-yamilet-final/17-academia-fondo-claro.webp
-          grep -q 'name="academy-build" content="v108-stable"' public/academia/index.html
+          grep -q 'name="academy-build" content="v109-admin-routing"' public/academia/index.html
           grep -q 'CACHE_NAME = `${CACHE_PREFIX}v108`' public/academia/sw.js
           grep -q "library: 'library'" public/academia/academy-hash-router-v70.js
           grep -q "calendar: 'calendar'" public/academia/academy-hash-router-v70.js
