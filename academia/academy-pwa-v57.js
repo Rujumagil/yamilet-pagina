@@ -164,3 +164,59 @@
   [600, 1400, 2600, 5000].forEach(delay => window.setTimeout(syncDashboardState, delay));
   window.setInterval(syncDashboardState, 5000);
 })();
+
+(() => {
+  'use strict';
+
+  // Evita que los reintentos de inicialización vuelvan a renderizar el mismo
+  // panel mientras ya está cargando o después de que quedó listo. El botón
+  // "Actualizar" conserva su comportamiento porque usa el render interno.
+  let attempts = 0;
+
+  function panelState() {
+    const page = document.querySelector('[data-shell-page="admin"]');
+    if (!page || page.classList.contains('hidden')) return 'hidden';
+    const root = page.querySelector('[data-admin-v79-root]');
+    if (!root) return 'empty';
+    if (root.querySelector('.admin-v79-loading')) return 'loading';
+    if (root.querySelector('.admin-v79-shell,.admin-v79-denied')) return 'ready';
+    return 'empty';
+  }
+
+  function installStableAdminRender() {
+    const api = window.ACADEMIA_YAMILET_ADMIN;
+    if (!api?.render) {
+      attempts += 1;
+      if (attempts <= 100) window.setTimeout(installStableAdminRender, 50);
+      return;
+    }
+    if (api.__stableRenderWrapped) return;
+
+    const originalRender = api.render.bind(api);
+    let inFlight = null;
+
+    api.render = (...args) => {
+      const state = panelState();
+      if (state === 'hidden') return Promise.resolve(false);
+      if (state === 'loading' || state === 'ready') return Promise.resolve(true);
+      if (inFlight) return inFlight;
+
+      inFlight = Promise.resolve(originalRender(...args))
+        .finally(() => { inFlight = null; });
+      return inFlight;
+    };
+
+    api.__stableRenderWrapped = true;
+    if (window.ACADEMIA_YAMILET_ADMIN_V79 === api) {
+      window.ACADEMIA_YAMILET_ADMIN_V79 = api;
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', installStableAdminRender, { once: true });
+  } else {
+    installStableAdminRender();
+  }
+
+  window.addEventListener('pageshow', installStableAdminRender);
+})();
