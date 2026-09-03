@@ -38,9 +38,8 @@
     const buttons = [...nav.querySelectorAll('.shell-nav-item[data-shell-route]')];
     if (!buttons.length || !buttons.some(button => button.dataset.shellRoute === 'home')) return retry();
 
-    // Conservamos los controles administrativos originales porque otros módulos
-    // todavía los usan como disparadores internos para inicializar contenido,
-    // alumnas y reservas. Se mantienen ocultos, pero no se eliminan del DOM.
+    // Estos controles antiguos siguen siendo disparadores internos de los módulos.
+    // Deben permanecer en el DOM aunque no se muestren en la navegación profesional.
     const legacyAdminControls = [...nav.querySelectorAll('[data-content-admin-nav],[data-students-admin-nav],[data-scroll-bookings]')];
 
     const byRoute = new Map(buttons.map(button => [button.dataset.shellRoute, button]));
@@ -90,8 +89,8 @@
       }, 0);
     }
 
-    // El shell administrativo oculta #reservas con !important. Cuando se abre
-    // "Clase gratuita" forzamos el panel visible después de que actúe el router.
+    // El shell oculta #reservas con !important. Al abrir Clase gratuita dejamos
+    // el panel visible después de que termine el enrutado principal.
     if (event.target.closest('[data-admin-target="bookings"]')) {
       window.setTimeout(() => {
         const panel = document.querySelector('#reservas');
@@ -103,7 +102,7 @@
         panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 0);
     }
-  }, true);
+  });
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', organizeNavigation, { once: true });
   else organizeNavigation();
@@ -194,4 +193,104 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootVideoExclusion, { once: true });
   else bootVideoExclusion();
+})();
+
+(() => {
+  'use strict';
+
+  // Corrección de carrera de inicialización del centro administrativo.
+  // El shell cambia la visibilidad por clase y el router actualiza el hash con
+  // history.pushState; ninguno de esos cambios garantiza por sí solo un
+  // hashchange. Por eso el panel podía quedar vacío hasta recargar el navegador.
+  let pageObserver = null;
+  let attachAttempts = 0;
+  let pendingTimer = null;
+
+  const adminPage = () => document.querySelector('[data-shell-page="admin"]');
+  const isAdminHash = () => /^#admin(?:\/|$)/.test(String(location.hash || ''));
+  const isAdminVisible = () => {
+    const page = adminPage();
+    return !!page && !page.classList.contains('hidden');
+  };
+
+  function requestAdminRender(force = false, delay = 0) {
+    window.clearTimeout(pendingTimer);
+    pendingTimer = window.setTimeout(() => {
+      if (!isAdminVisible()) return;
+      const api = window.ACADEMIA_YAMILET_ADMIN;
+      if (!api?.render) return;
+
+      // Si el shell ya mostró administración pero el router todavía no terminó
+      // de sincronizar el hash, lo normalizamos antes de renderizar.
+      if (!isAdminHash()) {
+        const url = `${location.pathname}${location.search}#admin`;
+        history.replaceState({ academyRoute: 'admin' }, '', url);
+      }
+
+      api.render(force);
+    }, delay);
+  }
+
+  function bindAdminPageObserver() {
+    const page = adminPage();
+    if (!page) {
+      attachAttempts += 1;
+      if (attachAttempts <= 80) window.setTimeout(bindAdminPageObserver, 100);
+      return;
+    }
+
+    if (pageObserver) pageObserver.disconnect();
+    pageObserver = new MutationObserver(mutations => {
+      if (mutations.some(mutation => mutation.type === 'attributes' && mutation.attributeName === 'class')) {
+        if (isAdminVisible()) {
+          requestAdminRender(false, 0);
+          requestAdminRender(false, 90);
+        }
+      }
+    });
+    pageObserver.observe(page, { attributes: true, attributeFilter: ['class'] });
+
+    if (isAdminVisible() || isAdminHash()) {
+      requestAdminRender(false, 40);
+      requestAdminRender(false, 180);
+    }
+  }
+
+  function boot() {
+    bindAdminPageObserver();
+
+    document.addEventListener('click', event => {
+      const enteringAdmin = event.target.closest('[data-shell-route="admin"]');
+      const adminControl = event.target.closest('[data-admin-v79-go],[data-admin-v79-go-card]');
+      if (!enteringAdmin && !adminControl) return;
+
+      // Reintentos cortos cubren render del shell, actualización del hash y carga
+      // de sesión/Supabase sin exigir una recarga manual al usuario.
+      [35, 110, 260, 600].forEach((delay, index) => {
+        window.setTimeout(() => requestAdminRender(index === 3, 0), delay);
+      });
+    }, true);
+
+    window.addEventListener('hashchange', () => {
+      if (isAdminHash()) requestAdminRender(false, 40);
+    });
+    window.addEventListener('popstate', () => {
+      if (isAdminHash()) requestAdminRender(false, 40);
+    });
+    window.addEventListener('pageshow', () => {
+      if (isAdminVisible() || isAdminHash()) {
+        requestAdminRender(false, 80);
+        requestAdminRender(false, 260);
+      }
+    });
+
+    // También cubre el caso de volver a la pestaña después de que el navegador
+    // haya suspendido JavaScript o restaurado la página desde bfcache.
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && (isAdminVisible() || isAdminHash())) requestAdminRender(false, 50);
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  else boot();
 })();
