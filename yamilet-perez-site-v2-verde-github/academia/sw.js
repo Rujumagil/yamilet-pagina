@@ -1,6 +1,6 @@
 const CACHE_PREFIX = 'academia-yamilet-pwa-';
 const CACHE_NAME = `${CACHE_PREFIX}v108`;
-// v108 stabilization: route aliases, current mobile UI, corrected PWA assets and clean cache rotation.
+// v108 cache baseline; v115 registration/admin assets use network-first so new signups are visible without stale scripts.
 const BASE = new URL('./', self.location.href);
 const OFFLINE_URL = new URL('./offline.html', BASE).href;
 
@@ -114,7 +114,7 @@ const PRECACHE = [
   new URL('./academy-certificates-refinement-v76.css?v=76', BASE).href
 ];
 
-const isAdminAsset = url => /(?:admin|students-p16|content-admin-p15|academy-content-cms|academy-content-runtime)/i.test(url.pathname);
+const isAdminAsset = url => /(?:admin|students-p16|content-admin-p15|academy-content-cms|academy-content-runtime|academy-registration|academy-pending-registrations)/i.test(url.pathname);
 
 self.addEventListener('install', event => {
   event.waitUntil(
