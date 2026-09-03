@@ -1,8 +1,11 @@
 (() => {
   'use strict';
-  const VERSION='112.0.0';
-  let loading=null,loaded=false,timer=null;
+
+  const VERSION='121.0.0';
   const $=(s,r=document)=>r.querySelector(s);
+  let loading=null;
+  let loaded=false;
+  let timer=null;
 
   function loadPublicRegistrationAssets(){
     if(!$('link[data-academy-registration-v111]')){
@@ -55,73 +58,114 @@
     }
   }
 
-  function isRoute(){const p=String(location.hash||'').replace(/^#/,'').split('/').filter(Boolean);return p[0]==='admin'&&p[1]==='operations';}
-  function dashboardReady(){const d=$('[data-dashboard]');return !!d&&!d.classList.contains('hidden')&&!!$('[data-shell-page="admin"]');}
-  function cleanLegacy(){if(!isRoute())return;$('[data-commerce-host]')?.remove();$('[data-academy-ops]')?.remove();}
-  function remount(){if(!isRoute())return;cleanLegacy();[40,180,420,900].forEach(delay=>setTimeout(()=>{window.ACADEMIA_YAMILET_ADMIN?.render?.();cleanLegacy();setTimeout(()=>window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render?.(),35);},delay));}
-  function loadAdmin(){
-    if(loaded){remount();return Promise.resolve(true);}if(loading)return loading;
-    loading=new Promise(resolve=>{const existing=$('script[data-operations-runtime-v87]');if(existing){if(existing.dataset.loaded==='true'){loaded=true;remount();resolve(true);return;}existing.addEventListener('load',()=>{loaded=true;existing.dataset.loaded='true';remount();resolve(true);},{once:true});existing.addEventListener('error',()=>resolve(false),{once:true});return;}
-      const s=document.createElement('script');s.src='./academy-operations-admin-v87.js?v=87';s.async=true;s.dataset.operationsRuntimeV87='true';s.addEventListener('load',()=>{loaded=true;s.dataset.loaded='true';remount();resolve(true);},{once:true});s.addEventListener('error',()=>resolve(false),{once:true});document.body.appendChild(s);
-    }).finally(()=>loading=null);return loading;
+  function isRoute(){
+    const p=String(location.hash||'').replace(/^#/,'').split('/').filter(Boolean);
+    return p[0]==='admin'&&p[1]==='operations';
   }
-  function schedule(delay=100){clearTimeout(timer);timer=setTimeout(async()=>{if(!isRoute()||!dashboardReady())return;cleanLegacy();await loadAdmin();if(loaded&&!$('[data-ops87-root]'))remount();},delay);}
+
+  function cleanLegacy(){
+    if(!isRoute())return;
+    $('[data-commerce-host]')?.remove();
+    $('[data-academy-ops]')?.remove();
+  }
+
+  function loadAdmin(){
+    if(!isRoute())return Promise.resolve(false);
+    cleanLegacy();
+    if(loaded){
+      window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render?.();
+      return Promise.resolve(true);
+    }
+    if(loading)return loading;
+
+    loading=new Promise(resolve=>{
+      const existing=$('script[data-operations-runtime-v87]');
+      if(existing){
+        if(existing.dataset.loaded==='true'||window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87){
+          loaded=true;
+          window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render?.();
+          resolve(true);
+          return;
+        }
+        existing.addEventListener('load',()=>{
+          loaded=true;
+          existing.dataset.loaded='true';
+          if(isRoute())window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render?.();
+          resolve(true);
+        },{once:true});
+        existing.addEventListener('error',()=>resolve(false),{once:true});
+        return;
+      }
+
+      const script=document.createElement('script');
+      script.src='./academy-operations-admin-v87.js?v=87';
+      script.async=true;
+      script.dataset.operationsRuntimeV87='true';
+      script.addEventListener('load',()=>{
+        loaded=true;
+        script.dataset.loaded='true';
+        if(isRoute())window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render?.();
+        resolve(true);
+      },{once:true});
+      script.addEventListener('error',()=>resolve(false),{once:true});
+      document.body.appendChild(script);
+    }).finally(()=>{loading=null;});
+
+    return loading;
+  }
+
+  function schedule(delay=0){
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      if(isRoute())loadAdmin();
+    },Math.max(0,delay));
+  }
+
   function start(){
     loadPublicRegistrationAssets();
     loadPendingRegistrationAdminAssets();
     loadStudentDeletionAssets();
-    document.addEventListener('click',e=>{if(e.target.closest('[data-admin-v79-go="operations"],a[href="#admin/operations"]'))schedule(120);},true);
-    window.addEventListener('hashchange',()=>schedule(90));
-    window.addEventListener('popstate',()=>schedule(90));
-    window.addEventListener('pageshow',()=>schedule(180));
-    const o=new MutationObserver(()=>{if(!isRoute()||!dashboardReady())return;cleanLegacy();if(!loaded||!$('[data-ops87-root]'))schedule(80);});
-    o.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','data-admin-v79-section']});
-    [300,800,1500].forEach(d=>setTimeout(()=>schedule(0),d));
+    window.addEventListener('hashchange',()=>schedule(0));
+    window.addEventListener('pageshow',()=>schedule(80));
+    if(isRoute())schedule(0);
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
+  else start();
+
   window.ACADEMIA_YAMILET_ADMIN_OPERATIONS={version:VERSION,render:()=>schedule(0),load:loadAdmin};
 })();
 
 (() => {
   'use strict';
 
-  const VERSION = '113.0.0';
-  const $ = (selector, root = document) => root.querySelector(selector);
-  let repairTimer = null;
-  let observer = null;
+  const VERSION='121.0.0';
+  const $=(selector,root=document)=>root.querySelector(selector);
+  let timer=null;
+  let frame=null;
+  let assessmentRuntimeLoading=null;
 
-  function routeSection() {
-    const parts = String(location.hash || '').replace(/^#/, '').split('/').filter(Boolean);
-    if (parts[0] !== 'admin') return null;
-    return parts[1] || 'overview';
+  function routeSection(){
+    const parts=String(location.hash||'').replace(/^#/,'').split('/').filter(Boolean);
+    if(parts[0]!=='admin')return null;
+    return parts[1]||'overview';
   }
 
-  function adminPage() {
-    return $('[data-shell-page="admin"]');
-  }
+  function adminPage(){return $('[data-shell-page="admin"]');}
+  function adminModule(){const page=adminPage();return page?$('[data-admin-v79-module]',page):null;}
+  function dashboardMain(){return $('.dashboard-main');}
 
-  function adminModule() {
-    const page = adminPage();
-    return page ? $('[data-admin-v79-module]', page) : null;
-  }
-
-  function dashboardMain() {
-    return $('.dashboard-main');
-  }
-
-  function parkNativePanels(activeSection = routeSection()) {
-    const main = dashboardMain();
-    const root = $('[data-admin-v79-root]');
-    if (!main || !root) return;
-
+  function parkNativePanels(activeSection=routeSection()){
+    const main=dashboardMain();
+    const root=$('[data-admin-v79-root]');
+    if(!main||!root)return;
     [
-      ['content', '[data-content-admin]'],
-      ['students', '[data-students-admin]']
-    ].forEach(([section, selector]) => {
-      const panel = $(selector);
-      if (!panel) return;
-      if (section === activeSection) return;
-      if (root.contains(panel)) {
+      ['content','[data-content-admin]'],
+      ['students','[data-students-admin]']
+    ].forEach(([section,selector])=>{
+      const panel=$(selector);
+      if(!panel||section===activeSection)return;
+      if(root.contains(panel)){
         panel.classList.add('hidden');
         panel.classList.remove('admin-v79-native-panel');
         main.appendChild(panel);
@@ -129,14 +173,13 @@
     });
   }
 
-  function mountNative(section, selector) {
-    if (routeSection() !== section) return false;
-    const module = adminModule();
-    const panel = $(selector);
-    if (!module || !panel) return false;
-
-    if (panel.parentElement !== module) {
-      module.innerHTML = '';
+  function mountNative(section,selector){
+    if(routeSection()!==section)return false;
+    const module=adminModule();
+    const panel=$(selector);
+    if(!module||!panel)return false;
+    if(panel.parentElement!==module){
+      module.innerHTML='';
       module.appendChild(panel);
     }
     panel.classList.remove('hidden');
@@ -145,155 +188,118 @@
     return true;
   }
 
-  function moveAssessmentHost() {
-    if (routeSection() !== 'evaluations') return false;
-    const page = adminPage();
-    const module = adminModule();
-    if (!page || !module) return false;
-    const host = $('[data-assessment-admin-host]', page);
-    if (!host) return false;
-
-    if (host.parentElement !== module) {
-      module.innerHTML = '';
-      module.appendChild(host);
-    }
-    host.style.setProperty('display', 'block', 'important');
-    return true;
-  }
-
-  function ensureScript(src, attr, globalCheck) {
-    if (globalCheck?.()) return Promise.resolve(true);
-    const existing = $(`script[${attr}]`);
-    if (existing) {
-      if (globalCheck?.()) return Promise.resolve(true);
-      return new Promise(resolve => {
-        const done = () => resolve(!!globalCheck?.());
-        existing.addEventListener('load', done, { once: true });
-        existing.addEventListener('error', () => resolve(false), { once: true });
-        setTimeout(done, 1200);
+  function loadScript(src,attr){
+    const existing=$(`script[${attr}]`);
+    if(existing){
+      if(existing.dataset.loaded==='true')return Promise.resolve(true);
+      return new Promise(resolve=>{
+        existing.addEventListener('load',()=>{existing.dataset.loaded='true';resolve(true);},{once:true});
+        existing.addEventListener('error',()=>resolve(false),{once:true});
       });
     }
-    return new Promise(resolve => {
-      const script = document.createElement('script');
-      script.src = src;
-      script.async = true;
-      script.setAttribute(attr, 'true');
-      script.addEventListener('load', () => resolve(!!globalCheck?.()), { once: true });
-      script.addEventListener('error', () => resolve(false), { once: true });
+    return new Promise(resolve=>{
+      const script=document.createElement('script');
+      script.src=src;
+      script.async=true;
+      script.setAttribute(attr,'true');
+      script.addEventListener('load',()=>{script.dataset.loaded='true';resolve(true);},{once:true});
+      script.addEventListener('error',()=>resolve(false),{once:true});
       document.body.appendChild(script);
     });
   }
 
-  async function repairEvaluations() {
-    if (routeSection() !== 'evaluations') return;
-
-    await ensureScript(
-      './academy-assessment-admin.js?v=113',
-      'data-assessment-admin-hotfix-v113',
-      () => !!window.ACADEMIA_YAMILET_ASSESSMENT_ADMIN
-    );
-
-    if (routeSection() !== 'evaluations') return;
-    const renderPromise = window.ACADEMIA_YAMILET_ASSESSMENT_ADMIN?.render?.();
-    moveAssessmentHost();
-    Promise.resolve(renderPromise).finally(() => moveAssessmentHost());
-    [50, 140, 320, 700, 1400].forEach(delay => setTimeout(moveAssessmentHost, delay));
+  async function ensureAssessmentRuntime(){
+    if(window.ACADEMIA_YAMILET_ASSESSMENT_RUNTIME?.version==='120.0.0')return true;
+    if(assessmentRuntimeLoading)return assessmentRuntimeLoading;
+    assessmentRuntimeLoading=loadScript(
+      './academy-assessment-runtime-v82.js?v=120',
+      'data-assessment-runtime-bridge-v120'
+    ).then(()=>window.ACADEMIA_YAMILET_ASSESSMENT_RUNTIME?.version==='120.0.0')
+      .finally(()=>{assessmentRuntimeLoading=null;});
+    return assessmentRuntimeLoading;
   }
 
-  async function repairCurrent() {
-    const section = routeSection();
-    if (!section) return;
-
+  async function repairCurrent(){
+    const section=routeSection();
+    if(!section)return false;
     parkNativePanels(section);
 
-    if (section === 'content') {
-      window.ACADEMIA_YAMILET_CONTENT_RUNTIME?.load?.();
-      mountNative('content', '[data-content-admin]');
-      [80, 220, 520, 1000].forEach(delay => setTimeout(() => {
-        mountNative('content', '[data-content-admin]');
-        window.ACADEMIA_YAMILET_CONTENT_CMS?.enhance?.();
-      }, delay));
-      return;
+    if(section==='content'){
+      await window.ACADEMIA_YAMILET_CONTENT_RUNTIME?.load?.();
+      mountNative('content','[data-content-admin]');
+      window.ACADEMIA_YAMILET_CONTENT_CMS?.enhance?.();
+      return true;
     }
 
-    if (section === 'students') {
-      window.ACADEMIA_YAMILET_CONTENT_RUNTIME?.loadStudents?.();
-      mountNative('students', '[data-students-admin]');
-      [80, 220, 520, 1000].forEach(delay => setTimeout(() => {
-        mountNative('students', '[data-students-admin]');
-        window.ACADEMIA_YAMILET_STUDENTS_RUNTIME?.load?.();
-      }, delay));
-      return;
+    if(section==='students'){
+      await window.ACADEMIA_YAMILET_CONTENT_RUNTIME?.loadStudents?.();
+      mountNative('students','[data-students-admin]');
+      window.ACADEMIA_YAMILET_PENDING_REGISTRATIONS_V111?.render?.();
+      return true;
     }
 
-    if (section === 'evaluations') {
-      repairEvaluations();
-      return;
+    if(section==='evaluations'){
+      const ready=await ensureAssessmentRuntime();
+      if(!ready||routeSection()!=='evaluations')return false;
+      await window.ACADEMIA_YAMILET_ASSESSMENT_RUNTIME?.load?.();
+      window.ACADEMIA_YAMILET_ASSESSMENT_RUNTIME?.mount?.();
+      return true;
     }
 
-    if (section === 'agenda') {
-      window.ACADEMIA_YAMILET_EVENT_ADMIN?.load?.();
-      [120, 360, 800].forEach(delay => setTimeout(() => window.ACADEMIA_YAMILET_AGENDA_ADMIN_V85?.render?.(), delay));
-      return;
+    if(section==='agenda'){
+      await window.ACADEMIA_YAMILET_EVENT_ADMIN?.load?.();
+      return true;
     }
 
-    if (section === 'certificates') {
-      window.ACADEMIA_YAMILET_CERTIFICATE_RUNTIME_V84?.load?.();
-      [120, 360, 800].forEach(delay => setTimeout(() => window.ACADEMIA_YAMILET_CERTIFICATE_ADMIN_V84?.render?.(), delay));
-      return;
+    if(section==='certificates'){
+      await window.ACADEMIA_YAMILET_CERTIFICATE_RUNTIME_V84?.load?.();
+      return true;
     }
 
-    if (section === 'support') {
-      window.ACADEMIA_YAMILET_EVENT_ADMIN?.load?.();
-      [120, 360, 800].forEach(delay => setTimeout(() => window.ACADEMIA_YAMILET_SUPPORT_ADMIN_V86?.render?.(), delay));
-      return;
+    if(section==='support'){
+      await window.ACADEMIA_YAMILET_EVENT_ADMIN?.load?.();
+      return true;
     }
 
-    if (section === 'operations') {
-      window.ACADEMIA_YAMILET_ADMIN_OPERATIONS?.load?.();
-      [120, 360, 800].forEach(delay => setTimeout(() => window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render?.(), delay));
-      return;
+    if(section==='operations'){
+      await window.ACADEMIA_YAMILET_ADMIN_OPERATIONS?.load?.();
+      return true;
     }
 
-    if (section === 'settings') {
-      window.ACADEMIA_YAMILET_COMMERCIAL_ADMIN?.load?.();
-      [120, 360, 800].forEach(delay => setTimeout(() => window.ACADEMIA_YAMILET_SETTINGS_ADMIN_V88?.render?.(), delay));
+    if(section==='settings'){
+      await window.ACADEMIA_YAMILET_COMMERCIAL_ADMIN?.load?.();
+      return true;
     }
+
+    return true;
   }
 
-  function scheduleRepair(delay = 60) {
-    clearTimeout(repairTimer);
-    repairTimer = setTimeout(repairCurrent, delay);
+  function scheduleRepair(delay=0){
+    clearTimeout(timer);
+    if(frame)cancelAnimationFrame(frame);
+    timer=setTimeout(()=>{
+      frame=requestAnimationFrame(()=>{
+        frame=null;
+        repairCurrent().catch(error=>console.warn('Academia Yamilet admin bridge v121',error));
+      });
+    },Math.max(0,delay));
   }
 
-  function boot() {
-    document.addEventListener('click', event => {
-      const nav = event.target.closest('[data-admin-v79-go],[data-admin-v79-go-card]');
-      if (!nav) return;
-      const next = nav.dataset.adminV79Go || nav.dataset.adminV79GoCard || null;
+  function boot(){
+    document.addEventListener('click',event=>{
+      const nav=event.target.closest('[data-admin-v79-go],[data-admin-v79-go-card]');
+      if(!nav)return;
+      const next=nav.dataset.adminV79Go||nav.dataset.adminV79GoCard||null;
       parkNativePanels(next);
-      [40, 140, 340, 760].forEach(delay => setTimeout(() => scheduleRepair(0), delay));
-    }, true);
+    },true);
 
-    window.addEventListener('hashchange', () => {
-      parkNativePanels(routeSection());
-      [30, 120, 320, 700].forEach(delay => setTimeout(() => scheduleRepair(0), delay));
-    });
-    window.addEventListener('popstate', () => scheduleRepair(50));
-    window.addEventListener('pageshow', () => scheduleRepair(100));
-
-    observer = new MutationObserver(() => {
-      const section = routeSection();
-      if (!section) return;
-      if (section === 'evaluations') moveAssessmentHost();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    [250, 700, 1500].forEach(delay => setTimeout(() => scheduleRepair(0), delay));
+    window.addEventListener('hashchange',()=>scheduleRepair(0));
+    window.addEventListener('pageshow',()=>scheduleRepair(80));
+    if(routeSection())scheduleRepair(0);
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
   else boot();
 
-  window.ACADEMIA_YAMILET_ADMIN_MOUNT_FIX = { version: VERSION, repair: repairCurrent };
+  window.ACADEMIA_YAMILET_ADMIN_MOUNT_FIX={version:VERSION,repair:repairCurrent};
 })();
