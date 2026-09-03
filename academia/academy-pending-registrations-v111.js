@@ -1,14 +1,17 @@
 (() => {
   'use strict';
 
-  const VERSION='115.0.0';
+  const VERSION='116.0.0';
   const CONFIG_ENDPOINT='https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
   const $=(s,r=document)=>r.querySelector(s);
   const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
   const esc=(v='')=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   let sb=null,workspace=null,courses=[],pending=[],loading=false,timer=null;
 
-  const isRoute=()=>{const p=String(location.hash||'').replace(/^#/,'').split('/').filter(Boolean);return p[0]==='admin'&&p[1]==='students';};
+  const routeSection=()=>{const p=String(location.hash||'').replace(/^#/,'').split('/').filter(Boolean);if(p[0]!=='admin')return null;return p[1]||'overview';};
+  const isRoute=()=>routeSection()==='students';
+  const isOverview=()=>routeSection()==='overview';
+  const isSupportedRoute=()=>isRoute()||isOverview();
   const fmt=value=>{if(!value)return 'Sin fecha';try{return new Intl.DateTimeFormat('es-MX',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(value));}catch{return 'Sin fecha';}};
   const defaultCourseId=()=>courses.find(c=>/método\s+mes|metodo\s+mes/i.test(c.title||''))?.id||courses.find(c=>c.status==='published')?.id||courses[0]?.id||'';
   const courseOptions=(selected='')=>courses.map(c=>`<option value="${esc(c.id)}" ${c.id===selected?'selected':''}>${esc(c.title)}${c.status==='draft'?' · borrador':''}</option>`).join('');
@@ -56,6 +59,41 @@
     return '<span class="waiting">Cuenta creada · correo por confirmar</span>';
   }
 
+  function renderOverview(){
+    if(!isOverview())return false;
+    const root=$('[data-admin-v79-root]');
+    if(!root)return false;
+    const summary=$('.admin-v79-summary',root);
+    if(!summary)return false;
+
+    const studentCard=$$('article',summary).find(card=>String(card.querySelector('span')?.textContent||'').trim()==='Estudiantes');
+    if(studentCard){
+      const small=$('small',studentCard);
+      if(small)small.innerHTML=`con acceso activo · <b>${pending.length}</b> registro${pending.length===1?'':'s'} pendiente${pending.length===1?'':'s'}`;
+      studentCard.dataset.pendingOverview='true';
+      studentCard.style.cursor='pointer';
+      studentCard.title=pending.length?'Abrir registros pendientes':'Abrir estudiantes';
+      studentCard.onclick=()=>{location.hash='#admin/students';};
+    }
+
+    let banner=$('[data-pending-overview-banner]',root);
+    if(!pending.length){banner?.remove();return true;}
+
+    if(!banner){
+      banner=document.createElement('section');
+      banner.className='admin-v79-section-head';
+      banner.dataset.pendingOverviewBanner='true';
+      const live=$('.admin-v79-live-grid',root);
+      if(live)live.insertAdjacentElement('beforebegin',banner);else root.appendChild(banner);
+    }
+
+    const latest=pending[0]||{};
+    const confirmed=pending.filter(item=>!!item.email_confirmed_at).length;
+    banner.innerHTML=`<div><span>NUEVOS REGISTROS</span><h2>${pending.length} registro${pending.length===1?'':'s'} pendiente${pending.length===1?'':'s'} de activar</h2><p>${esc(latest.full_name||latest.email||'Nueva alumna')} · ${esc(latest.email||'')} · ${confirmed} correo${confirmed===1?'':'s'} confirmado${confirmed===1?'':'s'}</p></div><button type="button" data-pending-overview-open>Revisar registros</button>`;
+    $('[data-pending-overview-open]',banner)?.addEventListener('click',()=>{location.hash='#admin/students';});
+    return true;
+  }
+
   function render(){
     if(!isRoute())return;const panel=panelHost();if(!panel)return;
     const confirmed=pending.filter(x=>!!x.email_confirmed_at).length,accounts=pending.filter(x=>!!x.account_created).length,defaultId=defaultCourseId();
@@ -75,17 +113,35 @@
     if(button.disabled)return;const card=button.closest('[data-pending-user]'),userId=button.dataset.pending111Activate,courseId=$('[data-pending111-course]',card)?.value||defaultCourseId(),status=$('[data-pending111-status]',card);
     if(!userId||!courseId||!status)return;button.disabled=true;status.className='';status.textContent='Activando acceso…';
     try{const api=await client();const {error}=await api.from('enrollments').insert({user_id:userId,course_id:courseId,status:'active'});if(error)throw error;status.className='ok';status.textContent='Curso activado correctamente.';await window.ACADEMIA_YAMILET_STUDENTS?.refresh?.();await refresh(false);}
-    catch(error){console.warn('Academia Yamilet pending registration activation v115',error);status.className='error';status.textContent=String(error?.message||'').toLowerCase().includes('duplicate')?'Esta persona ya tiene ese curso asignado.':'No fue posible activar el curso.';button.disabled=false;}
+    catch(error){console.warn('Academia Yamilet pending registration activation v116',error);status.className='error';status.textContent=String(error?.message||'').toLowerCase().includes('duplicate')?'Esta persona ya tiene ese curso asignado.':'No fue posible activar el curso.';button.disabled=false;}
   }
 
   async function refresh(showLoading=false){
-    if(!isRoute()||loading)return;loading=true;const panel=panelHost();if(showLoading&&panel)panel.classList.add('is-loading');
-    try{await loadData();render();}catch(error){console.warn('Academia Yamilet pending registrations v115',error);const host=panelHost();if(host)host.innerHTML='<div class="pending110-error"><strong>No fue posible cargar los nuevos registros.</strong><span>Verifica que tu sesión administrativa siga activa.</span></div>';}
-    finally{loading=false;panelHost()?.classList.remove('is-loading');}
+    if(!isSupportedRoute()||loading)return;loading=true;const panel=isRoute()?panelHost():null;if(showLoading&&panel)panel.classList.add('is-loading');
+    try{await loadData();if(isRoute())render();else if(isOverview())renderOverview();}
+    catch(error){console.warn('Academia Yamilet pending registrations v116',error);if(isRoute()){const host=panelHost();if(host)host.innerHTML='<div class="pending110-error"><strong>No fue posible cargar los nuevos registros.</strong><span>Verifica que tu sesión administrativa siga activa.</span></div>';}}
+    finally{loading=false;if(isRoute())panelHost()?.classList.remove('is-loading');}
   }
 
-  function schedule(delay=120){clearTimeout(timer);timer=setTimeout(()=>{if(isRoute()&&!$('[data-pending111]'))refresh(false);},delay);}
-  function start(){const observer=new MutationObserver(()=>schedule(80));observer.observe(document.body,{childList:true,subtree:true});window.addEventListener('hashchange',()=>{if(isRoute())refresh(false);});window.addEventListener('pageshow',()=>{if(isRoute())refresh(false);});document.addEventListener('click',event=>{if(event.target.closest('[data-admin-v79-go="students"],a[href="#admin/students"]'))setTimeout(()=>refresh(false),180);},true);if(isRoute())refresh(false);}
+  function schedule(delay=120){
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      if(isRoute()&&!$('[data-pending111]'))refresh(false);
+      else if(isOverview()&&!$('[data-admin-v79-root] [data-pending-overview="true"]'))refresh(false);
+    },delay);
+  }
+
+  function start(){
+    const observer=new MutationObserver(()=>schedule(80));
+    observer.observe(document.body,{childList:true,subtree:true});
+    window.addEventListener('hashchange',()=>{if(isSupportedRoute())setTimeout(()=>refresh(false),120);});
+    window.addEventListener('pageshow',()=>{if(isSupportedRoute())setTimeout(()=>refresh(false),180);});
+    document.addEventListener('click',event=>{
+      if(event.target.closest('[data-admin-v79-go="students"],a[href="#admin/students"]'))setTimeout(()=>refresh(false),180);
+      if(event.target.closest('[data-admin-v79-go="overview"],a[href="#admin"]'))setTimeout(()=>refresh(false),180);
+    },true);
+    if(isSupportedRoute())setTimeout(()=>refresh(false),160);
+  }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
   window.ACADEMIA_YAMILET_PENDING_REGISTRATIONS_V111=Object.freeze({version:VERSION,refresh});
 })();
