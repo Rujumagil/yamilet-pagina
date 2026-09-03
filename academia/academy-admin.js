@@ -1,11 +1,11 @@
 (() => {
   'use strict';
 
-  const VERSION = '89.0.0';
+  const VERSION = '90.0.0';
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-  const esc = (value = '') => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const esc = (value = '') => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[char]));
   const SECTIONS = new Set(['overview','courses','content','students','agenda','evaluations','certificates','support','operations','settings']);
   const DYNAMIC_SECTIONS = new Set(['agenda','evaluations','certificates','support','operations','settings']);
   const LABELS = {
@@ -72,7 +72,7 @@
   async function safe(query) {
     const result = await query;
     if (result.error) {
-      console.warn('Academia Yamilet admin v89 query', result.error);
+      console.warn('Academia Yamilet admin v90 query', result.error);
       return [];
     }
     return result.data || [];
@@ -157,6 +157,7 @@
   function shell(section, body, options = {}) {
     const root = ensureRoot();
     if (!root) return null;
+    root.dataset.adminV79RenderedSection = section;
     root.innerHTML = `<div class="admin-v79-shell">
       <header class="admin-v79-top"><div><span>CENTRO ADMINISTRATIVO</span><h1>${esc(options.title || LABELS[section])}</h1><p>${esc(options.copy || 'Gestiona Academia Yamilet desde un espacio separado de la experiencia de aprendizaje.')}</p></div><div class="admin-v79-top-actions"><button type="button" data-admin-v79-refresh>Actualizar</button><a href="#home">Salir de administración</a></div></header>
       ${nav(section)}
@@ -215,29 +216,75 @@
     shell(section,'<div class="admin-v79-loading"><span></span><strong>Preparando módulo administrativo…</strong><small>Cargando la herramienta de esta sección.</small></div>',{title:LABELS[section],copy:'Esta herramienta se carga únicamente cuando entras a su subruta.'});
   }
 
+  function kickNativeRuntime(section) {
+    if (section === 'content') {
+      window.ACADEMIA_YAMILET_CONTENT_RUNTIME?.load?.();
+      [80,240,600,1200].forEach(delay=>setTimeout(()=>window.ACADEMIA_YAMILET_CONTENT_CMS?.enhance?.(),delay));
+    }
+    if (section === 'students') {
+      window.ACADEMIA_YAMILET_CONTENT_RUNTIME?.loadStudents?.();
+      [100,300,700,1300].forEach(delay=>setTimeout(()=>window.ACADEMIA_YAMILET_STUDENTS_RUNTIME?.load?.(),delay));
+    }
+  }
+
   function mountNative(section, selector, triggerSelector) {
     const mount = shell(section,'<div class="admin-v79-loading"><span></span><strong>Abriendo herramienta…</strong><small>Conectando el editor con esta ruta administrativa.</small></div>',{
       title:LABELS[section],
       copy:section==='content'?'Gestiona cursos, módulos, lecciones, recursos y videos.':'Gestiona cuentas, inscripciones y acceso académico.'
     });
+
     const attach = () => {
       const target = $(selector);
       if (!target || !mount) return false;
       target.classList.remove('hidden');
-      mount.innerHTML = '';
-      mount.appendChild(target);
       target.classList.add('admin-v79-native-panel');
+      mount.innerHTML = '';
+      mount.style.display = 'none';
       return true;
     };
+
     $(triggerSelector)?.click();
-    [60,180,420,900,1600].forEach(delay=>setTimeout(attach,delay));
+    kickNativeRuntime(section);
+    [40,120,260,520,900,1600].forEach(delay=>setTimeout(attach,delay));
   }
 
   function hideNativeOutside(section) {
-    if (!['content','students'].includes(section)) {
-      $('[data-content-admin]')?.classList.add('hidden');
-      $('[data-students-admin]')?.classList.add('hidden');
+    if (section !== 'content') $('[data-content-admin]')?.classList.add('hidden');
+    if (section !== 'students') $('[data-students-admin]')?.classList.add('hidden');
+  }
+
+  function kickDynamic(section) {
+    if (section === 'agenda' || section === 'support') {
+      window.ACADEMIA_YAMILET_EVENT_ADMIN?.load?.();
+      return;
     }
+    if (section === 'evaluations') {
+      window.ACADEMIA_YAMILET_ASSESSMENT_RUNTIME?.load?.();
+      return;
+    }
+    if (section === 'certificates') {
+      window.ACADEMIA_YAMILET_CERTIFICATE_RUNTIME_V84?.load?.();
+      return;
+    }
+    if (section === 'operations') {
+      window.ACADEMIA_YAMILET_ADMIN_OPERATIONS?.load?.();
+      return;
+    }
+    if (section === 'settings') {
+      window.ACADEMIA_YAMILET_COMMERCIAL_ADMIN?.load?.();
+    }
+  }
+
+  function alreadyPrepared(section) {
+    const root = ensureRoot();
+    if (!root) return false;
+    if (root.dataset.adminV79RenderedSection !== section) return false;
+    if (!$('[data-admin-v79-module]',root)) return false;
+
+    if (section === 'content') return !!$('[data-content-admin]:not(.hidden)');
+    if (section === 'students') return !!$('[data-students-admin]:not(.hidden)');
+    if (DYNAMIC_SECTIONS.has(section)) return true;
+    return false;
   }
 
   async function render(force = false) {
@@ -260,9 +307,21 @@
       updateChrome(section);
       hideNativeOutside(section);
 
-      if (section==='content') { mountNative('content','[data-content-admin]','[data-content-admin-nav]'); return true; }
-      if (section==='students') { mountNative('students','[data-students-admin]','[data-students-admin-nav]'); return true; }
-      if (DYNAMIC_SECTIONS.has(section)) { loading(section); return true; }
+      if (!force && alreadyPrepared(section)) return true;
+
+      if (section==='content') {
+        mountNative('content','[data-content-admin]','[data-content-admin-nav]');
+        return true;
+      }
+      if (section==='students') {
+        mountNative('students','[data-students-admin]','[data-students-admin-nav]');
+        return true;
+      }
+      if (DYNAMIC_SECTIONS.has(section)) {
+        loading(section);
+        kickDynamic(section);
+        return true;
+      }
 
       loading(section);
       const data = await loadData(force);
@@ -271,7 +330,7 @@
       else overview(data);
       return true;
     } catch (error) {
-      console.error('Academia Yamilet admin v89',error);
+      console.error('Academia Yamilet admin v90',error);
       const root = ensureRoot();
       if (!root) return false;
       root.innerHTML = error?.message==='forbidden'
@@ -308,6 +367,6 @@
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
   else start();
 
-  window.ACADEMIA_YAMILET_ADMIN = {version:VERSION,render:()=>render(true),go};
+  window.ACADEMIA_YAMILET_ADMIN = {version:VERSION,render:()=>render(false),refresh:()=>render(true),go};
   window.ACADEMIA_YAMILET_ADMIN_V79 = window.ACADEMIA_YAMILET_ADMIN;
 })();
