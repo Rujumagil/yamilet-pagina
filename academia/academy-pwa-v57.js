@@ -1,6 +1,7 @@
 (() => {
   'use strict';
 
+  const BUILD = '124';
   let deferredInstallPrompt = null;
   let toastTimer = null;
   const $ = (selector, root = document) => root.querySelector(selector);
@@ -14,6 +15,14 @@
     calendar:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h2M14 14h2"/></svg>',
     more:'<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>'
   };
+
+  function syncBuildMarkers() {
+    const deployment = $('meta[name="deployment"]');
+    const build = $('meta[name="academy-build"]');
+    if (deployment) deployment.content = `academia-yamilet-stable-v${BUILD}`;
+    if (build) build.content = `v${BUILD}-unified-runtime`;
+    document.documentElement.dataset.academyBuild = BUILD;
+  }
 
   function shellButton(route) {
     return $(`.sidebar [data-shell-route="${route}"]`);
@@ -99,7 +108,9 @@
       const choice = await deferredInstallPrompt.userChoice.catch(() => null);
       deferredInstallPrompt = null;
       if (helper) {
-        helper.textContent = choice?.outcome === 'accepted' ? 'La instalación comenzó. Cuando termine, abre Academia Yamilet desde tu pantalla de inicio.' : 'Puedes instalarla más adelante desde este mismo menú.';
+        helper.textContent = choice?.outcome === 'accepted'
+          ? 'La instalación comenzó. Cuando termine, abre Academia Yamilet desde tu pantalla de inicio.'
+          : 'Puedes instalarla más adelante desde este mismo menú.';
         helper.classList.add('visible');
       }
       syncMoreOptions();
@@ -119,6 +130,14 @@
     syncMoreOptions();
   }
 
+  function observeDashboardState() {
+    const dashboard = $('[data-dashboard]');
+    if (!dashboard || dashboard.dataset.pwaObserved === 'true') return;
+    dashboard.dataset.pwaObserved = 'true';
+    const observer = new MutationObserver(syncDashboardState);
+    observer.observe(dashboard, { attributes:true, attributeFilter:['class'] });
+  }
+
   function showConnectivity(message, offline = false) {
     const toast = $('[data-pwa-connectivity]');
     if (!toast) return;
@@ -131,7 +150,8 @@
 
   function registerServiceWorker() {
     if (!('serviceWorker' in navigator) || !['https:', 'http:'].includes(location.protocol)) return;
-    navigator.serviceWorker.register('./sw.js', { scope:'./', updateViaCache:'none' })
+    const swUrl = `./sw.js?build=${encodeURIComponent(BUILD)}`;
+    navigator.serviceWorker.register(swUrl, { scope:'./', updateViaCache:'none' })
       .then(registration => registration.update().catch(() => null))
       .catch(error => console.warn('Academia Yamilet PWA', error));
   }
@@ -149,7 +169,14 @@
   });
   window.addEventListener('online', () => showConnectivity('Conexión restablecida.'));
   window.addEventListener('offline', () => showConnectivity('Sin conexión. Los datos privados requieren internet.', true));
-  window.addEventListener('pageshow', syncDashboardState);
+  window.addEventListener('pageshow', () => {
+    observeDashboardState();
+    syncDashboardState();
+  });
+  window.addEventListener('hashchange', syncDashboardState);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) syncDashboardState();
+  });
   document.addEventListener('click', event => {
     const button = event.target.closest('.sidebar [data-shell-route]');
     if (button) setActive(button.dataset.shellRoute);
@@ -158,9 +185,11 @@
     if (event.key === 'Escape') closeMore();
   });
 
+  syncBuildMarkers();
   buildMobileNavigation();
+  observeDashboardState();
   registerServiceWorker();
   syncDashboardState();
-  [600, 1400, 2600, 5000].forEach(delay => window.setTimeout(syncDashboardState, delay));
-  window.setInterval(syncDashboardState, 5000);
+
+  window.ACADEMIA_YAMILET_BUILD = Object.freeze({ build:BUILD, pwa:'124.0.0' });
 })();
