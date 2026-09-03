@@ -1,11 +1,11 @@
 (() => {
   'use strict';
 
-  const VERSION='121.0.0';
+  const VERSION='123.0.0';
   const $=(s,r=document)=>r.querySelector(s);
   let loading=null;
   let loaded=false;
-  let timer=null;
+  let rendering=null;
 
   function loadPublicRegistrationAssets(){
     if(!$('link[data-academy-registration-v111]')){
@@ -63,49 +63,76 @@
     return p[0]==='admin'&&p[1]==='operations';
   }
 
+  function adminModule(){
+    const page=$('[data-shell-page="admin"]');
+    if(!page||page.classList.contains('hidden'))return null;
+    return $('[data-admin-v79-module]',page);
+  }
+
+  function operationsReady(){
+    const module=adminModule();
+    return !!module?.querySelector('[data-ops87-root], .ops87-loading');
+  }
+
   function cleanLegacy(){
     if(!isRoute())return;
     $('[data-commerce-host]')?.remove();
     $('[data-academy-ops]')?.remove();
   }
 
+  async function renderCurrent(force=false){
+    if(!isRoute())return false;
+    cleanLegacy();
+    if(!force&&operationsReady())return true;
+    if(rendering&&!force)return rendering;
+    const renderer=window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render;
+    if(!renderer)return false;
+    const promise=Promise.resolve(renderer(force)).then(value=>value!==false).finally(()=>{
+      if(rendering===promise)rendering=null;
+    });
+    rendering=promise;
+    return promise;
+  }
+
   function loadAdmin(){
     if(!isRoute())return Promise.resolve(false);
     cleanLegacy();
-    if(loaded){
-      window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render?.();
-      return Promise.resolve(true);
+    if(loaded&&window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87){
+      return renderCurrent(false);
     }
     if(loading)return loading;
 
     loading=new Promise(resolve=>{
-      const existing=$('script[data-operations-runtime-v87]');
+      const existing=$('script[data-operations-runtime-v123]')||$('script[data-operations-runtime-v87]');
       if(existing){
-        if(existing.dataset.loaded==='true'||window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87){
+        if(window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87){
           loaded=true;
-          window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render?.();
           resolve(true);
           return;
         }
-        existing.addEventListener('load',()=>{
-          loaded=true;
-          existing.dataset.loaded='true';
-          if(isRoute())window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render?.();
-          resolve(true);
-        },{once:true});
-        existing.addEventListener('error',()=>resolve(false),{once:true});
+        let settled=false;
+        const finish=async ok=>{
+          if(settled)return;
+          settled=true;
+          loaded=!!ok;
+          if(ok&&isRoute())await renderCurrent(false);
+          resolve(!!ok);
+        };
+        existing.addEventListener('load',()=>{existing.dataset.loaded='true';finish(!!window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87);},{once:true});
+        existing.addEventListener('error',()=>finish(false),{once:true});
+        setTimeout(()=>finish(!!window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87),1600);
         return;
       }
 
       const script=document.createElement('script');
-      script.src='./academy-operations-admin-v87.js?v=87';
+      script.src='./academy-operations-admin-v87.js?v=123';
       script.async=true;
-      script.dataset.operationsRuntimeV87='true';
-      script.addEventListener('load',()=>{
-        loaded=true;
+      script.dataset.operationsRuntimeV123='true';
+      script.addEventListener('load',async()=>{
         script.dataset.loaded='true';
-        if(isRoute())window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87?.render?.();
-        resolve(true);
+        loaded=!!window.ACADEMIA_YAMILET_OPERATIONS_ADMIN_V87;
+        if(loaded&&isRoute())await renderCurrent(false);
+        resolve(loaded);
       },{once:true});
       script.addEventListener('error',()=>resolve(false),{once:true});
       document.body.appendChild(script);
@@ -114,32 +141,27 @@
     return loading;
   }
 
-  function schedule(delay=0){
-    clearTimeout(timer);
-    timer=setTimeout(()=>{
-      if(isRoute())loadAdmin();
-    },Math.max(0,delay));
-  }
-
   function start(){
     loadPublicRegistrationAssets();
     loadPendingRegistrationAdminAssets();
     loadStudentDeletionAssets();
-    window.addEventListener('hashchange',()=>schedule(0));
-    window.addEventListener('pageshow',()=>schedule(80));
-    if(isRoute())schedule(0);
+    if(isRoute())queueMicrotask(()=>loadAdmin());
   }
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
   else start();
 
-  window.ACADEMIA_YAMILET_ADMIN_OPERATIONS={version:VERSION,render:()=>schedule(0),load:loadAdmin};
+  window.ACADEMIA_YAMILET_ADMIN_OPERATIONS=Object.freeze({
+    version:VERSION,
+    load:loadAdmin,
+    render:()=>renderCurrent(true)
+  });
 })();
 
 (() => {
   'use strict';
 
-  const VERSION='121.0.0';
+  const VERSION='123.0.0';
   const $=(selector,root=document)=>root.querySelector(selector);
   let timer=null;
   let frame=null;
@@ -280,7 +302,7 @@
     timer=setTimeout(()=>{
       frame=requestAnimationFrame(()=>{
         frame=null;
-        repairCurrent().catch(error=>console.warn('Academia Yamilet admin bridge v121',error));
+        repairCurrent().catch(error=>console.warn('Academia Yamilet admin bridge v123',error));
       });
     },Math.max(0,delay));
   }
