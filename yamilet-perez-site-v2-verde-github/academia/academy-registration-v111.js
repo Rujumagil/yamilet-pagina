@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '111.0.0';
+  const VERSION = '115.0.0';
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
   const $ = (selector, root = document) => root.querySelector(selector);
 
@@ -10,15 +10,23 @@
       eyebrow:'NUEVA EN LA ACADEMIA', title:'¿Aún no tienes cuenta?', text:'Crea tu perfil de alumna para formar parte de Academia Yamilet. Tus cursos aparecerán cuando tu inscripción sea activada.', open:'Crear mi cuenta',
       formEyebrow:'REGISTRO A LA ACADEMIA', formTitle:'Crea tu cuenta', formText:'Regístrate con tus datos. Crear tu cuenta no activa automáticamente un curso de pago.',
       name:'Nombre completo', email:'Correo', password:'Contraseña', confirm:'Confirmar contraseña', understand:'Entiendo que los cursos se activan cuando mi inscripción sea confirmada.', submit:'Registrarme en la Academia', back:'Ya tengo cuenta · volver al acceso',
-      working:'Creando tu cuenta…', mismatch:'Las contraseñas no coinciden.', short:'La contraseña debe tener al menos 8 caracteres.', required:'Completa todos los campos para continuar.', consent:'Confirma que entiendes cómo se activa el acceso a los cursos.',
-      successConfirm:'Cuenta registrada. Revisa tu correo para confirmar tu dirección y después podrás iniciar sesión.', successReady:'Cuenta creada correctamente. Ya puedes iniciar sesión. Tus cursos aparecerán cuando tu inscripción sea activada.', exists:'Este correo ya está registrado. Puedes iniciar sesión o usar “Cambiar mi contraseña”.', error:'No fue posible completar el registro. Intenta nuevamente en unos minutos.'
+      working:'Registrando tu solicitud…', mismatch:'Las contraseñas no coinciden.', short:'La contraseña debe tener al menos 8 caracteres.', required:'Completa todos los campos para continuar.', consent:'Confirma que entiendes cómo se activa el acceso a los cursos.',
+      successConfirm:'Registro recibido y cuenta creada. Revisa tu correo para confirmar tu dirección; tu solicitud ya es visible para Academia Yamilet.',
+      successReady:'Registro recibido y cuenta creada correctamente. Ya puedes iniciar sesión; tu solicitud ya es visible para Academia Yamilet.',
+      capturedPending:'Tu solicitud quedó registrada y ya es visible para Academia Yamilet. Si la cuenta no pudo crearse automáticamente, el equipo podrá darle seguimiento desde administración.',
+      exists:'Este correo ya está registrado. Tu solicitud quedó guardada para seguimiento; puedes iniciar sesión o usar “Cambiar mi contraseña”.',
+      error:'No fue posible guardar tu registro. Intenta nuevamente en unos minutos.'
     },
     it: {
       eyebrow:'NUOVA NELL’ACCADEMIA', title:'Non hai ancora un account?', text:'Crea il tuo profilo di studentessa per entrare in Academia Yamilet. I corsi appariranno quando la tua iscrizione sarà attivata.', open:'Crea il mio account',
       formEyebrow:'REGISTRAZIONE ALL’ACCADEMIA', formTitle:'Crea il tuo account', formText:'Registrati con i tuoi dati. La creazione dell’account non attiva automaticamente un corso a pagamento.',
       name:'Nome e cognome', email:'Email', password:'Password', confirm:'Conferma password', understand:'Ho capito che i corsi si attivano quando la mia iscrizione viene confermata.', submit:'Registrami all’Accademia', back:'Ho già un account · torna all’accesso',
-      working:'Creazione account…', mismatch:'Le password non coincidono.', short:'La password deve contenere almeno 8 caratteri.', required:'Completa tutti i campi per continuare.', consent:'Conferma di aver compreso come viene attivato l’accesso ai corsi.',
-      successConfirm:'Account registrato. Controlla la tua email per confermare l’indirizzo e poi potrai accedere.', successReady:'Account creato correttamente. Ora puoi accedere. I corsi appariranno quando la tua iscrizione sarà attivata.', exists:'Questa email è già registrata. Puoi accedere o usare il recupero password.', error:'Non è stato possibile completare la registrazione. Riprova tra qualche minuto.'
+      working:'Registrazione della richiesta…', mismatch:'Le password non coincidono.', short:'La password deve contenere almeno 8 caratteri.', required:'Completa tutti i campi per continuare.', consent:'Conferma di aver compreso come viene attivato l’accesso ai corsi.',
+      successConfirm:'Registrazione ricevuta e account creato. Controlla la tua email per confermare l’indirizzo; la richiesta è già visibile ad Academia Yamilet.',
+      successReady:'Registrazione ricevuta e account creato correttamente. Ora puoi accedere; la richiesta è già visibile ad Academia Yamilet.',
+      capturedPending:'La tua richiesta è stata registrata ed è già visibile ad Academia Yamilet. Se l’account non è stato creato automaticamente, il team potrà gestirlo dall’amministrazione.',
+      exists:'Questa email è già registrata. La richiesta è stata salvata per il follow-up; puoi accedere o usare il recupero password.',
+      error:'Non è stato possibile salvare la registrazione. Riprova tra qualche minuto.'
     }
   };
 
@@ -97,14 +105,39 @@
     if(!understood)return setStatus(root,t.consent);
 
     submit.disabled=true;submit.textContent=t.working;setStatus(root,'');
+    let captured=false;
     try{
       const client=await getClient(),a=attribution();
+      const pageUrl=String(location.href||'').slice(0,1000);
+      const {error:captureError}=await client.rpc('capture_academy_registration_request',{
+        target_email:email,
+        target_full_name:fullName,
+        target_locale:activeLang,
+        target_page_url:pageUrl,
+        target_utm_source:a.utm_source,
+        target_utm_medium:a.utm_medium,
+        target_utm_campaign:a.utm_campaign,
+        target_utm_content:a.utm_content,
+        target_utm_term:a.utm_term,
+        target_landing_cta:a.landing_cta
+      });
+      if(captureError)throw captureError;
+      captured=true;
+
       const redirectTo=`${location.origin}${location.pathname}`;
-      const {data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:redirectTo,data:{full_name:fullName,academy:'yamilet',registration_source:'academy-public',course_interest:'metodo-mes',...a}}});
+      const {data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:redirectTo,data:{full_name:fullName,academy:'yamilet',registration_source:'academy-public',course_interest:'metodo-mes',locale:activeLang,page_url:pageUrl,...a}}});
       if(error)throw error;
+
       form.reset();
-      if(data?.session){await client.auth.signOut().catch(()=>null);setStatus(root,t.successReady,true);}else setStatus(root,t.successConfirm,true);
-    }catch(error){console.warn('Academia Yamilet registration v111',error);setStatus(root,friendlyError(error,t));}
+      const identities=Array.isArray(data?.user?.identities)?data.user.identities:null;
+      if(identities && identities.length===0){setStatus(root,t.exists,true);return;}
+      if(data?.session){await client.auth.signOut().catch(()=>null);setStatus(root,t.successReady,true);}
+      else if(data?.user)setStatus(root,t.successConfirm,true);
+      else setStatus(root,t.capturedPending,true);
+    }catch(error){
+      console.warn('Academia Yamilet registration v115',error);
+      setStatus(root,captured?t.capturedPending:friendlyError(error,t),captured);
+    }
     finally{submit.disabled=false;submit.textContent=t.submit;}
   }
 
