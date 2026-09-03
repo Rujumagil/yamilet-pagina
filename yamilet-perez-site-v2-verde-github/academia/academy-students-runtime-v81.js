@@ -1,99 +1,175 @@
 (() => {
   'use strict';
 
-  const VERSION = '81.0.0';
-  let loading = null;
-  let loaded = false;
-  let timer = null;
-  let dashboardObserver = null;
-
+  const VERSION = '119.0.0';
   const $ = (selector, root = document) => root.querySelector(selector);
 
-  function isStudentsRoute(){
+  let scriptPromise = null;
+  let loaded = false;
+  let bootPromise = null;
+  let booted = false;
+
+  function isStudentsRoute() {
     const parts = String(location.hash || '').replace(/^#/, '').split('/').filter(Boolean);
     return parts[0] === 'admin' && parts[1] === 'students';
   }
 
-  function dashboardReady(){
-    const dashboard = $('[data-dashboard]');
-    return !!dashboard && !dashboard.classList.contains('hidden') && !!$('[data-students-admin-root]');
+  function section() {
+    return $('[data-students-admin]');
   }
 
-  function remount(){
-    if (!isStudentsRoute()) return;
-    window.ACADEMIA_YAMILET_STUDENTS?.bootstrap?.();
-    window.ACADEMIA_YAMILET_ADMIN?.render?.();
-    [160,420,900].forEach(delay => setTimeout(() => {
-      if (!isStudentsRoute()) return;
-      window.ACADEMIA_YAMILET_ADMIN?.render?.();
-    },delay));
+  function root() {
+    return $('[data-students-admin-root]');
   }
 
-  function loadStudents(){
-    if (loaded) { remount(); return Promise.resolve(true); }
-    if (loading) return loading;
-    loading = new Promise(resolve => {
+  function ensureStyle() {
+    if ($('link[data-students81-style]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = './students-p16.css?v=81';
+    link.dataset.students81Style = 'true';
+    document.head.appendChild(link);
+  }
+
+  function showPanel() {
+    if (!isStudentsRoute()) return false;
+    section()?.classList.remove('hidden');
+    return true;
+  }
+
+  function showLoading() {
+    const host = root();
+    if (!host || host.children.length) return;
+    host.innerHTML = '<div class="students81-runtime-loading"><span></span><strong>Preparando Estudiantes…</strong><small>Cargando accesos, solicitudes y seguimiento académico.</small></div>';
+  }
+
+  function showError() {
+    const host = root();
+    if (!host) return;
+    host.innerHTML = '<div class="students81-error"><strong>No fue posible abrir Estudiantes</strong><span>La sesión sigue activa. Pulsa Reintentar para cargar nuevamente.</span><button type="button" data-students119-retry>Reintentar</button></div>';
+    $('[data-students119-retry]', host)?.addEventListener('click', () => {
+      loaded = false;
+      booted = false;
+      loadStudents(true);
+    }, { once: true });
+  }
+
+  function loadScript() {
+    if (window.ACADEMIA_YAMILET_STUDENTS) {
+      loaded = true;
+      return Promise.resolve(true);
+    }
+    if (scriptPromise) return scriptPromise;
+
+    ensureStyle();
+    showLoading();
+
+    scriptPromise = new Promise(resolve => {
       const existing = $('script[data-students-runtime-v81]');
       if (existing) {
-        if (existing.dataset.loaded === 'true') { loaded = true; remount(); resolve(true); return; }
-        existing.addEventListener('load',() => { loaded = true; existing.dataset.loaded = 'true'; remount(); resolve(true); },{once:true});
-        existing.addEventListener('error',() => resolve(false),{once:true});
+        if (window.ACADEMIA_YAMILET_STUDENTS || existing.dataset.loaded === 'true') {
+          loaded = true;
+          resolve(true);
+          return;
+        }
+        existing.addEventListener('load', () => {
+          existing.dataset.loaded = 'true';
+          loaded = !!window.ACADEMIA_YAMILET_STUDENTS;
+          resolve(loaded);
+        }, { once: true });
+        existing.addEventListener('error', () => resolve(false), { once: true });
         return;
       }
-      const root = $('[data-students-admin-root]');
-      if (root && !root.children.length) root.innerHTML = '<div class="students81-runtime-loading"><span></span><strong>Preparando Estudiantes…</strong><small>Conectando accesos y seguimiento académico.</small></div>';
+
       const script = document.createElement('script');
       script.src = './students-p16.js?v=81';
       script.async = true;
       script.dataset.studentsRuntimeV81 = 'true';
-      script.addEventListener('load',() => {
-        loaded = true;
+      script.addEventListener('load', () => {
         script.dataset.loaded = 'true';
-        remount();
-        resolve(true);
-      },{once:true});
-      script.addEventListener('error',() => {
-        const rootNode = $('[data-students-admin-root]');
-        if (rootNode) rootNode.innerHTML = '<div class="students81-error"><strong>No fue posible abrir Estudiantes</strong><span>Recarga la Academia e inténtalo nuevamente.</span></div>';
-        resolve(false);
-      },{once:true});
+        loaded = !!window.ACADEMIA_YAMILET_STUDENTS;
+        resolve(loaded);
+      }, { once: true });
+      script.addEventListener('error', () => resolve(false), { once: true });
       document.body.appendChild(script);
-    }).finally(() => { loading = null; });
-    return loading;
-  }
-
-  function schedule(delay = 100){
-    clearTimeout(timer);
-    timer = setTimeout(async () => {
-      if (!isStudentsRoute() || !dashboardReady()) return;
-      await loadStudents();
-      remount();
-    },delay);
-  }
-
-  function watchDashboard(){
-    const dashboard = $('[data-dashboard]');
-    if (!dashboard) { setTimeout(watchDashboard,250); return; }
-    dashboardObserver?.disconnect();
-    dashboardObserver = new MutationObserver(() => {
-      if (isStudentsRoute() && !dashboard.classList.contains('hidden')) schedule(80);
+    }).finally(() => {
+      scriptPromise = null;
     });
-    dashboardObserver.observe(dashboard,{attributes:true,attributeFilter:['class']});
+
+    return scriptPromise;
   }
 
-  function start(){
-    document.addEventListener('click',event => {
-      if (event.target.closest('[data-admin-v79-go="students"],[data-admin-v79-go-card="students"],[data-students-admin-nav]')) schedule(120);
-    },true);
-    window.addEventListener('hashchange',() => schedule(100));
-    window.addEventListener('popstate',() => schedule(100));
-    window.addEventListener('pageshow',() => schedule(180));
-    watchDashboard();
-    [280,760,1500].forEach(delay => setTimeout(() => schedule(0),delay));
+  async function bootstrapOnce(force = false) {
+    if (!isStudentsRoute()) return false;
+    if (booted && !force) return true;
+    if (bootPromise) return bootPromise;
+
+    bootPromise = (async () => {
+      const api = window.ACADEMIA_YAMILET_STUDENTS;
+      if (!api) return false;
+      const result = await api.bootstrap?.();
+      booted = result !== false;
+      return booted;
+    })().catch(error => {
+      console.warn('Academia Yamilet students runtime v119 bootstrap', error);
+      return false;
+    }).finally(() => {
+      bootPromise = null;
+    });
+
+    return bootPromise;
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start,{once:true});
-  else start();
+  async function mountPending() {
+    const pending = window.ACADEMIA_YAMILET_PENDING_REGISTRATIONS_V111;
+    if (!pending) return false;
+    if (typeof pending.mount === 'function') return pending.mount();
+    if (typeof pending.render === 'function') return pending.render();
+    return false;
+  }
 
-  window.ACADEMIA_YAMILET_STUDENTS_RUNTIME = {version:VERSION,load:loadStudents};
+  async function loadStudents(force = false) {
+    if (!isStudentsRoute()) return false;
+    showPanel();
+    ensureStyle();
+
+    if (!loaded || !window.ACADEMIA_YAMILET_STUDENTS) {
+      const ready = await loadScript();
+      if (!ready) {
+        showError();
+        return false;
+      }
+    }
+
+    const ready = await bootstrapOnce(force);
+    if (!ready) {
+      showError();
+      return false;
+    }
+
+    showPanel();
+    await mountPending();
+    return true;
+  }
+
+  async function refresh() {
+    if (!isStudentsRoute()) return false;
+    const api = window.ACADEMIA_YAMILET_STUDENTS;
+    if (!api) return loadStudents(true);
+    try {
+      await api.refresh?.();
+      booted = true;
+      await window.ACADEMIA_YAMILET_PENDING_REGISTRATIONS_V111?.refresh?.();
+      return true;
+    } catch (error) {
+      console.warn('Academia Yamilet students runtime v119 refresh', error);
+      return false;
+    }
+  }
+
+  window.ACADEMIA_YAMILET_STUDENTS_RUNTIME = Object.freeze({
+    version: VERSION,
+    load: loadStudents,
+    refresh
+  });
 })();
