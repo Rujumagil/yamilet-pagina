@@ -22,7 +22,7 @@
     admin: 'Panel administrativo'
   };
 
-  let attempts = 0;
+  let navObserver = null;
 
   function relabel(button, route) {
     const spans = button.querySelectorAll('span');
@@ -32,16 +32,13 @@
 
   function organizeNavigation() {
     const nav = document.querySelector('.sidebar nav');
-    if (!nav) return retry();
-    if (nav.dataset.professionalAcademyNav === 'true') return;
+    if (!nav) return false;
+    if (nav.dataset.professionalAcademyNav === 'true') return true;
 
     const buttons = [...nav.querySelectorAll('.shell-nav-item[data-shell-route]')];
-    if (!buttons.length || !buttons.some(button => button.dataset.shellRoute === 'home')) return retry();
+    if (!buttons.length || !buttons.some(button => button.dataset.shellRoute === 'home')) return false;
 
-    // Estos controles antiguos siguen siendo disparadores internos de los módulos.
-    // Deben permanecer en el DOM aunque no se muestren en la navegación profesional.
     const legacyAdminControls = [...nav.querySelectorAll('[data-content-admin-nav],[data-students-admin-nav],[data-scroll-bookings]')];
-
     const byRoute = new Map(buttons.map(button => [button.dataset.shellRoute, button]));
     const fragment = document.createDocumentFragment();
 
@@ -74,25 +71,29 @@
       button.tabIndex = -1;
     });
     nav.dataset.professionalAcademyNav = 'true';
+    return true;
   }
 
-  function retry() {
-    attempts += 1;
-    if (attempts <= 40) window.setTimeout(organizeNavigation, 250);
+  function bootNavigation() {
+    if (organizeNavigation()) return;
+    navObserver = new MutationObserver(() => {
+      if (!organizeNavigation()) return;
+      navObserver?.disconnect();
+      navObserver = null;
+    });
+    navObserver.observe(document.body, { childList: true, subtree: true });
   }
 
   document.addEventListener('click', event => {
     if (event.target.closest('[data-shell-route="explore"]')) {
-      window.setTimeout(() => {
+      queueMicrotask(() => {
         const breadcrumb = document.querySelector('[data-shell-breadcrumb]');
         if (breadcrumb) breadcrumb.textContent = 'Catálogo de cursos';
-      }, 0);
+      });
     }
 
-    // El shell oculta #reservas con !important. Al abrir Clase gratuita dejamos
-    // el panel visible después de que termine el enrutado principal.
     if (event.target.closest('[data-admin-target="bookings"]')) {
-      window.setTimeout(() => {
+      requestAnimationFrame(() => {
         const panel = document.querySelector('#reservas');
         if (!panel) return;
         panel.classList.remove('hidden');
@@ -100,17 +101,14 @@
         panel.style.setProperty('grid-column', '1 / -1', 'important');
         panel.style.setProperty('grid-row', 'auto', 'important');
         panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 0);
+      });
     }
   });
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', organizeNavigation, { once: true });
-  else organizeNavigation();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootNavigation, { once: true });
+  else bootNavigation();
 
-  window.addEventListener('pageshow', () => {
-    attempts = 0;
-    organizeNavigation();
-  });
+  window.addEventListener('pageshow', () => organizeNavigation());
 })();
 
 (() => {
@@ -186,8 +184,8 @@
 
   function bootVideoExclusion() {
     const observer = new MutationObserver(scheduleVideoExclusion);
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
-    document.addEventListener('click', () => window.setTimeout(scheduleVideoExclusion, 50), true);
+    observer.observe(document.body, { childList: true, subtree: true });
+    document.addEventListener('click', scheduleVideoExclusion, true);
     scheduleVideoExclusion();
   }
 
@@ -198,13 +196,8 @@
 (() => {
   'use strict';
 
-  // Corrección de carrera de inicialización del centro administrativo.
-  // El shell cambia la visibilidad por clase y el router actualiza el hash con
-  // history.pushState; ninguno de esos cambios garantiza por sí solo un
-  // hashchange. Por eso el panel podía quedar vacío hasta recargar el navegador.
-  let pageObserver = null;
-  let attachAttempts = 0;
-  let pendingTimer = null;
+  let pendingFrame = 0;
+  let fallbackTimer = 0;
 
   const adminPage = () => document.querySelector('[data-shell-page="admin"]');
   const isAdminHash = () => /^#admin(?:\/|$)/.test(String(location.hash || ''));
@@ -213,84 +206,49 @@
     return !!page && !page.classList.contains('hidden');
   };
 
-  function requestAdminRender(force = false, delay = 0) {
-    window.clearTimeout(pendingTimer);
-    pendingTimer = window.setTimeout(() => {
-      if (!isAdminVisible()) return;
-      const api = window.ACADEMIA_YAMILET_ADMIN;
-      if (!api?.render) return;
-
-      // Si el shell ya mostró administración pero el router todavía no terminó
-      // de sincronizar el hash, lo normalizamos antes de renderizar.
-      if (!isAdminHash()) {
-        const url = `${location.pathname}${location.search}#admin`;
-        history.replaceState({ academyRoute: 'admin' }, '', url);
-      }
-
-      api.render(force);
-    }, delay);
+  function renderAdmin(force = false) {
+    if (!isAdminHash() && !isAdminVisible()) return;
+    const api = window.ACADEMIA_YAMILET_ADMIN;
+    if (!api?.render) return;
+    if (isAdminVisible() && !isAdminHash()) {
+      history.replaceState({ academyRoute: 'admin' }, '', `${location.pathname}${location.search}#admin`);
+    }
+    if (force) api.refresh?.();
+    else api.render();
   }
 
-  function bindAdminPageObserver() {
-    const page = adminPage();
-    if (!page) {
-      attachAttempts += 1;
-      if (attachAttempts <= 80) window.setTimeout(bindAdminPageObserver, 100);
-      return;
-    }
-
-    if (pageObserver) pageObserver.disconnect();
-    pageObserver = new MutationObserver(mutations => {
-      if (mutations.some(mutation => mutation.type === 'attributes' && mutation.attributeName === 'class')) {
-        if (isAdminVisible()) {
-          requestAdminRender(false, 0);
-          requestAdminRender(false, 90);
-        }
-      }
-    });
-    pageObserver.observe(page, { attributes: true, attributeFilter: ['class'] });
-
-    if (isAdminVisible() || isAdminHash()) {
-      requestAdminRender(false, 40);
-      requestAdminRender(false, 180);
-    }
-  }
-
-  function boot() {
-    bindAdminPageObserver();
-
-    document.addEventListener('click', event => {
-      const enteringAdmin = event.target.closest('[data-shell-route="admin"]');
-      const adminControl = event.target.closest('[data-admin-v79-go],[data-admin-v79-go-card]');
-      if (!enteringAdmin && !adminControl) return;
-
-      // Reintentos cortos cubren render del shell, actualización del hash y carga
-      // de sesión/Supabase sin exigir una recarga manual al usuario.
-      [35, 110, 260, 600].forEach((delay, index) => {
-        window.setTimeout(() => requestAdminRender(index === 3, 0), delay);
+  function scheduleAdminRender(force = false) {
+    if (pendingFrame) cancelAnimationFrame(pendingFrame);
+    clearTimeout(fallbackTimer);
+    pendingFrame = requestAnimationFrame(() => {
+      pendingFrame = requestAnimationFrame(() => {
+        pendingFrame = 0;
+        renderAdmin(force);
       });
+    });
+    fallbackTimer = window.setTimeout(() => renderAdmin(force), 120);
+  }
+
+  function bootAdminBridge() {
+    document.addEventListener('click', event => {
+      if (event.target.closest('[data-shell-route="admin"],[data-admin-v79-go],[data-admin-v79-go-card]')) {
+        scheduleAdminRender(false);
+      }
     }, true);
 
     window.addEventListener('hashchange', () => {
-      if (isAdminHash()) requestAdminRender(false, 40);
+      if (isAdminHash()) scheduleAdminRender(false);
     });
     window.addEventListener('popstate', () => {
-      if (isAdminHash()) requestAdminRender(false, 40);
+      if (isAdminHash()) scheduleAdminRender(false);
     });
     window.addEventListener('pageshow', () => {
-      if (isAdminVisible() || isAdminHash()) {
-        requestAdminRender(false, 80);
-        requestAdminRender(false, 260);
-      }
+      if (isAdminHash() || isAdminVisible()) scheduleAdminRender(false);
     });
 
-    // También cubre el caso de volver a la pestaña después de que el navegador
-    // haya suspendido JavaScript o restaurado la página desde bfcache.
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && (isAdminVisible() || isAdminHash())) requestAdminRender(false, 50);
-    });
+    if (isAdminHash() || isAdminVisible()) scheduleAdminRender(false);
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
-  else boot();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootAdminBridge, { once: true });
+  else bootAdminBridge();
 })();
