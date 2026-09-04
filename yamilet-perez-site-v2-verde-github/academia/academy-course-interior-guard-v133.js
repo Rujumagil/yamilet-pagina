@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '133.0.0';
+  const VERSION = '133.1.0';
   const INTERIOR_ROUTES = new Set(['course', 'lesson']);
   let scheduled = false;
   let observer = null;
@@ -23,6 +23,15 @@
       }
     `;
     document.head.appendChild(style);
+  }
+
+  function ensureAssessmentGateV135() {
+    if (window.ACADEMIA_YAMILET_ASSESSMENT_GATE_V135 || $('script[data-academy-assessment-gate-v135]')) return;
+    const script = document.createElement('script');
+    script.src = './academy-assessment-course-gate-v135.js?v=135';
+    script.async = true;
+    script.dataset.academyAssessmentGateV135 = 'true';
+    document.body.appendChild(script);
   }
 
   function clearStaleCourseListSuppression(main) {
@@ -75,6 +84,7 @@
 
   function start() {
     ensureStyle();
+    ensureAssessmentGateV135();
     apply();
     startObserver();
     window.addEventListener('hashchange', () => schedule(0));
