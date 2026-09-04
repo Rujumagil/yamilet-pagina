@@ -1,0 +1,440 @@
+/* Academia Yamilet · Evaluaciones mobile UX v129
+   Mejora el estado vacío y cubre tanto la vista v77 como el fallback del shell. */
+
+body[data-academy-route="evaluations"] .v77-evaluations-page,
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"]{
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  padding-bottom:calc(106px + env(safe-area-inset-bottom,0px))!important;
+}
+
+/* Vista moderna v77 */
+body[data-academy-route="evaluations"] .v77-evaluations-page{
+  gap:14px!important;
+  padding-top:10px!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-heading{
+  margin:0!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-heading>div:first-child>span{
+  color:#9a7528!important;
+  font-size:9px!important;
+  letter-spacing:.15em!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-heading h1{
+  margin:3px 0 7px!important;
+  color:#1f332b!important;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  font-weight:790!important;
+  letter-spacing:-.035em!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-heading p{
+  margin:0!important;
+  color:#6f7c75!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-summary article{
+  border:1px solid rgba(18,63,53,.09)!important;
+  background:rgba(255,255,255,.94)!important;
+  box-shadow:0 7px 18px rgba(18,63,53,.035)!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-empty{
+  border:1px solid rgba(18,63,53,.10)!important;
+  background:
+    radial-gradient(circle at 92% 0%,rgba(184,138,44,.10),transparent 33%),
+    linear-gradient(145deg,#fff,#f8faf7)!important;
+  box-shadow:0 11px 28px rgba(18,63,53,.045)!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-empty-icon{
+  background:#eaf3ee!important;
+  color:#145244!important;
+  box-shadow:inset 0 0 0 1px rgba(18,63,53,.06)!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-empty h2{
+  color:#263a31!important;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  font-weight:760!important;
+  letter-spacing:-.025em!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-empty-actions a{
+  min-height:42px!important;
+  border-radius:12px!important;
+  font-weight:800!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-info-grid article{
+  border:1px solid rgba(18,63,53,.09)!important;
+  border-radius:17px!important;
+  background:rgba(255,255,255,.94)!important;
+  box-shadow:0 8px 20px rgba(18,63,53,.03)!important;
+}
+
+body[data-academy-route="evaluations"] .v77-eval-info-grid strong{
+  color:#263a31!important;
+}
+
+/* Fallback del shell: es la vista que aparecía en la captura cuando v77 no alcanzaba a montar. */
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-page-heading{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  align-items:start!important;
+  gap:15px!important;
+  margin:0 0 14px!important;
+}
+
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-page-heading .kicker{
+  color:#7e9188!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  letter-spacing:.15em!important;
+  text-transform:uppercase!important;
+}
+
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-page-heading h2{
+  margin:4px 0 7px!important;
+  color:#1f332b!important;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  font-size:38px!important;
+  line-height:1!important;
+  font-weight:790!important;
+  letter-spacing:-.04em!important;
+}
+
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-page-heading p{
+  max-width:620px!important;
+  margin:0!important;
+  color:#6f7c75!important;
+  font-size:13px!important;
+  line-height:1.55!important;
+}
+
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-summary{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+  width:100%!important;
+}
+
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-summary article{
+  min-width:0!important;
+  min-height:82px!important;
+  display:grid!important;
+  place-content:center!important;
+  padding:10px 8px!important;
+  border:1px solid rgba(18,63,53,.09)!important;
+  border-radius:16px!important;
+  background:rgba(255,255,255,.94)!important;
+  box-shadow:0 7px 18px rgba(18,63,53,.035)!important;
+}
+
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-summary strong{
+  color:#145244!important;
+  font:750 24px/1 Inter,system-ui,sans-serif!important;
+}
+
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-summary span{
+  margin-top:7px!important;
+  color:#7b8780!important;
+  font-size:8px!important;
+  font-weight:850!important;
+  letter-spacing:.08em!important;
+}
+
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-empty.v129-eval-empty-shell{
+  min-height:0!important;
+  display:grid!important;
+  grid-template-columns:52px minmax(0,1fr)!important;
+  place-items:initial!important;
+  align-items:start!important;
+  gap:14px!important;
+  padding:20px!important;
+  border:1px solid rgba(18,63,53,.10)!important;
+  border-radius:20px!important;
+  background:
+    radial-gradient(circle at 90% 0%,rgba(184,138,44,.11),transparent 34%),
+    linear-gradient(145deg,#fff,#f8faf7)!important;
+  text-align:left!important;
+  box-shadow:0 11px 28px rgba(18,63,53,.045)!important;
+}
+
+.v129-eval-empty-icon{
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  border-radius:15px;
+  background:#eaf3ee;
+  color:#145244;
+  font-size:21px;
+  font-weight:900;
+  box-shadow:inset 0 0 0 1px rgba(18,63,53,.06);
+}
+
+.v129-eval-empty-copy>span{
+  display:block;
+  margin:1px 0 6px;
+  color:#a47d29;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-empty.v129-eval-empty-shell strong{
+  margin:0!important;
+  color:#263a31!important;
+  font:760 21px/1.15 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  letter-spacing:-.025em!important;
+}
+
+body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-empty.v129-eval-empty-shell p{
+  margin:7px 0 0!important;
+  color:#6f7c75!important;
+  font-size:12px!important;
+  line-height:1.55!important;
+}
+
+.v129-eval-empty-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:15px;
+}
+
+.v129-eval-empty-actions a{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 11px;
+  border:1px solid rgba(18,63,53,.12);
+  border-radius:11px;
+  background:#fff;
+  color:#145244;
+  font-size:10px;
+  font-weight:850;
+  text-decoration:none;
+}
+
+.v129-eval-empty-actions a:first-child{
+  border-color:#145244;
+  background:#145244;
+  color:#fff;
+}
+
+.v129-eval-guide{
+  display:grid;
+  gap:10px;
+  margin-top:12px;
+  padding:17px;
+  border:1px solid rgba(18,63,53,.08);
+  border-radius:20px;
+  background:rgba(255,255,255,.78);
+  box-shadow:0 8px 22px rgba(18,63,53,.025);
+}
+
+.v129-eval-guide-head span{
+  display:block;
+  color:#a47d29;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+.v129-eval-guide-head h3{
+  margin:4px 0 0;
+  color:#263a31;
+  font:760 20px/1.15 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:-.025em;
+}
+
+.v129-eval-guide-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+
+.v129-eval-guide-grid article{
+  min-width:0;
+  padding:13px;
+  border:1px solid rgba(18,63,53,.08);
+  border-radius:15px;
+  background:#fff;
+}
+
+.v129-eval-guide-grid b{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  margin-bottom:9px;
+  border-radius:9px;
+  background:#edf5f1;
+  color:#145244;
+  font-size:8px;
+}
+
+.v129-eval-guide-grid strong{
+  display:block;
+  color:#2b4037;
+  font-size:11px;
+  line-height:1.25;
+}
+
+.v129-eval-guide-grid p{
+  margin:4px 0 0;
+  color:#7a867f;
+  font-size:9px;
+  line-height:1.45;
+}
+
+@media(max-width:760px){
+  body[data-academy-route="evaluations"] .v77-evaluations-page{
+    gap:12px!important;
+    padding:8px 18px calc(106px + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-heading{
+    gap:13px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-heading h1{
+    font-size:36px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-summary{
+    gap:8px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-summary article{
+    min-height:80px!important;
+    display:grid!important;
+    place-content:center!important;
+    padding:9px 7px!important;
+    border-radius:16px!important;
+    text-align:center!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-summary strong{
+    font-size:24px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-summary span{
+    margin-top:6px!important;
+    font-size:8px!important;
+    text-transform:uppercase!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-empty{
+    grid-template-columns:48px minmax(0,1fr)!important;
+    gap:13px!important;
+    padding:18px!important;
+    border-radius:20px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-empty-icon{
+    width:48px!important;
+    height:48px!important;
+    border-radius:14px!important;
+    font-size:20px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-empty h2{
+    font-size:21px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-empty p{
+    font-size:11px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-empty-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:7px!important;
+    margin-top:14px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-empty-actions a{
+    width:100%!important;
+    min-width:0!important;
+    padding:0 8px!important;
+    font-size:9px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-info-grid{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-info-grid article{
+    min-width:0!important;
+    padding:12px 10px!important;
+    border-radius:14px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-info-grid b{
+    width:26px!important;
+    height:26px!important;
+    margin-bottom:8px!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-info-grid strong{
+    font-size:10px!important;
+    line-height:1.25!important;
+  }
+
+  body[data-academy-route="evaluations"] .v77-eval-info-grid p{
+    font-size:8px!important;
+    line-height:1.4!important;
+  }
+
+  body[data-academy-route="evaluations"] [data-shell-page="evaluations"]{
+    padding:8px 18px calc(106px + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  .v129-eval-guide-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+@media(max-width:430px){
+  body[data-academy-route="evaluations"] .v77-eval-empty,
+  body[data-academy-route="evaluations"] [data-shell-page="evaluations"] .shell-empty.v129-eval-empty-shell{
+    grid-template-columns:1fr!important;
+  }
+
+  .v129-eval-empty-actions,
+  body[data-academy-route="evaluations"] .v77-eval-empty-actions{
+    grid-template-columns:1fr!important;
+  }
+
+  .v129-eval-guide-grid,
+  body[data-academy-route="evaluations"] .v77-eval-info-grid{
+    grid-template-columns:1fr!important;
+  }
+
+  .v129-eval-guide-grid article,
+  body[data-academy-route="evaluations"] .v77-eval-info-grid article{
+    display:grid;
+    grid-template-columns:30px minmax(0,1fr);
+    gap:9px;
+    align-items:start;
+  }
+
+  .v129-eval-guide-grid b,
+  body[data-academy-route="evaluations"] .v77-eval-info-grid b{
+    grid-row:1/3;
+    margin:0!important;
+  }
+}
