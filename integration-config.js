@@ -17,17 +17,53 @@ window.YAMILET_INTEGRATION_CONFIG = {
   'use strict';
 
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
+  const COMPAS_TRACKER_URL = 'https://app.proyectocompas.com/compas-attribution.js';
+  const COMPAS_PUBLIC_KEY = 'wc_94eeb529d09ab712b4961646af31d03e4d1b';
   const cfg = window.YAMILET_INTEGRATION_CONFIG || {};
   const nativeFetch = window.fetch.bind(window);
   const isItalian = document.documentElement.lang === 'it';
-  const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+  const ATTRIBUTION_KEYS = [
+    'utm_source','utm_medium','utm_campaign','utm_content','utm_term',
+    'gclid','gbraid','wbraid','fbclid','msclkid'
+  ];
+
+  function ensureCompasTracker(){
+    if (window.CompasTracking?.__initialized) return;
+    if (document.querySelector('script[data-yamilet-compas-attribution]')) return;
+    const script = document.createElement('script');
+    script.src = COMPAS_TRACKER_URL;
+    script.async = true;
+    script.dataset.key = COMPAS_PUBLIC_KEY;
+    script.dataset.product = 'yamilet-metodo-mes';
+    script.dataset.funnel = 'yamilet-site';
+    script.dataset.yamiletCompasAttribution = 'true';
+    document.head.appendChild(script);
+  }
+
+  ensureCompasTracker();
 
   function currentAttribution(defaultCampaign = '', defaultContent = '') {
     const params = new URLSearchParams(window.location.search);
+    const trackerTouch = window.CompasTracking?.getAttribution?.()?.lastTouch || {};
     const value = {};
-    UTM_KEYS.forEach(key => { value[key] = String(params.get(key) || '').slice(0,255); });
-    if (!value.utm_source) value.utm_source = 'yamilet-site';
-    if (!value.utm_medium) value.utm_medium = 'website';
+
+    ATTRIBUTION_KEYS.forEach(key => {
+      value[key] = String(params.get(key) || trackerTouch[key] || '').slice(0,500);
+    });
+
+    if (!value.utm_source) {
+      if (value.gclid || value.gbraid || value.wbraid) value.utm_source = 'google';
+      else if (value.fbclid) value.utm_source = 'meta';
+      else if (value.msclkid) value.utm_source = 'bing';
+      else value.utm_source = 'yamilet-site';
+    }
+
+    if (!value.utm_medium) {
+      value.utm_medium = value.gclid || value.gbraid || value.wbraid || value.fbclid || value.msclkid
+        ? 'cpc'
+        : 'website';
+    }
+
     if (!value.utm_campaign && defaultCampaign) value.utm_campaign = defaultCampaign;
     if (!value.utm_content && defaultContent) value.utm_content = defaultContent;
     return value;
@@ -36,7 +72,7 @@ window.YAMILET_INTEGRATION_CONFIG = {
   function academyUrl({register = false, cta = 'academy-link'} = {}) {
     const url = new URL('../academia/', window.location.href);
     const a = currentAttribution(register ? 'academy-registration' : 'academy-login', cta);
-    UTM_KEYS.forEach(key => { if (a[key]) url.searchParams.set(key, a[key]); });
+    ATTRIBUTION_KEYS.forEach(key => { if (a[key]) url.searchParams.set(key, a[key]); });
     url.searchParams.set('cta', cta);
     if (register) url.searchParams.set('register','1');
     return url.href;
@@ -45,7 +81,7 @@ window.YAMILET_INTEGRATION_CONFIG = {
   function catalogUrl(cta = 'academy-catalog') {
     const url = new URL('../academia/catalogo.html', window.location.href);
     const a = currentAttribution('academy-catalog', cta);
-    UTM_KEYS.forEach(key => { if (a[key]) url.searchParams.set(key, a[key]); });
+    ATTRIBUTION_KEYS.forEach(key => { if (a[key]) url.searchParams.set(key, a[key]); });
     return url.href;
   }
 
@@ -79,16 +115,30 @@ window.YAMILET_INTEGRATION_CONFIG = {
     if (courseExplore) bindLink(courseExplore, catalogUrl('academy-courses-card'));
   }
 
+  // Añade UTMs + click IDs al payload que app.js envía a book-free-class.
   window.fetch = function yamiletTrackedFetch(input, init = {}) {
+    let trackedBooking = false;
     try {
       const target = typeof input === 'string' ? input : input?.url || '';
       if (cfg.booking?.endpoint && target === cfg.booking.endpoint && String(init.method || 'GET').toUpperCase() === 'POST' && typeof init.body === 'string') {
         const body = JSON.parse(init.body);
         const a = currentAttribution('free-class','booking-form');
         init = {...init, body:JSON.stringify({...body,...a})};
+        trackedBooking = true;
       }
     } catch (_) {}
-    return nativeFetch(input, init);
+
+    return nativeFetch(input, init).then(response => {
+      if (trackedBooking && response.ok) {
+        window.CompasTracking?.track?.('lead_created', {
+          metadata: {
+            lead_type: 'free_class_booking',
+            locale: isItalian ? 'it' : 'es'
+          }
+        });
+      }
+      return response;
+    });
   };
 
   async function captureNewsletter(form) {
@@ -126,6 +176,12 @@ window.YAMILET_INTEGRATION_CONFIG = {
         })
       });
       if (!response.ok) throw new Error('capture_failed');
+      window.CompasTracking?.track?.('lead_created', {
+        metadata: {
+          lead_type: 'newsletter',
+          locale: isItalian ? 'it' : 'es'
+        }
+      });
       form.reset();
       if (note) note.textContent = isItalian ? 'Grazie. La tua registrazione è stata ricevuta.' : 'Gracias. Tu registro fue recibido correctamente.';
     } catch (error) {
@@ -136,6 +192,7 @@ window.YAMILET_INTEGRATION_CONFIG = {
     }
   }
 
+  // Captura antes del listener heredado de app.js para evitar dobles envíos/alertas.
   document.addEventListener('submit', event => {
     const form = event.target.closest?.('[data-newsletter]');
     if (!form) return;
