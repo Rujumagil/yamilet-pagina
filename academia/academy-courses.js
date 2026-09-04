@@ -179,6 +179,15 @@
     }, delay);
   }
 
+  function loadUnifiedCoursesFix() {
+    if (document.querySelector('script[data-academy-courses-fix-v125]')) return;
+    const script = document.createElement('script');
+    script.src = './academy-mobile-courses-fix-v125.js?v=125';
+    script.defer = true;
+    script.dataset.academyCoursesFixV125 = 'true';
+    document.head.appendChild(script);
+  }
+
   document.addEventListener('click', event => {
     if (event.target.closest('[data-open-course]')) {
       window.setTimeout(cleanCourseLearningView, 0);
@@ -199,4 +208,5 @@
 
   window.addEventListener('pageshow', () => scheduleEnhance(120));
   window.setTimeout(() => scheduleEnhance(0), 300);
+  loadUnifiedCoursesFix();
 })();
