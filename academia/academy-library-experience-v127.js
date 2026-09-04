@@ -1,16 +1,20 @@
 (() => {
   'use strict';
 
-  const VERSION = '127.0.0';
+  const VERSION = '127.0.1';
   let scheduled = false;
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+  const setText = (node, value) => {
+    if (node && node.textContent !== value) node.textContent = value;
+  };
 
   function normalizeCard(card) {
     if (!card) return;
     const meta = $('.library-meta', card);
-    const title = $('h3', card)?.textContent?.trim().toLowerCase() || '';
+    const titleNode = $('h3', card);
+    const title = titleNode?.textContent?.trim().toLowerCase() || '';
     const currentMeta = meta?.textContent?.trim().toLowerCase() || '';
 
     const workbook = /cuaderno|workbook|semana/.test(title);
@@ -22,23 +26,24 @@
 
     if (workbook || isTemplate || isDocument) {
       card.dataset.libraryType = 'document';
-      if (meta) meta.textContent = 'DOCUMENTO';
+      setText(meta, 'DOCUMENTO');
     } else if (isExercise) {
       card.dataset.libraryType = 'exercise';
-      if (meta) meta.textContent = 'EJERCICIO';
+      setText(meta, 'EJERCICIO');
     } else if (isAudio) {
       card.dataset.libraryType = 'audio';
-      if (meta) meta.textContent = 'AUDIO';
+      setText(meta, 'AUDIO');
     } else if (isLink) {
       card.dataset.libraryType = 'link';
-      if (meta) meta.textContent = 'ENLACE';
+      setText(meta, 'ENLACE');
     }
 
     const action = $('.shell-action', card);
     if (action) {
-      action.textContent = 'Abrir recurso';
-      action.removeAttribute('target');
-      action.setAttribute('aria-label', `Abrir ${$('h3', card)?.textContent?.trim() || 'recurso'}`);
+      setText(action, 'Abrir recurso');
+      if (action.hasAttribute('target')) action.removeAttribute('target');
+      const aria = `Abrir ${titleNode?.textContent?.trim() || 'recurso'}`;
+      if (action.getAttribute('aria-label') !== aria) action.setAttribute('aria-label', aria);
     }
   }
 
@@ -54,20 +59,16 @@
       const text = card.textContent || '';
       if (/m[eé]todo mes/i.test(text)) courseLabels.add('Método MES');
     });
-    const courseCount = Math.max(1, courseLabels.size || (resourceCount ? 1 : 0));
+    const courseCount = Math.max(resourceCount ? 1 : 0, courseLabels.size);
 
     const articles = $$('article', summary);
     if (articles[0]) {
-      const strong = $('strong', articles[0]);
-      const span = $('span', articles[0]);
-      if (strong) strong.textContent = String(resourceCount);
-      if (span) span.textContent = resourceCount === 1 ? 'RECURSO' : 'RECURSOS';
+      setText($('strong', articles[0]), String(resourceCount));
+      setText($('span', articles[0]), resourceCount === 1 ? 'RECURSO' : 'RECURSOS');
     }
     if (articles[1]) {
-      const strong = $('strong', articles[1]);
-      const span = $('span', articles[1]);
-      if (strong) strong.textContent = String(courseCount);
-      if (span) span.textContent = courseCount === 1 ? 'CURSO' : 'CURSOS';
+      setText($('strong', articles[1]), String(courseCount));
+      setText($('span', articles[1]), courseCount === 1 ? 'CURSO' : 'CURSOS');
     }
   }
 
@@ -82,16 +83,15 @@
 
     const search = $('[data-library-search]', page);
     if (search) {
-      search.placeholder = 'Buscar recursos';
-      search.setAttribute('autocomplete', 'off');
-      search.setAttribute('enterkeyhint', 'search');
+      if (search.placeholder !== 'Buscar recursos') search.placeholder = 'Buscar recursos';
+      if (search.getAttribute('autocomplete') !== 'off') search.setAttribute('autocomplete', 'off');
+      if (search.getAttribute('enterkeyhint') !== 'search') search.setAttribute('enterkeyhint', 'search');
     }
 
-    const filters = $$('[data-library-filter]', page);
-    filters.forEach(button => {
-      if (button.dataset.libraryFilter === 'document') button.textContent = 'Documentos';
-      if (button.dataset.libraryFilter === 'exercise') button.textContent = 'Ejercicios';
-      if (button.dataset.libraryFilter === 'link') button.textContent = 'Enlaces';
+    $$('[data-library-filter]', page).forEach(button => {
+      if (button.dataset.libraryFilter === 'document') setText(button, 'Documentos');
+      if (button.dataset.libraryFilter === 'exercise') setText(button, 'Ejercicios');
+      if (button.dataset.libraryFilter === 'link') setText(button, 'Enlaces');
     });
 
     if (window.ACADEMIA_YAMILET_LIBRARY?.enhance && page.dataset.libraryEnhanced !== '1') {
@@ -115,7 +115,9 @@
   window.addEventListener('hashchange', () => schedule(60));
   window.addEventListener('pageshow', () => schedule(180));
 
-  const observer = new MutationObserver(() => schedule(50));
+  const observer = new MutationObserver(records => {
+    if (records.some(record => record.addedNodes?.length)) schedule(50);
+  });
   observer.observe(document.body, { childList: true, subtree: true });
 
   schedule(350);
