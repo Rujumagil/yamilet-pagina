@@ -1,0 +1,228 @@
+/* Academia Yamilet · Biblioteca móvil v127
+   Mejora contraste, densidad, controles y espacio final sin alterar escritorio. */
+@media (max-width:760px){
+  body.pwa-dashboard-active [data-shell-page="library"].academy-library-page{
+    padding-bottom:calc(86px + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  body.pwa-dashboard-active [data-shell-page="library"].academy-library-page>.shell-page-heading,
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-hero{
+    min-height:232px!important;
+    padding:18px!important;
+    gap:12px!important;
+    align-content:end!important;
+    border-radius:22px!important;
+    background:
+      linear-gradient(180deg,rgba(6,42,35,.18) 0%,rgba(7,48,40,.62) 40%,rgba(7,44,37,.96) 100%),
+      url('../imagenes-academia-yamilet-final/15-recursos-descargables.webp') center 40%/cover no-repeat!important;
+    box-shadow:0 12px 28px rgba(18,63,53,.08)!important;
+  }
+
+  body.pwa-dashboard-active [data-shell-page="library"]>.shell-page-heading .kicker,
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-hero>div:first-child>span{
+    color:#f0c85d!important;
+    font-size:9px!important;
+    letter-spacing:.13em!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"]>.shell-page-heading h2,
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-hero h2{
+    margin:4px 0 6px!important;
+    color:#fff!important;
+    font:700 34px/1.02 Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+    letter-spacing:-.04em!important;
+    text-shadow:0 2px 12px rgba(0,0,0,.18)!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"]>.shell-page-heading p,
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-hero p{
+    max-width:96%!important;
+    color:rgba(255,255,255,.9)!important;
+    font-size:12.5px!important;
+    line-height:1.45!important;
+    text-shadow:0 1px 8px rgba(0,0,0,.14)!important;
+  }
+
+  body.pwa-dashboard-active [data-shell-page="library"]>.shell-page-heading .shell-summary{
+    width:100%!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+    margin-top:2px!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"]>.shell-page-heading .shell-summary article{
+    min-height:60px!important;
+    padding:9px 10px!important;
+    border:1px solid rgba(255,255,255,.76)!important;
+    border-radius:15px!important;
+    background:rgba(255,255,255,.94)!important;
+    backdrop-filter:blur(10px)!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"]>.shell-page-heading .shell-summary strong{
+    color:#0f594c!important;
+    font:800 22px/1 Inter,system-ui,sans-serif!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"]>.shell-page-heading .shell-summary span{
+    margin-top:4px!important;
+    color:#63736d!important;
+    font-size:8.5px!important;
+    font-weight:800!important;
+    letter-spacing:.08em!important;
+  }
+
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-toolbar{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:9px!important;
+    margin:0 0 12px!important;
+    padding:10px!important;
+    border:1px solid rgba(18,63,53,.08)!important;
+    border-radius:18px!important;
+    background:rgba(255,255,255,.9)!important;
+    box-shadow:0 7px 20px rgba(18,63,53,.04)!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-search{
+    position:relative!important;
+    height:46px!important;
+    padding:0!important;
+    gap:0!important;
+    border:0!important;
+    border-radius:14px!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-search>span{
+    position:absolute!important;
+    left:14px!important;
+    top:50%!important;
+    z-index:2!important;
+    transform:translateY(-50%)!important;
+    color:#6d7c76!important;
+    font-size:18px!important;
+    pointer-events:none!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-search input{
+    width:100%!important;
+    height:46px!important;
+    padding:0 14px 0 43px!important;
+    border:1px solid rgba(18,63,53,.14)!important;
+    border-radius:14px!important;
+    outline:0!important;
+    background:#fff!important;
+    color:#23362f!important;
+    font-size:13px!important;
+    box-shadow:none!important;
+    appearance:none!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-search input:focus{
+    border-color:rgba(15,89,76,.42)!important;
+    box-shadow:0 0 0 3px rgba(15,89,76,.08)!important;
+  }
+
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-filters{
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    gap:6px!important;
+    overflow-x:auto!important;
+    padding:0 0 2px!important;
+    scroll-snap-type:x proximity!important;
+    scrollbar-width:none!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-filters::-webkit-scrollbar{display:none!important}
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-filters button{
+    flex:0 0 auto!important;
+    min-height:36px!important;
+    padding:0 12px!important;
+    border-radius:10px!important;
+    font-size:9px!important;
+    font-weight:800!important;
+    white-space:nowrap!important;
+    scroll-snap-align:start!important;
+  }
+
+  body.pwa-dashboard-active [data-shell-page="library"]>.shell-grid.two{
+    grid-template-columns:1fr!important;
+    gap:9px!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .library-card{
+    min-height:0!important;
+    grid-template-columns:46px minmax(0,1fr)!important;
+    gap:11px!important;
+    padding:14px!important;
+    border-radius:18px!important;
+    box-shadow:0 7px 20px rgba(18,63,53,.04)!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .library-icon{
+    width:46px!important;
+    height:46px!important;
+    min-width:46px!important;
+    border-radius:13px!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .library-meta{
+    margin:0 0 4px!important;
+    padding:4px 7px!important;
+    color:#4e6d62!important;
+    font-size:8px!important;
+    letter-spacing:.08em!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .library-card h3{
+    margin:0 0 5px!important;
+    color:#1f312b!important;
+    font:750 17px/1.16 Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+    letter-spacing:-.02em!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .library-card p{
+    margin:0!important;
+    color:#6b7973!important;
+    font-size:12px!important;
+    line-height:1.42!important;
+    -webkit-line-clamp:2!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .library-card .shell-card-footer{
+    margin-top:10px!important;
+    padding-top:0!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .library-card .shell-action,
+  body.pwa-dashboard-active [data-shell-page="library"] .library-card .shell-action.primary{
+    width:auto!important;
+    min-width:144px!important;
+    min-height:38px!important;
+    padding:0 15px!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    align-self:flex-start!important;
+    border-radius:11px!important;
+    background:#0f594c!important;
+    color:#fff!important;
+    border-color:#0f594c!important;
+    font-size:10px!important;
+    font-weight:850!important;
+    line-height:1!important;
+    text-align:center!important;
+    text-decoration:none!important;
+    box-shadow:none!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .library-card .shell-action::after{
+    content:' →';
+    margin-left:4px;
+  }
+
+  body.pwa-dashboard-active [data-shell-page="library"]>.shell-grid.two:last-child,
+  body.pwa-dashboard-active [data-shell-page="library"] .library-card:last-child{
+    margin-bottom:0!important;
+  }
+}
+
+@media (max-width:390px){
+  body.pwa-dashboard-active [data-shell-page="library"].academy-library-page>.shell-page-heading,
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-hero{
+    min-height:220px!important;
+    padding:16px!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"]>.shell-page-heading h2,
+  body.pwa-dashboard-active [data-shell-page="library"] .academy-library-hero h2{font-size:31px!important}
+  body.pwa-dashboard-active [data-shell-page="library"] .library-card{
+    grid-template-columns:42px minmax(0,1fr)!important;
+    padding:12px!important;
+  }
+  body.pwa-dashboard-active [data-shell-page="library"] .library-icon{width:42px!important;height:42px!important;min-width:42px!important}
+  body.pwa-dashboard-active [data-shell-page="library"] .library-card h3{font-size:16px!important}
+}
