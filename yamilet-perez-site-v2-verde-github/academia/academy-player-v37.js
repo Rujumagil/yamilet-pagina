@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const RELEASE = '20260823.38';
+  const RELEASE = '20260904.134';
   const lessonView = document.querySelector('[data-lesson-view]');
   const lessonHost = document.querySelector('[data-lesson-detail]');
   let timer = null;
@@ -11,6 +11,61 @@
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[c]));
   const normalize = (value = '') => String(value).replace(/\s+/g, ' ').trim().toLocaleLowerCase('es');
+
+  function injectLessonUxFix() {
+    if (document.querySelector('style[data-academy-lesson-ux-v134]')) return;
+    const style = document.createElement('style');
+    style.dataset.academyLessonUxV134 = 'true';
+    style.textContent = `
+      body.yamilet-player-mode .dashboard-main .mes-player-shell .mes-player-heading .lesson-title h2{
+        color:#fff!important;
+        text-shadow:0 2px 14px rgba(0,0,0,.16)!important;
+      }
+      body.yamilet-player-mode .dashboard-main .mes-player-shell .mes-player-heading .lesson-title p{
+        color:rgba(239,247,243,.90)!important;
+      }
+      body.yamilet-player-mode .dashboard-main .mes-player-shell .mes-player-heading .lesson-breadcrumb{
+        color:rgba(204,226,216,.82)!important;
+      }
+      body.yamilet-player-mode .dashboard-main .mes-player-shell .mes-player-heading .lesson-complete-badge{
+        color:#edf7f2!important;
+      }
+      @media(max-width:760px){
+        body.yamilet-player-mode .dashboard-main .mes-player-shell .mes-player-heading{
+          min-height:0!important;
+        }
+        body.yamilet-player-mode .dashboard-main .mes-player-shell .mes-player-heading .lesson-title h2{
+          font-size:clamp(29px,8.3vw,36px)!important;
+          line-height:1.02!important;
+          overflow-wrap:normal!important;
+          word-break:normal!important;
+        }
+        body.yamilet-player-mode .dashboard-main .mes-player-shell .lesson-content{
+          line-height:1.62!important;
+        }
+        body.yamilet-player-mode .dashboard-main .mes-player-shell .lesson-content p,
+        body.yamilet-player-mode .dashboard-main .mes-player-shell .lesson-content li{
+          font-size:16px!important;
+          line-height:1.62!important;
+        }
+        body.yamilet-player-mode .dashboard-main .mes-player-shell .lesson-content h1,
+        body.yamilet-player-mode .dashboard-main .mes-player-shell .lesson-content h2{
+          font-size:25px!important;
+          line-height:1.16!important;
+        }
+        body.yamilet-player-mode .dashboard-main .mes-player-shell .lesson-content h3{
+          font-size:21px!important;
+          line-height:1.2!important;
+        }
+        body.yamilet-player-mode .dashboard-main .mes-player-shell .mes-outline-head h3{
+          font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+          font-size:22px!important;
+          font-weight:800!important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
   function inferContextFromVisibleTitle() {
     const visibleTitle = lessonHost?.querySelector('.lesson-title h2')?.textContent?.trim();
@@ -190,15 +245,25 @@
 
   function enhanceNavigation(main) {
     const nav = main.querySelector('.lesson-nav');
-    if (!nav || nav.dataset.mesEnhanced === 'true') return;
+    if (!nav) return;
     nav.dataset.mesEnhanced = 'true';
     nav.classList.add('mes-lesson-navigation');
-    nav.querySelectorAll('.btn').forEach((button, index) => {
-      button.insertAdjacentHTML('afterbegin', `<span class="mes-nav-label">${index === 0 ? 'LECCIÓN ANTERIOR' : 'SIGUIENTE LECCIÓN'}</span>`);
+    const slots = [...nav.children];
+    nav.querySelectorAll('.btn').forEach(button => {
+      const slot = slots.indexOf(button);
+      const label = slot === 0 ? 'LECCIÓN ANTERIOR' : 'SIGUIENTE LECCIÓN';
+      let labelNode = button.querySelector(':scope > .mes-nav-label');
+      if (!labelNode) {
+        labelNode = document.createElement('span');
+        labelNode.className = 'mes-nav-label';
+        button.insertAdjacentElement('afterbegin', labelNode);
+      }
+      labelNode.textContent = label;
     });
   }
 
   function enhanceLesson() {
+    injectLessonUxFix();
     const context = currentContext();
     if (!context || !lessonHost) {
       document.body.classList.remove('yamilet-player-mode');
@@ -283,5 +348,6 @@
   document.addEventListener('yamilet:stream-ready', () => schedule(20));
   window.addEventListener('pageshow', () => schedule(180));
 
+  injectLessonUxFix();
   window.ACADEMIA_YAMILET_PLAYER_V37 = { release: RELEASE, enhance: enhanceLesson };
 })();
