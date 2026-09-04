@@ -1,0 +1,71 @@
+/* Academia Yamilet · Mobile Home Fix v126
+   Corrige el orden de estilos del Inicio móvil, evita el bloque blanco excesivo
+   en Continuar curso y elimina el doble espacio inferior sobre la navegación. */
+
+@media (max-width:760px){
+  /* El padding de cursos v125 no debe afectar Inicio. */
+  html body.pwa-dashboard-active .dashboard-main[data-academy-section="home"],
+  html body.pwa-dashboard-active .dashboard-main[data-v71-route="home"]{
+    padding-bottom:0!important;
+  }
+
+  html body.pwa-dashboard-active .dashboard-main[data-academy-section="home"] > .aula-v71-page-host,
+  html body.pwa-dashboard-active .dashboard-main[data-v71-route="home"] > .aula-v71-page-host{
+    padding-bottom:calc(88px + env(safe-area-inset-bottom))!important;
+  }
+
+  /* Defensa final contra reglas antiguas de v94 cargadas desde caché. */
+  html body.pwa-dashboard-active .v71-home-page .v71-featured-course{
+    min-height:0!important;
+    background:#fff!important;
+    background-image:none!important;
+  }
+
+  html body.pwa-dashboard-active .v71-home-page .v71-featured-course::after{
+    display:none!important;
+  }
+
+  html body.pwa-dashboard-active .v71-home-page .v71-featured-course>div{
+    position:relative!important;
+    z-index:2!important;
+    min-height:0!important;
+    height:auto!important;
+    padding:20px 20px 22px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:flex-start!important;
+    background:#fff!important;
+    color:#172825!important;
+  }
+
+  html body.pwa-dashboard-active .v71-home-page .v71-featured-course h2,
+  html body.pwa-dashboard-active .v71-home-page .v71-featured-course h3{
+    color:#172825!important;
+  }
+
+  html body.pwa-dashboard-active .v71-home-page .v71-featured-course p,
+  html body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-progress-label{
+    color:#62716d!important;
+  }
+
+  html body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-progress-label strong{
+    color:#0d5a4d!important;
+  }
+
+  html body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-btn.primary{
+    background:#0d5a4d!important;
+    color:#fff!important;
+    border-color:#0d5a4d!important;
+  }
+
+  html body.pwa-dashboard-active .v71-home-page .v71-featured-course .v71-btn.ghost{
+    background:#f7f8f5!important;
+    color:#0d5a4d!important;
+    border-color:#dfe8e4!important;
+  }
+
+  /* Mantener el cierre del Inicio compacto antes de la barra inferior. */
+  html body.pwa-dashboard-active .v71-home-page .v71-support{
+    margin-bottom:0!important;
+  }
+}
