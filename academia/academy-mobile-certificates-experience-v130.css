@@ -1,0 +1,162 @@
+/* Academia Yamilet · Certificados mobile UX v130
+   Unifica la ruta de certificados: conserva la vista moderna v71 y oculta el render legado duplicado. */
+
+/* La ruta moderna v71 y la pagina shell antigua estaban visibles al mismo tiempo. */
+.dashboard-main[data-v71-route="certificates"] > [data-shell-page="certificates"],
+body[data-academy-route="certificates"] .dashboard-main[data-v71-route="certificates"] > [data-shell-page="certificates"]{
+  display:none!important;
+}
+
+.dashboard-main[data-v71-route="certificates"] > [data-aula-pages-v71]{
+  display:block!important;
+  width:100%!important;
+}
+
+.v71-certificates-page{
+  padding-bottom:calc(104px + env(safe-area-inset-bottom,0px))!important;
+}
+
+.v130-cert-requirements{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:12px;
+}
+.v130-cert-requirements span{
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:7px 10px;
+  border:1px solid rgba(18,63,53,.08);
+  border-radius:11px;
+  background:#f5f7f3;
+  color:#6b756f;
+  font-size:10px;
+  font-weight:750;
+  text-align:center;
+}
+.v130-cert-requirements span::before{
+  content:"✓";
+  margin-right:6px;
+  color:#b88a2c;
+  font-size:9px;
+}
+
+@media(max-width:760px){
+  .v71-certificates-page{
+    gap:14px!important;
+    padding:14px 18px calc(96px + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  .v71-certificates-page .v71-page-heading{
+    gap:13px!important;
+    margin-bottom:2px!important;
+  }
+  .v71-certificates-page .v71-page-heading h1{
+    margin-top:4px!important;
+    font-size:34px!important;
+    line-height:1.02!important;
+  }
+  .v71-certificates-page .v71-page-heading p{
+    margin-top:8px!important;
+    font-size:12px!important;
+    line-height:1.5!important;
+  }
+
+  .v71-certificates-page .v71-library-summary{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+  .v71-certificates-page .v71-library-summary article{
+    min-width:0!important;
+    padding:11px 9px!important;
+    border-radius:13px!important;
+  }
+  .v71-certificates-page .v71-library-summary strong{
+    font-size:21px!important;
+  }
+  .v71-certificates-page .v71-library-summary span{
+    font-size:8px!important;
+  }
+
+  .v71-certificates-page .v71-certificate-progress{
+    display:grid!important;
+    grid-template-columns:48px minmax(0,1fr)!important;
+    gap:11px 12px!important;
+    padding:18px!important;
+    border-radius:18px!important;
+  }
+  .v71-certificates-page .v71-cert-icon{
+    width:48px!important;
+    height:48px!important;
+    align-self:start!important;
+  }
+  .v71-certificates-page .v71-certificate-progress>div{
+    min-width:0!important;
+  }
+  .v71-certificates-page .v71-certificate-progress h2{
+    margin:5px 0 5px!important;
+    font-size:23px!important;
+    line-height:1.08!important;
+  }
+  .v71-certificates-page .v71-certificate-progress p{
+    font-size:11px!important;
+    line-height:1.5!important;
+  }
+  .v71-certificates-page .v71-certificate-progress .v71-progress{
+    margin-top:11px!important;
+  }
+  .v71-certificates-page .v71-certificate-progress>div>small{
+    display:block!important;
+    margin-top:6px!important;
+    font-size:9px!important;
+  }
+  .v71-certificates-page .v71-certificate-progress>a.v71-btn{
+    grid-column:1/-1!important;
+    width:100%!important;
+    min-height:44px!important;
+    margin-top:1px!important;
+    border-radius:12px!important;
+  }
+
+  .v71-certificates-page .v71-info-note{
+    grid-template-columns:42px minmax(0,1fr)!important;
+    gap:10px!important;
+    padding:14px!important;
+    border-radius:16px!important;
+  }
+  .v71-certificates-page .v71-info-note>span{
+    width:42px!important;
+    height:42px!important;
+  }
+  .v71-certificates-page .v71-info-note strong{
+    font-size:12px!important;
+  }
+  .v71-certificates-page .v71-info-note p{
+    font-size:10px!important;
+    line-height:1.45!important;
+  }
+  .v71-certificates-page .v71-info-note>a{
+    grid-column:2!important;
+    justify-self:start!important;
+    margin-top:2px!important;
+  }
+
+  /* Evita repetir el mismo curso dos veces: la tarjeta superior ya representa el siguiente certificado. */
+  .v71-certificates-page .v71-cert-section:has(.v71-pending-list){
+    display:none!important;
+  }
+}
+
+@media(max-width:390px){
+  .v71-certificates-page{
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+  .v130-cert-requirements{
+    grid-template-columns:1fr;
+  }
+}
