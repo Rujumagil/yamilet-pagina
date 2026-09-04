@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '133.1.0';
+  const VERSION = '133.2.0';
   const INTERIOR_ROUTES = new Set(['course', 'lesson']);
   let scheduled = false;
   let observer = null;
@@ -31,6 +31,15 @@
     script.src = './academy-assessment-course-gate-v135.js?v=135';
     script.async = true;
     script.dataset.academyAssessmentGateV135 = 'true';
+    document.body.appendChild(script);
+  }
+
+  function ensureCoursesStabilityV136() {
+    if (window.ACADEMIA_YAMILET_COURSES_STABILITY_V136 || $('script[data-academy-courses-stability-v136]')) return;
+    const script = document.createElement('script');
+    script.src = './academy-courses-stability-v136.js?v=136';
+    script.async = true;
+    script.dataset.academyCoursesStabilityV136 = 'true';
     document.body.appendChild(script);
   }
 
@@ -85,6 +94,7 @@
   function start() {
     ensureStyle();
     ensureAssessmentGateV135();
+    ensureCoursesStabilityV136();
     apply();
     startObserver();
     window.addEventListener('hashchange', () => schedule(0));
