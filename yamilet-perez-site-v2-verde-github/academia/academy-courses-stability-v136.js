@@ -1,15 +1,12 @@
 (() => {
   'use strict';
 
-  const VERSION = '136.1.0';
+  const VERSION = '136.2.0';
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const MES_COVER = new URL('../imagenes-academia-yamilet-final/10-metodo-mes-cover.webp', document.baseURI).href;
 
-  let observer = null;
-  let lastUpcomingHtml = '';
-  let normalizing = false;
-  let frame = 0;
+  let timer = 0;
 
   function routeName() {
     return decodeURIComponent(String(location.hash || '#home').replace(/^#/, '').split('/')[0] || 'home');
@@ -54,158 +51,75 @@
         aspect-ratio: 16 / 9 !important;
         object-fit: cover !important;
         object-position: center !important;
-        content: url("../imagenes-academia-yamilet-final/10-metodo-mes-cover.webp") !important;
-      }
-
-      html body.academy-courses-stable-v136 #mis-cursos .academy-v68-upcoming-loading {
-        min-height: 82px !important;
-        visibility: hidden !important;
-      }
-
-      html body.academy-courses-stable-v136 #mis-cursos [data-v136-course-hidden="true"] {
-        display: none !important;
       }
     `;
     document.head.appendChild(style);
   }
 
-  function stabilizeUpcoming(panel) {
-    const section = $('.academy-v68-upcoming', panel);
-    if (!section) return;
-    const loading = !!$('.academy-v68-upcoming-loading', section);
-    if (loading && lastUpcomingHtml) {
-      section.innerHTML = lastUpcomingHtml;
-      return;
-    }
-    if (!loading && section.innerHTML.trim()) lastUpcomingHtml = section.innerHTML;
-  }
-
-  function makeCardStable(card) {
-    const title = $('h3', card)?.textContent?.trim() || '';
-    if (/preparaci[oó]n/i.test($('.tag', card)?.textContent || '')) {
-      card.dataset.v136CourseHidden = 'true';
-      return;
-    }
-
-    card.dataset.v136CourseHidden = 'false';
-    if (!card.classList.contains('academy-v68-active-course')) card.classList.add('academy-v68-active-course');
-    if (card.dataset.courseHubV68 !== 'true') card.dataset.courseHubV68 = 'true';
-
-    const tag = $('.tag', card);
-    if (tag && !/staff/i.test(tag.textContent || '') && tag.textContent !== 'ACTIVO') tag.textContent = 'ACTIVO';
-
-    const action = $('[data-open-course]', card);
-    if (action) {
-      if (action.textContent !== 'Abrir curso') action.textContent = 'Abrir curso';
-      const aria = `Abrir ${title || 'curso'}`;
-      if (action.getAttribute('aria-label') !== aria) action.setAttribute('aria-label', aria);
-    }
-
-    const img = $('.course-cover', card);
-    if (img) {
-      if (img.src !== MES_COVER) img.src = MES_COVER;
-      if (img.getAttribute('loading') !== 'eager') img.setAttribute('loading', 'eager');
-      if (img.getAttribute('decoding') !== 'async') img.setAttribute('decoding', 'async');
-    }
-
-    if (card.dataset.v136Bound !== 'true') {
-      card.dataset.v136Bound = 'true';
-      card.tabIndex = 0;
-      card.setAttribute('role', 'link');
-      card.addEventListener('click', event => {
-        if (event.target.closest('button,a,input,select,textarea')) return;
-        action?.click();
-      });
-      card.addEventListener('keydown', event => {
-        if ((event.key === 'Enter' || event.key === ' ') && !event.target.closest('button,a,input,select,textarea')) {
-          event.preventDefault();
-          action?.click();
-        }
-      });
-    }
-  }
-
-  function normalizeNativeCourses() {
-    if (normalizing || !isCoursesRoute()) return;
+  function normalizeOnce() {
+    if (!isCoursesRoute()) return;
     const panel = $('#mis-cursos');
     const list = $('[data-course-list]', panel || document);
     if (!panel || !list) return;
 
-    normalizing = true;
-    try {
-      panel.classList.add('academy-v68-course-hub');
-      list.classList.add('academy-v68-active-grid');
-      $$('.learning-course-card', list).forEach(makeCardStable);
-      stabilizeUpcoming(panel);
-    } finally {
-      normalizing = false;
-    }
+    panel.classList.add('academy-v68-course-hub');
+    list.classList.add('academy-v68-active-grid');
+
+    $$('.learning-course-card', list).forEach(card => {
+      const tag = $('.tag', card);
+      const draft = /preparaci[oó]n/i.test(tag?.textContent || '');
+      card.hidden = draft;
+      if (draft) return;
+
+      card.classList.add('academy-v68-active-course');
+      if (tag && !/staff/i.test(tag.textContent || '')) tag.textContent = 'ACTIVO';
+
+      const action = $('[data-open-course]', card);
+      const title = $('h3', card)?.textContent?.trim() || 'curso';
+      if (action) {
+        action.textContent = 'Abrir curso';
+        action.setAttribute('aria-label', `Abrir ${title}`);
+      }
+
+      const img = $('.course-cover', card);
+      if (img) {
+        img.src = MES_COVER;
+        img.loading = 'eager';
+        img.decoding = 'async';
+      }
+    });
   }
 
   function apply() {
-    frame = 0;
     ensureStyle();
     const active = isCoursesRoute();
     document.body.classList.toggle('academy-courses-stable-v136', active);
     if (!active) return;
-    normalizeNativeCourses();
-  }
 
-  function schedule() {
-    if (frame) return;
-    frame = requestAnimationFrame(() => {
-      apply();
-      requestAnimationFrame(normalizeNativeCourses);
-    });
-  }
-
-  function observe() {
-    observer?.disconnect();
-    const dashboard = $('[data-dashboard]') || document.body;
-    observer = new MutationObserver(records => {
-      if (!isCoursesRoute() || normalizing) return;
-
-      const relevant = records.some(record => {
-        const target = record.target instanceof Element ? record.target : record.target?.parentElement;
-        return !!target?.closest?.('#mis-cursos');
-      });
-      if (!relevant) return;
-
-      // MutationObserver runs before the next paint. Normalize immediately so the
-      // base card written by app.js never becomes visible for a frame.
-      normalizeNativeCourses();
-      schedule();
-    });
-    observer.observe(dashboard, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-      attributes: true,
-      attributeFilter: ['class', 'src', 'hidden', 'data-course-hub-v68']
-    });
+    // Run only a few bounded passes after navigation. No MutationObserver is used
+    // here: previous continuous observers could react to each other and freeze
+    // the UI on sign-in when the last route was #courses.
+    normalizeOnce();
+    window.clearTimeout(timer);
+    timer = window.setTimeout(normalizeOnce, 220);
+    window.setTimeout(normalizeOnce, 700);
   }
 
   function start() {
     ensureStyle();
     apply();
-    observe();
-
-    window.addEventListener('hashchange', schedule);
-    window.addEventListener('popstate', schedule);
-    window.addEventListener('pageshow', schedule);
+    window.addEventListener('hashchange', apply);
+    window.addEventListener('popstate', apply);
+    window.addEventListener('pageshow', apply);
     document.addEventListener('click', event => {
       if (event.target.closest('[data-pwa-route="courses"],[data-shell-route="courses"],[data-scroll-courses],a[href="#courses"]')) {
-        queueMicrotask(normalizeNativeCourses);
-        schedule();
+        window.setTimeout(apply, 0);
       }
     }, true);
 
     window.ACADEMIA_YAMILET_COURSES_STABILITY_V136 = Object.freeze({
       version: VERSION,
-      refresh: () => {
-        normalizeNativeCourses();
-        schedule();
-      }
+      refresh: apply
     });
   }
 
