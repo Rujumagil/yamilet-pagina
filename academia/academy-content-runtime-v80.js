@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '119.0.0';
+  const VERSION = '127.0.0';
   const CONTENT_READY_TIMEOUT = 12000;
   const $ = (selector, root = document) => root.querySelector(selector);
 
@@ -124,7 +124,7 @@
         'data-content-tus-v118',
         () => !!window.tus
       );
-      if (!tusReady) console.warn('Academia Yamilet v118: TUS no disponible; la vinculación manual de Stream sigue disponible.');
+      if (!tusReady) console.warn('Academia Yamilet v127: TUS no disponible; la vinculación manual de Stream sigue disponible.');
 
       await Promise.allSettled([
         loadScript('./academy-video-admin-v62.js?v=62', 'data-video-admin-runtime-v118'),
@@ -132,7 +132,7 @@
       ]);
       return true;
     })().catch(error => {
-      console.warn('Academia Yamilet video stack v118', error);
+      console.warn('Academia Yamilet video stack v127', error);
       return false;
     }).finally(() => {
       videoStackLoading = null;
@@ -152,6 +152,7 @@
     contentLoading = (async () => {
       ensureStyle('./content-admin-p15.css?v=89', 'data-content-admin-style-v118');
       ensureStyle('./academy-content-cms-v80.css?v=80', 'data-content-cms-style-v118');
+      ensureStyle('./academy-content-refinement-v127.css?v=127', 'data-content-refinement-v127');
 
       const root = $('[data-content-admin-root]');
       if (root && !root.children.length) {
@@ -177,7 +178,7 @@
       void loadVideoStack();
       return true;
     })().catch(error => {
-      console.error('Academia Yamilet content runtime v118', error);
+      console.error('Academia Yamilet content runtime v127', error);
       return false;
     }).finally(() => {
       contentLoading = null;
