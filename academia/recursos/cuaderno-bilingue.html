@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#123f35">
+  <title>Cuaderno Método MES® | Academia Yamilet</title>
+</head>
+<body>
+  <div style="min-height:100vh;display:grid;place-items:center;background:#eef1ee;color:#123f35;font:600 14px system-ui">Preparando cuaderno…</div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (()=>{
+    'use strict';
+    const COURSE='44444444-4444-4444-8444-444444444444';
+    const CONFIG='https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
+    const KEY='yamilet-academy-locale';
+    const week=Math.min(4,Math.max(1,Number(new URLSearchParams(location.search).get('semana'))||1));
+    const source=`./cuaderno-metodo-mes-semana-${week}.html`;
+    let client=null, sourceDoc=null, textMap=new Map(), originals=new WeakMap();
+    const common=new Map(Object.entries({
+      'Volver a la Academia':'Torna all’Accademia','Imprimir / Guardar PDF':'Stampa / Salva PDF','Cuaderno de trabajo':'Quaderno di lavoro','Medita.':'Medita.','Escribe.':'Scrivi.','Sana.':'Guarisci.','Nombre':'Nome','Fecha de inicio':'Data di inizio','Antes de empezar':'Prima di iniziare','Cómo usar este cuaderno':'Come usare questo quaderno','Mi intención para esta semana':'La mia intenzione per questa settimana','Para el grupo':'Per il gruppo','Cierre de semana':'Chiusura della settimana','Integración de la semana':'Integrazione della settimana','Días de práctica completados':'Giorni di pratica completati','Firma':'Firma','Fecha':'Data',
+      'Este cuaderno acompaña las prácticas ya incluidas en la Semana 1 de Método MES®. No reemplaza las lecciones; sirve para registrar tu proceso.':'Questo quaderno accompagna le pratiche già incluse nella Settimana 1 di Método MES®. Non sostituisce le lezioni; serve a registrare il tuo percorso.',
+      'Este cuaderno acompaña las prácticas ya incluidas en la Semana 2 de Método MES®. No reemplaza las lecciones; sirve para registrar tu proceso.':'Questo quaderno accompagna le pratiche già incluse nella Settimana 2 di Método MES®. Non sostituisce le lezioni; serve a registrare il tuo percorso.',
+      'Este cuaderno acompaña las prácticas ya incluidas en la Semana 3 de Método MES®. No reemplaza las lecciones; sirve para registrar tu proceso.':'Questo quaderno accompagna le pratiche già incluse nella Settimana 3 di Método MES®. Non sostituisce le lezioni; serve a registrare il tuo percorso.',
+      'Este cuaderno acompaña las prácticas ya incluidas en la Semana 4 de Método MES®. No reemplaza las lecciones; sirve para registrar tu proceso.':'Questo quaderno accompagna le pratiche già incluse nella Settimana 4 di Método MES®. Non sostituisce le lezioni; serve a registrare il tuo percorso.',
+      'Trabaja una práctica por día. No necesitas respuestas perfectas. La intención es observar, registrar y volver a ti con más claridad.':'Svolgi una pratica al giorno. Non servono risposte perfette. L’intenzione è osservare, registrare e tornare a te con maggiore chiarezza.',
+      'Mira o revisa la lección del día.':'Guarda o rivedi la lezione del giorno.','Haz la práctica antes de responder las preguntas.':'Svolgi la pratica prima di rispondere alle domande.','Escribe sin corregir lo que sientes o piensas.':'Scrivi senza correggere ciò che senti o pensi.','Usa el cierre para reconocer un avance concreto.':'Usa la chiusura per riconoscere un progresso concreto.'
+    }));
+    const locale=()=>localStorage.getItem(KEY)==='it'?'it':'es';
+    const norm=v=>String(v||'').replace(/\s+/g,' ').trim();
+    function pairHtml(sourceHtml,targetHtml){
+      if(!sourceHtml||!targetHtml)return;
+      const p=new DOMParser(),s=p.parseFromString(`<div>${sourceHtml}</div>`,'text/html'),t=p.parseFromString(`<div>${targetHtml}</div>`,'text/html');
+      const texts=root=>{const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const a=[];let n;while((n=w.nextNode())){if(norm(n.data))a.push(norm(n.data));}return a;};
+      const sa=texts(s.body),ta=texts(t.body);for(let i=0;i<Math.min(sa.length,ta.length);i++)if(sa[i]&&ta[i])textMap.set(sa[i],ta[i]);
+    }
+    async function loadTranslations(){
+      if(locale()!=='it')return;
+      try{
+        const cfg=await fetch(CONFIG,{headers:{Accept:'application/json'}}).then(r=>r.ok?r.json():Promise.reject());
+        client=window.supabase.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+        const {data:{session}}=await client.auth.getSession();if(!session?.user)return;
+        const {data:rows}=await client.from('academy_content_translations').select('entity_type,entity_id,field_name,source_text,translated_text,translated_html').eq('course_id',COURSE).eq('locale','it').eq('status','published');
+        (rows||[]).forEach(r=>{if(norm(r.source_text)&&norm(r.translated_text))textMap.set(norm(r.source_text),r.translated_text);});
+        const {data:modules}=await client.from('modules').select('id').eq('course_id',COURSE);const ids=(modules||[]).map(m=>m.id);
+        if(ids.length){const {data:lessons}=await client.from('lessons').select('id,content_html').in('module_id',ids);(lessons||[]).forEach(l=>{const tr=(rows||[]).find(r=>r.entity_type==='lesson'&&r.entity_id===l.id&&r.field_name==='content_html'&&r.translated_html);if(tr)pairHtml(l.content_html,tr.translated_html);});}
+      }catch(e){console.warn('Workbook i18n',e);}
+    }
+    function dynamic(value){let m;if((m=value.match(/^Día (\d+) · Semana (\d+)$/)))return `Giorno ${m[1]} · Settimana ${m[2]}`;if((m=value.match(/^Semana (\d+)$/)))return `Settimana ${m[1]}`;if((m=value.match(/^Semana (\d+) · (.+)$/))){const full=textMap.get(value);return full||`Settimana ${m[1]} · ${m[2]}`;}return null;}
+    function translate(v){const n=norm(v);return common.get(n)||textMap.get(n)||dynamic(n)||v;}
+    function apply(root=document.body){
+      const it=locale()==='it';document.documentElement.lang=it?'it':'es';
+      const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode())){if(!n.parentElement||/^(SCRIPT|STYLE)$/i.test(n.parentElement.tagName)||!norm(n.data))continue;if(!originals.has(n))originals.set(n,n.data);n.data=it?translate(originals.get(n)):originals.get(n);}
+      document.title=it?`Quaderno di lavoro · Settimana ${week} | Método MES®`:`Cuaderno de trabajo · Semana ${week} | Método MES®`;
+      const back=document.querySelector('.actions a');if(back)back.textContent=it?'Torna all’Accademia':'Volver a la Academia';
+      const print=document.querySelector('.actions button:not([data-workbook-lang])');if(print)print.textContent=it?'Stampa / Salva PDF':'Imprimir / Guardar PDF';
+      document.querySelectorAll('[data-workbook-lang]').forEach(b=>{const active=b.dataset.workbookLang===locale();b.style.background=active?'#123f35':'#fff';b.style.color=active?'#fff':'#123f35';b.setAttribute('aria-pressed',active?'true':'false');});
+    }
+    function addControls(){const actions=document.querySelector('.actions');if(!actions||actions.querySelector('[data-workbook-lang]'))return;const es=document.createElement('button'),it=document.createElement('button');[[es,'es','ES'],[it,'it','IT']].forEach(([b,l,label])=>{b.type='button';b.dataset.workbookLang=l;b.textContent=label;b.style.cssText='border:1px solid #dce4e0;border-radius:999px;padding:11px 14px;font-weight:700;cursor:pointer';b.addEventListener('click',async()=>{localStorage.setItem(KEY,l);if(l==='it'&&!textMap.size)await loadTranslations();apply(document.body);});actions.prepend(it);actions.prepend(es);});}
+    async function boot(){
+      const html=await fetch(source,{cache:'no-store'}).then(r=>r.text());sourceDoc=new DOMParser().parseFromString(html,'text/html');
+      document.head.querySelectorAll('style[data-workbook-source]').forEach(n=>n.remove());sourceDoc.querySelectorAll('style').forEach(s=>{const c=document.createElement('style');c.dataset.workbookSource='true';c.textContent=s.textContent;document.head.appendChild(c);});
+      document.body.innerHTML=sourceDoc.body.innerHTML;addControls();if(locale()==='it')await loadTranslations();apply(document.body);
+    }
+    boot().catch(e=>{console.error(e);document.body.innerHTML='<div style="padding:40px;font:600 16px system-ui">No fue posible abrir el cuaderno.</div>';});
+  })();
+  </script>
+</body>
+</html>
