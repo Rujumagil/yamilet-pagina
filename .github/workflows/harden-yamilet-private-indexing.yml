@@ -1,0 +1,65 @@
+name: Harden Yamilet private indexing
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/harden-yamilet-private-indexing.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  harden-private-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Add noindex to private Academy shells
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          pages = [
+              Path('yamilet-perez-site-v2-verde-github/academia/index.html'),
+              Path('yamilet-perez-site-v2-verde-github/academia/offline.html'),
+          ]
+          marker = '<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">'
+          for path in pages:
+              text = path.read_text(encoding='utf-8')
+              if 'name="robots"' in text:
+                  continue
+              viewport_end = text.find('\n', text.find('name="viewport"'))
+              if viewport_end == -1:
+                  raise SystemExit(f'Could not locate viewport line in {path}')
+              text = text[:viewport_end+1] + '  ' + marker + '\n' + text[viewport_end+1:]
+              path.write_text(text, encoding='utf-8')
+
+          admin = Path('yamilet-perez-site-v2-verde-github/academia/admin/index.html').read_text(encoding='utf-8')
+          if 'name="robots" content="noindex' not in admin:
+              raise SystemExit('Admin page must remain noindex')
+          PY
+
+          grep -q 'name="robots" content="noindex,nofollow,noarchive,nosnippet"' yamilet-perez-site-v2-verde-github/academia/index.html
+          grep -q 'name="robots" content="noindex,nofollow,noarchive,nosnippet"' yamilet-perez-site-v2-verde-github/academia/offline.html
+
+      - name: Commit hardened metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add yamilet-perez-site-v2-verde-github/academia/index.html yamilet-perez-site-v2-verde-github/academia/offline.html
+          if git diff --cached --quiet; then
+            echo 'Private Academy pages are already noindex.'
+            exit 0
+          fi
+          git commit -m 'seo: noindex private Academy routes'
+          git push origin HEAD:main
