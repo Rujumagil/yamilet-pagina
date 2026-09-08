@@ -1,0 +1,165 @@
+name: Yamilet public performance deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/yamilet-public-performance.yml'
+      - 'yamilet-perez-site-v2-verde-github/es/**'
+      - 'yamilet-perez-site-v2-verde-github/it/**'
+      - 'yamilet-perez-site-v2-verde-github/assets/*.png'
+      - 'yamilet-perez-site-v2-verde-github/index.html'
+      - 'yamilet-perez-site-v2-verde-github/app.js'
+      - 'yamilet-perez-site-v2-verde-github/integration-config.js'
+      - 'yamilet-perez-site-v2-verde-github/styles.css'
+      - 'yamilet-perez-site-v2-verde-github/styles-base.css'
+      - 'yamilet-perez-site-v2-verde-github/layout-fixes.css'
+      - 'yamilet-perez-site-v2-verde-github/ux-enhancements.css'
+      - 'yamilet-perez-site-v2-verde-github/ux-enhancements.js'
+      - 'yamilet-perez-site-v2-verde-github/robots.txt'
+      - 'yamilet-perez-site-v2-verde-github/sitemap.xml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: yamilet-public-production
+  cancel-in-progress: true
+
+jobs:
+  optimize-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: source
+          fetch-depth: 1
+
+      - name: Install WebP encoder
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y webp
+
+      - name: Build production WebP assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          assets='source/yamilet-perez-site-v2-verde-github/assets'
+          test -d "$assets"
+
+          cwebp -quiet -lossless -z 9 -metadata none "$assets/logo-yamilet.png" -o "$assets/logo-yamilet.webp"
+          cwebp -quiet -q 84 -m 6 -metadata none "$assets/hero-yamilet.png" -o "$assets/hero-yamilet.webp"
+          cwebp -quiet -q 84 -m 6 -metadata none "$assets/sobre-yamilet.png" -o "$assets/sobre-yamilet.webp"
+          cwebp -quiet -q 88 -m 6 -metadata none "$assets/curso-metodo-mes.png" -o "$assets/curso-metodo-mes.webp"
+          cwebp -quiet -q 88 -m 6 -metadata none "$assets/curso-metodo-mes-vertical.png" -o "$assets/curso-metodo-mes-vertical.webp"
+
+          for name in \
+            libro-metodo-mes \
+            libro-apegos \
+            libro-expresia \
+            libro-retazos-de-mi-alma \
+            libro-en-la-raiz-del-perdon \
+            libro-nel-silenzio-del-dovere; do
+            cwebp -quiet -q 90 -m 6 -sharp_yuv -metadata none "$assets/$name.png" -o "$assets/$name.webp"
+          done
+
+          echo 'Optimized asset sizes:'
+          for file in "$assets"/*.webp; do
+            bytes=$(stat -c%s "$file")
+            printf '%-45s %10d bytes\n' "$(basename "$file")" "$bytes"
+            test "$bytes" -gt 10000 || { echo "WebP suspiciously small: $file" >&2; exit 1; }
+          done
+
+          hero_size=$(stat -c%s "$assets/hero-yamilet.webp")
+          about_size=$(stat -c%s "$assets/sobre-yamilet.webp")
+          test "$hero_size" -lt 900000
+          test "$about_size" -lt 900000
+
+      - name: Checkout public gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: public
+          fetch-depth: 1
+
+      - name: Sync public site without touching Academia
+        shell: bash
+        run: |
+          set -euo pipefail
+          src='source/yamilet-perez-site-v2-verde-github'
+          test -d "$src/es" && test -d "$src/it" && test -d "$src/assets"
+
+          rsync -a --delete "$src/es/" public/es/
+          rsync -a --delete "$src/it/" public/it/
+          mkdir -p public/assets
+          rsync -a "$src/assets/" public/assets/
+
+          for file in index.html app.js integration-config.js styles.css styles-base.css layout-fixes.css ux-enhancements.css ux-enhancements.js robots.txt sitemap.xml; do
+            test -s "$src/$file"
+            install -m 0644 "$src/$file" "public/$file"
+          done
+
+      - name: Prefer optimized WebP on the live site
+        shell: bash
+        run: |
+          set -euo pipefail
+          targets=(public/es/index.html public/it/index.html public/app.js public/ux-enhancements.js)
+          names=(
+            logo-yamilet hero-yamilet sobre-yamilet curso-metodo-mes curso-metodo-mes-vertical
+            libro-metodo-mes libro-apegos libro-expresia libro-retazos-de-mi-alma
+            libro-en-la-raiz-del-perdon libro-nel-silenzio-del-dovere
+          )
+          for target in "${targets[@]}"; do
+            test -s "$target"
+            for name in "${names[@]}"; do
+              sed -i "s#../assets/${name}\\.png#../assets/${name}.webp#g" "$target"
+            done
+          done
+
+          grep -q '../assets/hero-yamilet.webp' public/es/index.html
+          grep -q '../assets/hero-yamilet.webp' public/it/index.html
+          grep -q "hero: '../assets/hero-yamilet.webp'" public/app.js
+          grep -q '../assets/curso-metodo-mes.webp' public/es/index.html
+
+      - name: Guard public deployment scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd public
+          unexpected="$(git status --porcelain | awk '{print $2}' | grep -Ev '^(es/|it/|assets/|index\.html$|app\.js$|integration-config\.js$|styles\.css$|styles-base\.css$|layout-fixes\.css$|ux-enhancements\.css$|ux-enhancements\.js$|robots\.txt$|sitemap\.xml$)' || true)"
+          if [ -n "$unexpected" ]; then
+            echo 'Deployment attempted to change files outside the public-site scope:' >&2
+            echo "$unexpected" >&2
+            exit 1
+          fi
+
+      - name: Publish gh-pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd public
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A es it assets index.html app.js integration-config.js styles.css styles-base.css layout-fixes.css ux-enhancements.css ux-enhancements.js robots.txt sitemap.xml
+          if git diff --cached --quiet; then
+            echo 'Public site already matches optimized production output.'
+            exit 0
+          fi
+          short_sha="${GITHUB_SHA::7}"
+          git commit -m "deploy(public): optimized Yamilet site ${short_sha}" -m "WebP quality build from ${GITHUB_SHA}"
+          git push origin HEAD:gh-pages
+
+      - name: Live smoke check
+        shell: bash
+        run: |
+          set -euo pipefail
+          sleep 12
+          html=$(curl -fsSL --retry 4 --retry-delay 5 'https://www.yamiletperez.com/es/?perf-check=1')
+          echo "$html" | grep -q 'Método MES'
+          curl -fsSI --retry 4 --retry-delay 5 'https://www.yamiletperez.com/assets/hero-yamilet.webp' | grep -qi '200\|304'
+          echo 'Live public site responded successfully.'
