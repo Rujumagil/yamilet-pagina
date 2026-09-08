@@ -1,9 +1,16 @@
-/* V11 · Optimización móvil, conversión y limpieza de contenido público */
+/* V12 · Optimización móvil, conversión, SEO visual y rendimiento */
 
 /* Ritmo general: menos scroll sin perder aire */
 section{padding:72px 0}
 .section-head{margin-bottom:30px}
 .trustbar{padding:8px 0 46px}
+section[id]{scroll-margin-top:96px}
+
+/* Reduce trabajo de renderizado en contenido fuera de pantalla */
+#academia,#libros,#yamilet,#blog,#contacto{
+  content-visibility:auto;
+  contain-intrinsic-size:900px;
+}
 
 /* Hero */
 .hero{padding:62px 0 42px}
@@ -37,6 +44,8 @@ section{padding:72px 0}
 .academy-login-link:hover{text-decoration:underline}
 .academy-grid{margin-top:20px}
 .academy-card{min-height:220px}
+.course-media-lazy{border-radius:28px;overflow:hidden;background:var(--teal);box-shadow:0 24px 58px rgba(24,62,52,.16)}
+.course-media-lazy img{width:100%;height:auto;display:block;object-fit:cover}
 
 /* Biblioteca */
 .books .section-head{margin-bottom:24px}
@@ -72,6 +81,8 @@ section{padding:72px 0}
 
 @media(max-width:620px){
   section{padding:50px 0}
+  section[id]{scroll-margin-top:82px}
+  #academia,#libros,#yamilet,#blog,#contacto{contain-intrinsic-size:1100px}
   .section-head{margin-bottom:24px}
   .hero{padding:34px 0 30px}
   .hero-grid{gap:28px}
