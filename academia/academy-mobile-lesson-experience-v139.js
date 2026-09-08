@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '139';
+  const VERSION = '139.1';
   const mq = window.matchMedia('(max-width:760px)');
   let timer = 0;
 
@@ -51,6 +51,13 @@
   function polishBackButton() {
     const back = $('[data-back-course]');
     if (back) back.textContent = '← Método MES®';
+  }
+
+  function dedupeMedia(main) {
+    const stream = $('[data-cloudflare-stream-player]', main);
+    if (!stream) return;
+    $$('.video-shell:not([data-cloudflare-stream-player]), .lesson-video, [data-mes-video-pending]', main)
+      .forEach(node => node.remove());
   }
 
   function hideEmptyResources(main) {
@@ -148,6 +155,7 @@
     document.body.dataset.academyLessonExperience = VERSION;
     polishBackButton();
     ensureStudyStrip(main);
+    dedupeMedia(main);
     hideEmptyResources(main);
     polishCompletion(main);
     polishNavigation(main);
@@ -170,6 +178,6 @@
   if (typeof mq.addEventListener === 'function') mq.addEventListener('change', () => schedule(20));
   else if (typeof mq.addListener === 'function') mq.addListener(() => schedule(20));
 
-  [100, 350, 900, 1800].forEach(delay => window.setTimeout(() => schedule(20), delay));
+  [100, 350, 900, 1800, 2600].forEach(delay => window.setTimeout(() => schedule(20), delay));
   window.ACADEMIA_YAMILET_MOBILE_LESSON_V139 = Object.freeze({ version:VERSION, refresh:enhance });
 })();
