@@ -1,10 +1,12 @@
 (() => {
   'use strict';
 
-  const VERSION = '136.2.0';
+  if (window.__ACADEMIA_YAMILET_COURSES_STABILITY_V136_INIT__) return;
+  window.__ACADEMIA_YAMILET_COURSES_STABILITY_V136_INIT__ = true;
+
+  const VERSION = '136.3.0';
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-  const MES_COVER = new URL('../imagenes-academia-yamilet-final/10-metodo-mes-cover.webp', document.baseURI).href;
 
   let timer = 0;
 
@@ -42,16 +44,6 @@
         animation: none !important;
         transition: none !important;
       }
-
-      html body.academy-courses-stable-v136 #mis-cursos .learning-course-card .course-cover {
-        width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        aspect-ratio: 16 / 9 !important;
-        object-fit: cover !important;
-        object-position: center !important;
-      }
     `;
     document.head.appendChild(style);
   }
@@ -62,31 +54,16 @@
     const list = $('[data-course-list]', panel || document);
     if (!panel || !list) return;
 
+    // v136 owns only layer stability. Visual content belongs to v140.
+    // Keeping these responsibilities separate prevents the two runtimes from
+    // alternating labels, buttons and course covers after navigation.
     panel.classList.add('academy-v68-course-hub');
     list.classList.add('academy-v68-active-grid');
 
     $$('.learning-course-card', list).forEach(card => {
       const tag = $('.tag', card);
       const draft = /preparaci[oó]n/i.test(tag?.textContent || '');
-      card.hidden = draft;
-      if (draft) return;
-
-      card.classList.add('academy-v68-active-course');
-      if (tag && !/staff/i.test(tag.textContent || '')) tag.textContent = 'ACTIVO';
-
-      const action = $('[data-open-course]', card);
-      const title = $('h3', card)?.textContent?.trim() || 'curso';
-      if (action) {
-        action.textContent = 'Abrir curso';
-        action.setAttribute('aria-label', `Abrir ${title}`);
-      }
-
-      const img = $('.course-cover', card);
-      if (img) {
-        img.src = MES_COVER;
-        img.loading = 'eager';
-        img.decoding = 'async';
-      }
+      if (card.hidden !== draft) card.hidden = draft;
     });
   }
 
@@ -96,13 +73,9 @@
     document.body.classList.toggle('academy-courses-stable-v136', active);
     if (!active) return;
 
-    // Run only a few bounded passes after navigation. No MutationObserver is used
-    // here: previous continuous observers could react to each other and freeze
-    // the UI on sign-in when the last route was #courses.
     normalizeOnce();
     window.clearTimeout(timer);
-    timer = window.setTimeout(normalizeOnce, 220);
-    window.setTimeout(normalizeOnce, 700);
+    timer = window.setTimeout(normalizeOnce, 240);
   }
 
   function start() {
