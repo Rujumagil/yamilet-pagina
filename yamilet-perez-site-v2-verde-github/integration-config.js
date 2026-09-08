@@ -41,9 +41,10 @@ window.YAMILET_INTEGRATION_CONFIG = {
     document.head.appendChild(script);
   }
 
-  // El tracker no compite con el hero ni con el primer render. Se carga en la
-  // primera intención real del usuario o, si no hay interacción, cuando la
-  // página ya terminó de cargar y el navegador tiene tiempo ocioso.
+  // La analítica completa se activa con intención real del usuario. Como
+  // respaldo para visitas pasivas se inicializa después de 12 s, fuera del
+  // periodo crítico de LCP/TTI. Las UTMs siguen disponibles desde la URL desde
+  // el primer milisegundo, por lo que formularios y accesos no pierden origen.
   let trackerScheduleReady = false;
   function scheduleCompasTracker(){
     if (trackerScheduleReady) return;
@@ -59,11 +60,11 @@ window.YAMILET_INTEGRATION_CONFIG = {
     const afterLoad = () => {
       window.setTimeout(() => {
         if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(ensureCompasTracker,{timeout:1500});
+          window.requestIdleCallback(ensureCompasTracker,{timeout:2500});
         } else {
-          window.setTimeout(ensureCompasTracker,0);
+          ensureCompasTracker();
         }
-      },2200);
+      },12000);
     };
     if (document.readyState === 'complete') afterLoad();
     else window.addEventListener('load',afterLoad,{once:true});
