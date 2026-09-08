@@ -1,0 +1,297 @@
+/* Academia Yamilet · Mobile Lesson Experience v139
+   Lección móvil más compacta, enfocada en estudiar: hero reducido, resumen único,
+   materiales vacíos ocultos y temario colapsable. */
+
+@media (max-width:760px){
+  body.yamilet-player-mode.v139-lesson-enhanced [data-lesson-view]{
+    padding:6px 10px calc(108px + env(safe-area-inset-bottom,0px))!important;
+  }
+
+  body.yamilet-player-mode.v139-lesson-enhanced [data-back-course]{
+    min-height:36px!important;
+    margin:0 0 9px!important;
+    padding:0 11px!important;
+    border-radius:12px!important;
+    color:#31584d!important;
+    font-size:10.5px!important;
+    font-weight:850!important;
+    box-shadow:0 5px 14px rgba(18,63,53,.04)!important;
+  }
+
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-shell{
+    gap:9px!important;
+  }
+
+  /* Hero: sólo lo necesario para identificar la lección. */
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading{
+    margin:0 0 9px!important;
+    padding:15px 16px 16px!important;
+    border-radius:18px!important;
+    box-shadow:0 10px 24px rgba(18,63,53,.10)!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-breadcrumb{
+    gap:5px!important;
+    margin:0 0 7px!important;
+    font-size:7.5px!important;
+    line-height:1.3!important;
+    letter-spacing:.07em!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-title{
+    display:block!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-title .eyebrow{
+    margin-bottom:6px!important;
+    font-size:7.5px!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-title h2{
+    max-width:100%!important;
+    margin:0 0 6px!important;
+    font-size:clamp(26px,7.4vw,31px)!important;
+    line-height:1.01!important;
+    letter-spacing:-.035em!important;
+    text-wrap:balance!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-title p{
+    font-size:10.5px!important;
+  }
+  /* El estado ya vive en la franja de estudio. Evita la píldora blanca casi vacía. */
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-complete-badge{
+    display:none!important;
+  }
+
+  /* Sustituye cuatro tarjetas por una sola franja. */
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-study-meta{
+    display:none!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-study-strip{
+    margin:0 0 9px!important;
+    padding:11px 12px!important;
+    border:1px solid rgba(18,63,53,.10)!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.96)!important;
+    box-shadow:0 6px 18px rgba(18,63,53,.035)!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-study-kpis{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:0!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-study-kpi{
+    min-width:0!important;
+    padding:0 9px!important;
+    border-right:1px solid rgba(18,63,53,.08)!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-study-kpi:first-child{padding-left:0!important}
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-study-kpi:last-child{padding-right:0!important;border-right:0!important}
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-study-kpi span{
+    display:block!important;
+    margin-bottom:3px!important;
+    color:#8a938e!important;
+    font-size:7px!important;
+    font-weight:900!important;
+    letter-spacing:.11em!important;
+    text-transform:uppercase!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-study-kpi strong{
+    display:block!important;
+    color:#123f35!important;
+    font-size:13px!important;
+    line-height:1.1!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-stage{
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    margin-top:9px!important;
+    padding-top:9px!important;
+    border-top:1px solid rgba(18,63,53,.08)!important;
+    color:#5e6e67!important;
+    font-size:10px!important;
+    line-height:1.3!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-stage span{
+    flex:0 0 auto!important;
+    color:#a47f26!important;
+    font-size:7px!important;
+    font-weight:900!important;
+    letter-spacing:.10em!important;
+    text-transform:uppercase!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-stage strong{
+    color:#24463c!important;
+    font-size:10.5px!important;
+  }
+
+  /* Reproductor primero y con menos separación. */
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .video-shell,
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .cloudflare-stream-shell,
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-video{
+    margin:0 0 9px!important;
+    border-radius:16px!important;
+    box-shadow:0 13px 30px rgba(14,43,35,.13)!important;
+  }
+
+  /* Lectura más compacta y cómoda. */
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content,
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .transcript{
+    margin:9px 0!important;
+    padding:17px!important;
+    border-radius:17px!important;
+    line-height:1.52!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content::before{
+    margin-bottom:12px!important;
+    font-size:7.5px!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content p,
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content li{
+    font-size:14.5px!important;
+    line-height:1.55!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content ul,
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content ol{
+    padding-left:22px!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content h1,
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content h2{
+    margin-top:19px!important;
+    margin-bottom:9px!important;
+    font-size:22px!important;
+    line-height:1.14!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content h3{
+    margin-top:18px!important;
+    margin-bottom:8px!important;
+    font-size:18px!important;
+    line-height:1.18!important;
+  }
+
+  /* Recursos sin archivos desaparecen; con archivos siguen disponibles. */
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-lesson-resources[hidden]{
+    display:none!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-lesson-resources{
+    margin:9px 0!important;
+    padding:15px!important;
+    border-radius:16px!important;
+  }
+
+  /* Acción de progreso más clara. */
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-actions{
+    gap:9px!important;
+    margin:9px 0!important;
+    padding:15px!important;
+    border-radius:16px!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-completion-copy strong{
+    font-size:14px!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-completion-copy small{
+    font-size:9px!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-actions .btn{
+    min-height:44px!important;
+    font-size:11px!important;
+    font-weight:850!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .staff-preview{
+    display:block!important;
+    width:100%!important;
+    padding:10px 12px!important;
+    border-radius:12px!important;
+    background:#f7f3e9!important;
+    color:#6e6758!important;
+    font-size:9.5px!important;
+    line-height:1.35!important;
+  }
+
+  /* Anterior / siguiente compactos. */
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-nav{
+    gap:7px!important;
+    margin:9px 0 0!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-nav .btn,
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-nav .btn:last-child{
+    min-height:54px!important;
+    padding:11px 13px!important;
+    border-radius:15px!important;
+    font-size:10.5px!important;
+  }
+
+  /* Temario: cerrado por defecto, accesible con un único botón. */
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-outline-toggle{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    gap:8px 12px!important;
+    align-items:center!important;
+    margin:3px 0 0!important;
+    padding:14px 15px!important;
+    border:1px solid rgba(18,63,53,.10)!important;
+    border-radius:16px!important;
+    background:#fff!important;
+    color:#24463c!important;
+    text-align:left!important;
+    box-shadow:0 7px 20px rgba(18,63,53,.04)!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-outline-toggle strong{
+    display:block!important;
+    font-size:12px!important;
+    line-height:1.2!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-outline-toggle small{
+    display:block!important;
+    margin-top:3px!important;
+    color:#7b8881!important;
+    font-size:8.5px!important;
+    line-height:1.25!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-outline-chevron{
+    width:30px!important;
+    height:30px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:10px!important;
+    background:#edf4f0!important;
+    color:#0d5a4d!important;
+    font-size:16px!important;
+    transition:transform .18s ease!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-outline-toggle[aria-expanded="true"] .v139-outline-chevron{
+    transform:rotate(180deg)!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-outline{
+    display:none!important;
+    position:static!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:12px!important;
+    border-radius:16px!important;
+    box-shadow:0 7px 20px rgba(18,63,53,.045)!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-outline.v139-open{
+    display:block!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-outline-head h3{
+    font-size:19px!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-outline-module summary{
+    padding:10px!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-outline-lesson{
+    padding:9px 10px!important;
+  }
+}
+
+@media (max-width:390px){
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-title h2{
+    font-size:26px!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .v139-study-kpi{
+    padding:0 7px!important;
+  }
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content p,
+  body.yamilet-player-mode.v139-lesson-enhanced .mes-player-main .lesson-content li{
+    font-size:14px!important;
+  }
+}
