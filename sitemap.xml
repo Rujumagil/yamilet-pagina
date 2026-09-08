@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.yamiletperez.com/es/</loc></url>
-  <url><loc>https://www.yamiletperez.com/it/</loc></url>
-  <url><loc>https://www.yamiletperez.com/es/privacidad.html</loc></url>
-  <url><loc>https://www.yamiletperez.com/it/privacy.html</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.yamiletperez.com/es/</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.yamiletperez.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.yamiletperez.com/it/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.yamiletperez.com/"/>
+  </url>
+  <url>
+    <loc>https://www.yamiletperez.com/it/</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.yamiletperez.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.yamiletperez.com/it/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.yamiletperez.com/"/>
+  </url>
+  <url>
+    <loc>https://www.yamiletperez.com/academia/catalogo.html</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url><loc>https://www.yamiletperez.com/es/privacidad.html</loc><lastmod>2026-09-08</lastmod><priority>0.2</priority></url>
+  <url><loc>https://www.yamiletperez.com/es/cookies.html</loc><lastmod>2026-09-08</lastmod><priority>0.2</priority></url>
+  <url><loc>https://www.yamiletperez.com/es/terminos.html</loc><lastmod>2026-09-08</lastmod><priority>0.2</priority></url>
+  <url><loc>https://www.yamiletperez.com/it/privacy.html</loc><lastmod>2026-09-08</lastmod><priority>0.2</priority></url>
+  <url><loc>https://www.yamiletperez.com/it/cookie.html</loc><lastmod>2026-09-08</lastmod><priority>0.2</priority></url>
+  <url><loc>https://www.yamiletperez.com/it/termini.html</loc><lastmod>2026-09-08</lastmod><priority>0.2</priority></url>
 </urlset>
