@@ -23,6 +23,20 @@
       script.dataset.academyMobileHomePolishV138 = 'true';
       document.body.appendChild(script);
     }
+    if (!document.querySelector('link[data-academy-mobile-lesson-v139]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-mobile-lesson-experience-v139.css?v=139';
+      link.dataset.academyMobileLessonV139 = 'true';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-academy-mobile-lesson-v139]')) {
+      const script = document.createElement('script');
+      script.src = './academy-mobile-lesson-experience-v139.js?v=139';
+      script.defer = true;
+      script.dataset.academyMobileLessonV139 = 'true';
+      document.body.appendChild(script);
+    }
   }
 
   function route() {
