@@ -59,7 +59,7 @@ assert(index.includes('name="deployment" content="academia-yamilet-stable-v124"'
 assert(index.includes('name="academy-build" content="v124-unified-runtime"'), 'v124 build marker is missing');
 assert(index.includes('manifest.webmanifest?v=124'), 'v124 manifest cache-bust is missing');
 assert(index.includes('academy-visuals-v91.css?v=124'), 'v124 visual stylesheet cache-bust is missing');
-assert(index.includes('academy-dashboard.js?v=124'), 'v124 dashboard runtime cache-bust is missing');
+assert(index.includes('academy-dashboard.js?v=141'), 'v141 dashboard runtime cache-bust is missing');
 assert(index.includes('academy-admin.js?v=124'), 'v124 admin runtime cache-bust is missing');
 assert(index.includes('academy-admin-operations.js?v=124'), 'v124 operations bridge cache-bust is missing');
 assert(index.includes('academy-commercial-admin.js?v=124'), 'v124 settings bridge cache-bust is missing');
