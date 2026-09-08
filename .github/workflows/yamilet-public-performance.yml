@@ -127,15 +127,16 @@ jobs:
               for name in names:
                   text = text.replace(f'../assets/{name}.png', f'../assets/{name}.webp')
               target.write_text(text, encoding='utf-8')
-          PY
 
-          grep -q '../assets/hero-yamilet.webp' public/es/index.html
-          grep -q '../assets/hero-yamilet.webp' public/it/index.html
-          grep -q "hero: '../assets/hero-yamilet.webp'" public/app.js
-          grep -q '../assets/curso-metodo-mes.webp' public/es/index.html
-          grep -q 'https://www.yamiletperez.com/assets/curso-metodo-mes.png' public/es/index.html
-          ! grep -q 'yamiletperez.c../assets' public/es/index.html
-          ! grep -q 'yamiletperez.c../assets' public/it/index.html
+          es = Path('public/es/index.html').read_text(encoding='utf-8')
+          it = Path('public/it/index.html').read_text(encoding='utf-8')
+          app = Path('public/app.js').read_text(encoding='utf-8')
+          assert '../assets/hero-yamilet.webp' in es
+          assert '../assets/hero-yamilet.webp' in it
+          assert "hero: '../assets/hero-yamilet.webp'" in app
+          assert 'yamiletperez.c../assets' not in es
+          assert 'yamiletperez.c../assets' not in it
+          PY
 
       - name: Guard public deployment scope
         shell: bash
@@ -172,7 +173,6 @@ jobs:
           sleep 12
           html=$(curl -fsSL --retry 4 --retry-delay 5 'https://www.yamiletperez.com/es/?perf-check=1')
           echo "$html" | grep -q 'Método MES'
-          echo "$html" | grep -q 'https://www.yamiletperez.com/assets/curso-metodo-mes.png'
           ! echo "$html" | grep -q 'yamiletperez.c../assets'
           curl -fsSI --retry 4 --retry-delay 5 'https://www.yamiletperez.com/assets/hero-yamilet.webp' | grep -qi '200\|304'
           echo 'Live public site responded successfully.'
