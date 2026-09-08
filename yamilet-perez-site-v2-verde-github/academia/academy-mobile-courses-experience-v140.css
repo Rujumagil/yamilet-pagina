@@ -74,6 +74,9 @@
     object-fit:cover!important;
     object-position:center!important;
   }
+  body[data-academy-courses-experience="140"] #mis-cursos .v140-course-card img.course-cover{
+    content:url("../imagenes-academia-yamilet-final/10-metodo-mes-cover.webp")!important;
+  }
 
   body[data-academy-courses-experience="140"] .v140-course-card .course-card-body,
   body[data-academy-courses-experience="140"] .v140-course-card .v125-course-body{
