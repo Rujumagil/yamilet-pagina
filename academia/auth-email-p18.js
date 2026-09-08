@@ -2,6 +2,51 @@
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
   let clientPromise;
 
+  // Stability guard v141: Supabase token refreshes must not rebuild the whole
+  // Academy dashboard. Multiple feature modules can own Supabase clients, so
+  // refreshing the shared session may emit several TOKEN_REFRESHED events in
+  // a short window. The legacy app listener used those events to call
+  // loadDashboard(), which rebuilt course cards and made the previous visual
+  // version flash back on screen. We only suppress TOKEN_REFRESHED for that
+  // specific dashboard listener; sign-in, sign-out, recovery and user updates
+  // keep their normal behavior.
+  function installDashboardRefreshGuard() {
+    const api = window.supabase;
+    if (!api?.createClient || api.__academyDashboardRefreshGuardV141) return;
+
+    const originalCreateClient = api.createClient.bind(api);
+    api.createClient = (...args) => {
+      const client = originalCreateClient(...args);
+      const auth = client?.auth;
+      if (!auth?.onAuthStateChange || auth.__academyDashboardRefreshGuardV141) return client;
+
+      const originalOnAuthStateChange = auth.onAuthStateChange.bind(auth);
+      auth.onAuthStateChange = callback => {
+        if (typeof callback !== 'function') return originalOnAuthStateChange(callback);
+        const source = Function.prototype.toString.call(callback);
+        const isDashboardReloadListener = source.includes('loadDashboard') && source.includes('TOKEN_REFRESHED');
+        if (!isDashboardReloadListener) return originalOnAuthStateChange(callback);
+
+        return originalOnAuthStateChange((event, session) => {
+          if (event === 'TOKEN_REFRESHED') {
+            window.dispatchEvent(new CustomEvent('academy:session-refreshed', {
+              detail: { userId: session?.user?.id || null }
+            }));
+            return;
+          }
+          return callback(event, session);
+        });
+      };
+      auth.__academyDashboardRefreshGuardV141 = true;
+      return client;
+    };
+
+    api.__academyDashboardRefreshGuardV141 = true;
+    window.ACADEMIA_YAMILET_AUTH_STABILITY_V141 = Object.freeze({ version: '141.0.0' });
+  }
+
+  installDashboardRefreshGuard();
+
   const statusEl = document.querySelector('[data-auth-status]');
   const loginForm = document.querySelector('[data-login-form]');
 
