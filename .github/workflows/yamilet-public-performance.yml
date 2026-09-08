@@ -52,11 +52,13 @@ jobs:
           assets='source/yamilet-perez-site-v2-verde-github/assets'
           test -d "$assets"
 
-          cwebp -quiet -lossless -z 9 -metadata none "$assets/logo-yamilet.png" -o "$assets/logo-yamilet.webp"
-          cwebp -quiet -q 84 -m 6 -metadata none "$assets/hero-yamilet.png" -o "$assets/hero-yamilet.webp"
-          cwebp -quiet -q 84 -m 6 -metadata none "$assets/sobre-yamilet.png" -o "$assets/sobre-yamilet.webp"
-          cwebp -quiet -q 88 -m 6 -metadata none "$assets/curso-metodo-mes.png" -o "$assets/curso-metodo-mes.webp"
-          cwebp -quiet -q 88 -m 6 -metadata none "$assets/curso-metodo-mes-vertical.png" -o "$assets/curso-metodo-mes-vertical.webp"
+          # Right-size the initial viewport assets so mobile devices do not decode
+          # multi-megapixel PNGs for elements that render at 62–430 CSS pixels.
+          cwebp -quiet -lossless -z 9 -resize 384 0 -metadata none "$assets/logo-yamilet.png" -o "$assets/logo-yamilet.webp"
+          cwebp -quiet -q 82 -m 6 -resize 960 0 -metadata none "$assets/hero-yamilet.png" -o "$assets/hero-yamilet.webp"
+          cwebp -quiet -q 82 -m 6 -resize 960 0 -metadata none "$assets/sobre-yamilet.png" -o "$assets/sobre-yamilet.webp"
+          cwebp -quiet -q 86 -m 6 -resize 1400 0 -metadata none "$assets/curso-metodo-mes.png" -o "$assets/curso-metodo-mes.webp"
+          cwebp -quiet -q 86 -m 6 -resize 900 0 -metadata none "$assets/curso-metodo-mes-vertical.png" -o "$assets/curso-metodo-mes-vertical.webp"
 
           for name in \
             libro-metodo-mes \
@@ -65,20 +67,22 @@ jobs:
             libro-retazos-de-mi-alma \
             libro-en-la-raiz-del-perdon \
             libro-nel-silenzio-del-dovere; do
-            cwebp -quiet -q 90 -m 6 -sharp_yuv -metadata none "$assets/$name.png" -o "$assets/$name.webp"
+            cwebp -quiet -q 88 -m 6 -sharp_yuv -resize 600 0 -metadata none "$assets/$name.png" -o "$assets/$name.webp"
           done
 
           echo 'Optimized asset sizes:'
           for file in "$assets"/*.webp; do
             bytes=$(stat -c%s "$file")
             printf '%-45s %10d bytes\n' "$(basename "$file")" "$bytes"
-            test "$bytes" -gt 10000 || { echo "WebP suspiciously small: $file" >&2; exit 1; }
+            test "$bytes" -gt 7000 || { echo "WebP suspiciously small: $file" >&2; exit 1; }
           done
 
+          logo_size=$(stat -c%s "$assets/logo-yamilet.webp")
           hero_size=$(stat -c%s "$assets/hero-yamilet.webp")
           about_size=$(stat -c%s "$assets/sobre-yamilet.webp")
-          test "$hero_size" -lt 900000
-          test "$about_size" -lt 900000
+          test "$logo_size" -lt 150000
+          test "$hero_size" -lt 200000
+          test "$about_size" -lt 200000
 
       - name: Checkout public gh-pages
         uses: actions/checkout@v4
