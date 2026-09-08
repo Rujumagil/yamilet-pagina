@@ -1,0 +1,148 @@
+/* Academia Yamilet · Mobile Home Polish v138
+   Segunda pasada visual sobre v137: menos repetición, menor scroll y mayor foco en aprendizaje. */
+
+@media (max-width:760px){
+  html body.pwa-dashboard-active .v71-home-page.v137-home{
+    gap:10px!important;
+  }
+
+  /* Hero más compacto sin perder presencia. */
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-welcome>div:first-child{
+    padding:16px 20px 13px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-welcome::after{
+    height:156px!important;
+    min-height:156px!important;
+    flex-basis:156px!important;
+    background-position:center 61%!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-welcome h1{
+    font-size:clamp(33px,9vw,39px)!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-welcome p{
+    font-size:12px!important;
+    line-height:1.38!important;
+  }
+
+  /* El curso usa su portada oficial para no repetir dos retratos de Yamilet seguidos. */
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-featured-course::before{
+    height:146px!important;
+    background:
+      linear-gradient(180deg,rgba(5,45,39,.02),rgba(5,45,39,.08)),
+      url("../imagenes-academia-yamilet-final/10-metodo-mes-cover.webp") center 50%/cover no-repeat!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-featured-course>div{
+    padding:17px 20px 18px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-featured-course h2{
+    font-size:26px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-featured-course p{
+    margin-top:6px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-featured-actions{
+    margin-top:12px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-featured-actions .v71-btn.primary{
+    min-height:46px!important;
+  }
+  html body.pwa-dashboard-active .v137-progress-note{
+    margin-top:7px!important;
+  }
+
+  /* KPIs todavía más densos. */
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-summary-card{
+    min-height:70px!important;
+    padding:10px 11px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-summary-icon{
+    width:32px!important;
+    height:32px!important;
+    min-width:32px!important;
+  }
+
+  /* Tarjeta sin evento: una sola línea de estado y CTA. */
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-event-card[data-v137-empty="true"]{
+    grid-template-columns:40px minmax(0,1fr)!important;
+    padding:14px 15px!important;
+    gap:2px 11px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-event-card[data-v137-empty="true"]::before{
+    width:40px!important;
+    height:40px!important;
+    min-height:40px!important;
+    border-radius:12px!important;
+    font-size:17px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-event-card[data-v137-empty="true"] h2{
+    font-size:17px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-event-card[data-v137-empty="true"] p{
+    font-size:10.5px!important;
+    margin-bottom:5px!important;
+  }
+
+  /* Accesos rápidos sin texto redundante en la cabecera. */
+  html body.pwa-dashboard-active .v137-quick{
+    padding:15px!important;
+  }
+  html body.pwa-dashboard-active .v137-quick-head{
+    margin-bottom:9px!important;
+  }
+  html body.pwa-dashboard-active .v137-quick-head small{
+    display:none!important;
+  }
+  html body.pwa-dashboard-active .v137-quick-grid a{
+    min-height:54px!important;
+    padding:9px!important;
+  }
+
+  /* Los enlaces de Novedades repetían Biblioteca y Calendario ya presentes arriba.
+     Se ocultan en Inicio móvil hasta que exista un feed real de novedades. */
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-news{
+    display:none!important;
+  }
+
+  /* Ayuda compacta, con el mismo acceso pero sin consumir media pantalla. */
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-support{
+    min-height:0!important;
+    height:auto!important;
+    padding:18px!important;
+    border-radius:20px!important;
+    background-position:center 44%!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-support h2{
+    margin-top:5px!important;
+    font-size:21px!important;
+    line-height:1.04!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-support p{
+    margin:7px 0 12px!important;
+    font-size:11.5px!important;
+    line-height:1.4!important;
+    max-width:330px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-support .v71-btn{
+    min-height:40px!important;
+    padding:9px 14px!important;
+  }
+
+  /* Menor espacio antes de la navegación inferior. */
+  html body.pwa-dashboard-active .aula-v71-page-host{
+    padding-bottom:92px!important;
+  }
+}
+
+@media (max-width:390px){
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-welcome::after{
+    height:146px!important;
+    min-height:146px!important;
+    flex-basis:146px!important;
+  }
+  html body.pwa-dashboard-active .v71-home-page.v137-home .v71-featured-course::before{
+    height:136px!important;
+  }
+  html body.pwa-dashboard-active .v137-quick-grid{
+    gap:7px!important;
+  }
+}
