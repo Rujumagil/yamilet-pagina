@@ -68,7 +68,7 @@ jobs:
           grep -q 'name="academy-build" content="v124-unified-runtime"' "$base/index.html"
           grep -q 'manifest.webmanifest?v=124' "$base/index.html"
           grep -q 'academy-navigation.js?v=124' "$base/index.html"
-          grep -q 'academy-dashboard.js?v=124' "$base/index.html"
+          grep -q 'academy-dashboard.js?v=141' "$base/index.html"
           grep -q 'academy-admin.js?v=124' "$base/index.html"
           grep -q 'academy-admin-operations.js?v=124' "$base/index.html"
           grep -q 'academy-commercial-admin.js?v=124' "$base/index.html"
