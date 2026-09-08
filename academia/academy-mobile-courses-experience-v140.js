@@ -1,13 +1,45 @@
 (() => {
   'use strict';
 
-  const VERSION = '140';
+  if (window.__ACADEMIA_YAMILET_MOBILE_COURSES_V140_INIT__) return;
+  window.__ACADEMIA_YAMILET_MOBILE_COURSES_V140_INIT__ = true;
+
+  const VERSION = '140.1';
   const mq = window.matchMedia('(max-width:760px)');
   const METHOD_COVER = '../imagenes-academia-yamilet-final/10-metodo-mes-cover.webp';
   let timer = 0;
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+  const normalize = value => String(value || '').replace(/\s+/g, ' ').trim();
+
+  function routeName() {
+    return decodeURIComponent(String(location.hash || '#home').replace(/^#/, '').split('/')[0] || 'home');
+  }
+
+  function isCoursesRoute() {
+    const main = $('.dashboard-main');
+    return routeName() === 'courses' ||
+      main?.dataset.v71Route === 'courses' ||
+      main?.dataset.academySection === 'courses' ||
+      document.body.dataset.academyRoute === 'courses';
+  }
+
+  function setText(node, value) {
+    if (!node) return false;
+    const next = String(value ?? '');
+    if (node.textContent === next) return false;
+    node.textContent = next;
+    return true;
+  }
+
+  function setAttr(node, name, value) {
+    if (!node) return false;
+    const next = String(value ?? '');
+    if (node.getAttribute(name) === next) return false;
+    node.setAttribute(name, next);
+    return true;
+  }
 
   function percentFrom(card) {
     const direct = $('.course-percent', card)?.textContent || $('.v125-course-top strong', card)?.textContent || '';
@@ -27,22 +59,29 @@
     if (!img) return;
     const current = img.getAttribute('src') || '';
     if (!current.includes('10-metodo-mes-cover.webp')) img.setAttribute('src', METHOD_COVER);
-    img.setAttribute('alt', 'Portada oficial del Método MES®');
-    img.setAttribute('loading', 'eager');
-    img.setAttribute('decoding', 'async');
+    setAttr(img, 'alt', 'Portada oficial del Método MES®');
+    setAttr(img, 'loading', 'eager');
+    setAttr(img, 'decoding', 'async');
   }
 
   function compactMeta(card) {
     const meta = $('.course-meta,.v125-course-meta', card);
     if (!meta) return;
-    const text = meta.textContent.replace(/\s+/g, ' ').trim();
+    const text = normalize(meta.textContent);
     const weeks = text.match(/(\d+)\s*semanas?/i)?.[1];
     const lessons = text.match(/(\d+)\s*(?:de\s*\d+\s*)?lecciones?/i)?.[1];
     let label = '';
     if (isMethodMes(card)) label = '4 semanas · 22 lecciones';
     else if (weeks && lessons) label = `${weeks} semanas · ${lessons} lecciones`;
     else label = text;
-    if (label) meta.innerHTML = `<span>${label}</span>`;
+    if (!label) return;
+
+    const singleSpan = meta.children.length === 1 && meta.firstElementChild?.tagName === 'SPAN';
+    if (singleSpan && normalize(meta.firstElementChild.textContent) === label) return;
+
+    const span = document.createElement('span');
+    span.textContent = label;
+    meta.replaceChildren(span);
   }
 
   function ensureProgressLabel(card, percent) {
@@ -55,29 +94,30 @@
       head.innerHTML = '<span>Tu progreso</span><strong>0%</strong>';
       track.insertAdjacentElement('beforebegin', head);
     }
-    $('strong', head).textContent = `${percent}%`;
-    track.setAttribute('aria-label', `Progreso del curso ${percent}%`);
+    setText($('strong', head), `${percent}%`);
+    setAttr(track, 'aria-label', `Progreso del curso ${percent}%`);
   }
 
   function intelligentAction(card, percent) {
     const action = $('[data-open-course],.v125-course-btn', card);
     if (!action) return;
-    action.textContent = percent >= 100 ? 'Repasar curso' : percent > 0 ? 'Continuar curso' : 'Comenzar curso';
-    action.setAttribute('aria-label', `${action.textContent}: ${$('h2,h3', card)?.textContent?.trim() || 'curso'}`);
+    const label = percent >= 100 ? 'Repasar curso' : percent > 0 ? 'Continuar curso' : 'Comenzar curso';
+    setText(action, label);
+    setAttr(action, 'aria-label', `${label}: ${$('h2,h3', card)?.textContent?.trim() || 'curso'}`);
   }
 
   function polishStatus(card, percent) {
     const tag = $('.tag,.v125-course-badge', card);
     if (!tag) return;
     const current = tag.textContent.trim().toLocaleLowerCase('es');
-    const staff = current.includes('staff');
+    const staff = current.includes('staff') || tag.dataset.v140Staff === 'true';
     if (staff) {
-      tag.textContent = 'VISTA DE STAFF';
-      tag.dataset.v140Staff = 'true';
+      setText(tag, 'VISTA DE STAFF');
+      if (tag.dataset.v140Staff !== 'true') tag.dataset.v140Staff = 'true';
       return;
     }
-    tag.textContent = percent >= 100 ? 'COMPLETADO' : 'ACTIVO';
-    delete tag.dataset.v140Staff;
+    setText(tag, percent >= 100 ? 'COMPLETADO' : 'ACTIVO');
+    if (tag.dataset.v140Staff) delete tag.dataset.v140Staff;
   }
 
   function polishCard(card) {
@@ -89,7 +129,7 @@
     intelligentAction(card, percent);
     polishStatus(card, percent);
     const oldPercent = $('.course-percent', card);
-    if (oldPercent) oldPercent.setAttribute('aria-hidden', 'true');
+    if (oldPercent && oldPercent.getAttribute('aria-hidden') !== 'true') oldPercent.setAttribute('aria-hidden', 'true');
   }
 
   function polishLegacyHeading() {
@@ -98,42 +138,45 @@
     panel.classList.add('v140-courses-hub');
     const head = $('.panel-head', panel);
     const copy = $('p', head || panel);
-    if (copy) copy.textContent = 'Continúa tus programas y retoma tu avance donde lo dejaste.';
+    setText(copy, 'Continúa tus programas y retoma tu avance donde lo dejaste.');
     const catalog = $('[data-open-course-catalog]', panel);
-    if (catalog) catalog.textContent = 'Catálogo de cursos →';
+    setText(catalog, 'Catálogo de cursos →');
     const activeHead = $('.academy-v68-active-head', panel);
     const activeCount = $$('.learning-course-card:not([hidden])', panel).length;
     const activeCopy = $('p', activeHead || panel);
-    if (activeCopy && activeHead) activeCopy.textContent = activeCount === 1 ? '1 programa activo en tu cuenta.' : `${activeCount} programas activos en tu cuenta.`;
+    if (activeCopy && activeHead) setText(activeCopy, activeCount === 1 ? '1 programa activo en tu cuenta.' : `${activeCount} programas activos en tu cuenta.`);
   }
 
   function polishV125Heading() {
     const page = $('.v125-courses-page');
     if (!page) return;
     page.classList.add('v140-courses-hub');
-    const copy = $('.v125-heading p', page);
-    if (copy) copy.textContent = 'Continúa tus programas y retoma tu avance donde lo dejaste.';
-    const catalog = $('.v125-catalog-btn', page);
-    if (catalog) catalog.textContent = 'Catálogo de cursos →';
+    setText($('.v125-heading p', page), 'Continúa tus programas y retoma tu avance donde lo dejaste.');
+    setText($('.v125-catalog-btn', page), 'Catálogo de cursos →');
   }
 
   function polishUpcoming() {
     $$('.academy-v68-upcoming,.v125-upcoming').forEach(section => {
       const hasRealCards = !!$('.academy-v68-upcoming-card,.v125-upcoming-card', section);
       const loading = !!$('.academy-v68-upcoming-loading', section);
-      section.classList.toggle('v140-upcoming-empty', !hasRealCards && !loading);
+      const shouldBeEmpty = !hasRealCards && !loading;
+      if (section.classList.contains('v140-upcoming-empty') !== shouldBeEmpty) {
+        section.classList.toggle('v140-upcoming-empty', shouldBeEmpty);
+      }
     });
   }
 
   function enhance() {
     window.clearTimeout(timer);
     timer = 0;
-    if (!mq.matches) return;
+    if (!mq.matches || !isCoursesRoute()) return;
 
     const cards = $$('.learning-course-card,.v125-course-card');
     if (!cards.length) return;
 
-    document.body.dataset.academyCoursesExperience = VERSION;
+    if (document.body.dataset.academyCoursesExperience !== VERSION) {
+      document.body.dataset.academyCoursesExperience = VERSION;
+    }
     polishLegacyHeading();
     polishV125Heading();
     cards.forEach(polishCard);
@@ -147,9 +190,13 @@
 
   const root = $('[data-dashboard]') || document.body;
   new MutationObserver(mutations => {
-    if (!mq.matches) return;
-    const relevant = mutations.some(m => m.type === 'childList' || (m.type === 'attributes' && m.attributeName === 'src'));
-    if (relevant) schedule(80);
+    if (!mq.matches || !isCoursesRoute()) return;
+    const relevant = mutations.some(m => {
+      if (m.type === 'attributes') return m.attributeName === 'src';
+      if (m.type !== 'childList') return false;
+      return m.addedNodes.length > 0 || m.removedNodes.length > 0;
+    });
+    if (relevant) schedule(90);
   }).observe(root, { childList:true, subtree:true, attributes:true, attributeFilter:['src'] });
 
   document.addEventListener('click', event => {
@@ -160,6 +207,6 @@
   if (typeof mq.addEventListener === 'function') mq.addEventListener('change', () => schedule(20));
   else if (typeof mq.addListener === 'function') mq.addListener(() => schedule(20));
 
-  [120, 400, 900, 1800, 3200].forEach(delay => window.setTimeout(() => schedule(20), delay));
+  [120, 500, 1400].forEach(delay => window.setTimeout(() => schedule(20), delay));
   window.ACADEMIA_YAMILET_MOBILE_COURSES_V140 = Object.freeze({ version:VERSION, refresh:enhance });
 })();
