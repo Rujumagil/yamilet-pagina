@@ -109,7 +109,7 @@
     const note = form.querySelector('.booking-note');
     if(note){
       note.innerHTML = isItalian
-        ? 'La disponibilità definitiva sarà confermata dopo l’invio. Consulta la nostra <a href="privacidad.html">informativa sulla privacy</a>.'
+        ? 'La disponibilità definitiva sarà confermata dopo l’invio. Consulta la nostra <a href="privacy.html">informativa sulla privacy</a>.'
         : 'La disponibilidad definitiva se confirmará después de enviar la solicitud. Consulta nuestro <a href="privacidad.html">Aviso de Privacidad</a>.';
     }
     if(!form.querySelector('.booking-next')){
@@ -268,7 +268,212 @@
     };
   }
 
+  function upsertMeta(selector, attrs){
+    let el=document.head.querySelector(selector);
+    if(!el){
+      el=document.createElement('meta');
+      document.head.appendChild(el);
+    }
+    Object.entries(attrs).forEach(([key,value])=>el.setAttribute(key,value));
+    return el;
+  }
+
+  function enhanceSeoMeta(){
+    const base='https://www.yamiletperez.com';
+    const canonical=isItalian ? `${base}/it/` : `${base}/es/`;
+    const image=`${base}/assets/curso-metodo-mes.png`;
+    upsertMeta('meta[name="robots"]',{name:'robots',content:'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'});
+    upsertMeta('meta[name="author"]',{name:'author',content:'Yamilet Pérez'});
+    upsertMeta('meta[property="og:url"]',{property:'og:url',content:canonical});
+    upsertMeta('meta[property="og:site_name"]',{property:'og:site_name',content:'Yamilet Pérez'});
+    upsertMeta('meta[property="og:locale"]',{property:'og:locale',content:isItalian?'it_IT':'es_MX'});
+    upsertMeta('meta[property="og:image"]',{property:'og:image',content:image});
+    upsertMeta('meta[property="og:image:alt"]',{property:'og:image:alt',content:isItalian?'Metodo MES di Yamilet Pérez':'Método MES de Yamilet Pérez'});
+    upsertMeta('meta[name="twitter:card"]',{name:'twitter:card',content:'summary_large_image'});
+    upsertMeta('meta[name="twitter:title"]',{name:'twitter:title',content:isItalian?'Yamilet Pérez | Metodo MES®':'Yamilet Pérez | Método MES®'});
+    upsertMeta('meta[name="twitter:description"]',{name:'twitter:description',content:isItalian?'Mindfulness e scrittura terapeutica per la donna contemporanea.':'Mindfulness y escritura terapéutica para la mujer actual.'});
+    upsertMeta('meta[name="twitter:image"]',{name:'twitter:image',content:image});
+  }
+
+  function injectStructuredData(){
+    if(document.querySelector('#yamilet-seo-schema')) return;
+    const base='https://www.yamiletperez.com';
+    const page=isItalian ? `${base}/it/` : `${base}/es/`;
+    const personId=`${base}/#yamilet-perez`;
+    const courseId=`${base}/#metodo-mes`;
+    const bookData=[
+      ['Método MES','https://www.amazon.com/dp/B0F38BQGPT'],
+      ['Apegos','https://www.amazon.com/dp/B0CW1JNM5Z'],
+      ['Expresia','https://www.amazon.com/dp/B0F5R1VX2V'],
+      ['Retazos de mi alma','https://www.amazon.com/dp/B0DX6RN58F'],
+      ['En la raíz del perdón','https://www.amazon.com/dp/B0G6JKFFCF'],
+      ['Nel silenzio del dovere','https://www.amazon.com/dp/B0GR6XF23R']
+    ];
+    const graph=[
+      {
+        '@type':'WebSite','@id':`${base}/#website`,url:`${base}/`,name:'Yamilet Pérez',
+        inLanguage:['es','it'],publisher:{'@id':personId}
+      },
+      {
+        '@type':'Person','@id':personId,name:'Yamilet Pérez',url:page,
+        image:`${base}/assets/sobre-yamilet.png`,
+        jobTitle:isItalian?'Autrice, educatrice e creatrice del Metodo MES®':'Autora, educadora y creadora del Método MES®',
+        knowsAbout:isItalian
+          ? ['Mindfulness','Scrittura terapeutica','Scrittura creativa','Crescita personale']
+          : ['Mindfulness','Escritura terapéutica','Escritura creativa','Crecimiento personal']
+      },
+      {
+        '@type':'WebPage','@id':`${page}#webpage`,url:page,
+        name:isItalian?'Yamilet Pérez | Metodo MES®':'Yamilet Pérez | Método MES®',
+        isPartOf:{'@id':`${base}/#website`},about:{'@id':personId},
+        primaryImageOfPage:{'@type':'ImageObject',url:`${base}/assets/hero-yamilet.png`},
+        inLanguage:isItalian?'it-IT':'es-MX'
+      },
+      {
+        '@type':'Course','@id':courseId,
+        name:isItalian?'Metodo MES® — Medita, Scrivi, Guarisci':'Método MES® — Medita, Escribe, Sana',
+        description:isItalian
+          ? 'Percorso guidato che integra mindfulness, scrittura terapeutica e creatività.'
+          : 'Recorrido guiado que integra mindfulness, escritura terapéutica y creatividad.',
+        provider:{'@id':personId},url:`${page}#academia`,inLanguage:isItalian?'it':'es'
+      },
+      {
+        '@type':'ItemList','@id':`${page}#libros`,name:isItalian?'Libri di Yamilet Pérez':'Libros de Yamilet Pérez',
+        itemListElement:bookData.map(([name,url],index)=>({
+          '@type':'ListItem',position:index+1,item:{'@type':'Book',name,url,author:{'@id':personId}}
+        }))
+      }
+    ];
+    const script=document.createElement('script');
+    script.id='yamilet-seo-schema';
+    script.type='application/ld+json';
+    script.textContent=JSON.stringify({'@context':'https://schema.org','@graph':graph});
+    document.head.appendChild(script);
+  }
+
+  function initLazyCourseMedia(){
+    const media=document.querySelector('.course-media-lazy');
+    if(!media || media.dataset.lazyCourseReady==='true') return;
+    media.dataset.lazyCourseReady='true';
+    media.classList.add('course-media');
+    const img=media.querySelector('img');
+    if(!img) return;
+    const mq=window.matchMedia('(max-width: 620px)');
+    const apply=()=>{
+      const target=mq.matches?'../assets/curso-metodo-mes-vertical.png':'../assets/curso-metodo-mes.png';
+      if(img.getAttribute('src')!==target) img.setAttribute('src',target);
+      img.loading='lazy';
+      img.decoding='async';
+      try{ img.fetchPriority='low'; }catch(_){ }
+    };
+    apply();
+    if(typeof mq.addEventListener==='function') mq.addEventListener('change',apply);
+    else if(typeof mq.addListener==='function') mq.addListener(apply);
+  }
+
+  function optimizeImages(){
+    document.querySelectorAll('img').forEach(img=>{
+      img.decoding='async';
+      if(img.closest('.hero-media')){
+        img.loading='eager';
+        try{ img.fetchPriority='high'; }catch(_){ }
+      }else if(!img.closest('.brand') && !img.classList.contains('welcome-logo')){
+        img.loading='lazy';
+        try{ if(!img.closest('.course-media')) img.fetchPriority='low'; }catch(_){ }
+      }
+    });
+  }
+
+  const analyticsQueue=window.__yamiletAnalyticsQueue=window.__yamiletAnalyticsQueue||[];
+  function sendAnalyticsEvent(eventName,metadata={}){
+    const payload={metadata:{locale:isItalian?'it':'es',page_path:location.pathname,...metadata}};
+    try{
+      if(window.CompasTracking?.track){
+        window.CompasTracking.track(eventName,payload);
+        return true;
+      }
+    }catch(_){ }
+    analyticsQueue.push([eventName,payload]);
+    return false;
+  }
+
+  function flushAnalyticsQueue(){
+    if(!window.CompasTracking?.track || !analyticsQueue.length) return;
+    while(analyticsQueue.length){
+      const [eventName,payload]=analyticsQueue.shift();
+      try{ window.CompasTracking.track(eventName,payload); }catch(_){ break; }
+    }
+  }
+
+  function initConversionTracking(){
+    if(document.documentElement.dataset.yamiletTrackingReady==='true') return;
+    document.documentElement.dataset.yamiletTrackingReady='true';
+
+    document.addEventListener('click',event=>{
+      const link=event.target.closest?.('a');
+      if(!link) return;
+      const href=link.getAttribute('href')||'';
+      const label=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
+      const section=link.closest('section')?.id || (link.closest('header')?'header':link.closest('footer')?'footer':'page');
+
+      if(href.includes('amazon.com') || href.includes('amzn.')){
+        sendAnalyticsEvent('outbound_click',{destination:'amazon',label,section});
+      }else if(link.matches('[data-academy-link]') || href.includes('/academia/')){
+        sendAnalyticsEvent('academy_click',{label,section,cta:link.dataset.academyCta||''});
+      }else if(href==='#clase' || link.closest('.hero .actions') || link.closest('.section-actions')){
+        sendAnalyticsEvent('cta_click',{label,section,destination:href||'#clase'});
+      }else if(link.matches('[data-lang-switch]')){
+        sendAnalyticsEvent('language_switch',{language:link.dataset.langSwitch||'',section});
+      }
+    },{passive:true});
+
+    const formDefs=[
+      ['[data-free-class-form]','free_class'],
+      ['[data-newsletter]','newsletter']
+    ];
+    formDefs.forEach(([selector,formType])=>{
+      const form=document.querySelector(selector);
+      if(!form) return;
+      let started=false;
+      const start=()=>{
+        if(started) return;
+        started=true;
+        sendAnalyticsEvent('form_start',{form_type:formType});
+      };
+      form.addEventListener('focusin',start,{once:true});
+      form.addEventListener('input',start,{once:true});
+      form.addEventListener('submit',()=>sendAnalyticsEvent('form_submit_attempt',{form_type:formType}),{capture:true});
+    });
+
+    if('IntersectionObserver' in window){
+      const seen=new Set();
+      const observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(!entry.isIntersecting || entry.intersectionRatio<0.35) return;
+          const id=entry.target.id;
+          if(!id || seen.has(id)) return;
+          seen.add(id);
+          sendAnalyticsEvent('section_view',{section:id});
+          observer.unobserve(entry.target);
+        });
+      },{threshold:[0.35]});
+      ['metodo','clase','academia','libros','yamilet','blog','contacto'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) observer.observe(el);
+      });
+    }
+
+    window.addEventListener('load',()=>{
+      flushAnalyticsQueue();
+      setTimeout(flushAnalyticsQueue,1200);
+      setTimeout(flushAnalyticsQueue,3500);
+    },{once:true});
+  }
+
   function run(){
+    enhanceSeoMeta();
+    injectStructuredData();
+    initLazyCourseMedia();
     enhanceHero();
     enhanceMethod();
     enhanceBooking();
@@ -279,6 +484,8 @@
     enhanceNewsletter();
     enhanceMenu();
     addBookingTimezoneToPayload();
+    optimizeImages();
+    initConversionTracking();
   }
 
   run();
