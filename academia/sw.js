@@ -41,7 +41,8 @@ const cacheResponse = async (request, response) => {
 
 const networkFirst = async request => {
   try {
-    const response = await fetch(request);
+    // Fuerza red real para runtimes; evita que el caché HTTP del navegador entregue JS/CSS de builds anteriores.
+    const response = await fetch(request, { cache: 'no-store' });
     return cacheResponse(request, response);
   } catch {
     return caches.match(request);
