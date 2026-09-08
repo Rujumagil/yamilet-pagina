@@ -1,0 +1,80 @@
+name: Yamilet mobile Lighthouse audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/yamilet-mobile-lighthouse.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lighthouse-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Audit live mobile landing
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes lighthouse 'https://www.yamiletperez.com/es/?lighthouse=mobile' \
+            --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' \
+            --only-categories=performance,accessibility,best-practices,seo \
+            --output=json \
+            --output-path=/tmp/yamilet-lighthouse-mobile.json \
+            --quiet
+
+      - name: Validate public/private SEO boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          landing=$(curl -fsSL --retry 4 --retry-delay 3 'https://www.yamiletperez.com/es/?seo-check=1')
+          academy=$(curl -fsSL --retry 4 --retry-delay 3 'https://www.yamiletperez.com/academia/?seo-check=1')
+          catalog=$(curl -fsSL --retry 4 --retry-delay 3 'https://www.yamiletperez.com/academia/catalogo.html?seo-check=1')
+
+          echo "$landing" | grep -q 'name="robots" content="index,follow'
+          echo "$landing" | grep -q 'rel="canonical" href="https://www.yamiletperez.com/es/"'
+          echo "$landing" | grep -q 'yamilet-seo-schema'
+          echo "$academy" | grep -q 'name="robots" content="noindex,nofollow,noarchive,nosnippet"'
+          echo "$catalog" | grep -q 'name="robots" content="index,follow'
+
+      - name: Build readable audit report
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data=json.loads(Path('/tmp/yamilet-lighthouse-mobile.json').read_text())
+          cats=data['categories']
+          audits=data['audits']
+          def score(name):
+              value=cats[name]['score']
+              return round(value*100) if value is not None else 'N/A'
+          def metric(key):
+              a=audits.get(key,{})
+              return a.get('displayValue') or 'N/A'
+
+          report=f'''# Yamilet Pérez — Lighthouse móvil\n\nFecha de auditoría: 2026-09-08\nURL: https://www.yamiletperez.com/es/\n\n## Puntuaciones\n\n| Categoría | Resultado |\n|---|---:|\n| Performance | {score('performance')} |\n| Accessibility | {score('accessibility')} |\n| Best Practices | {score('best-practices')} |\n| SEO | {score('seo')} |\n\n## Métricas de laboratorio\n\n| Métrica | Resultado |\n|---|---:|\n| First Contentful Paint | {metric('first-contentful-paint')} |\n| Largest Contentful Paint | {metric('largest-contentful-paint')} |\n| Speed Index | {metric('speed-index')} |\n| Total Blocking Time | {metric('total-blocking-time')} |\n| Cumulative Layout Shift | {metric('cumulative-layout-shift')} |\n\n## Límites SEO verificados\n\n- Landing ES: indexable, canonical y Schema presentes.\n- Academia privada: noindex/nofollow/noarchive/nosnippet.\n- Catálogo público: indexable.\n\n> Lighthouse son datos de laboratorio; Core Web Vitals de campo dependen de tráfico real suficiente en Chrome UX Report.\n'''
+          Path('docs/YAMILET-LIGHTHOUSE-MOBILE-LATEST.md').write_text(report,encoding='utf-8')
+          print(report)
+          PY
+
+      - name: Commit latest report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/YAMILET-LIGHTHOUSE-MOBILE-LATEST.md
+          if git diff --cached --quiet; then
+            echo 'Lighthouse report unchanged.'
+            exit 0
+          fi
+          git commit -m 'docs: update Yamilet mobile Lighthouse report'
+          git push origin HEAD:main
