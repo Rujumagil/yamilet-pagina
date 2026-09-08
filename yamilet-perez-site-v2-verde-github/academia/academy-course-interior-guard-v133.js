@@ -1,7 +1,10 @@
 (() => {
   'use strict';
 
-  const VERSION = '133.2.0';
+  if (window.__ACADEMIA_YAMILET_COURSE_INTERIOR_GUARD_V133_INIT__) return;
+  window.__ACADEMIA_YAMILET_COURSE_INTERIOR_GUARD_V133_INIT__ = true;
+
+  const VERSION = '133.3.0';
   const INTERIOR_ROUTES = new Set(['course', 'lesson']);
   let scheduled = false;
   let observer = null;
@@ -31,15 +34,6 @@
     script.src = './academy-assessment-course-gate-v135.js?v=135';
     script.async = true;
     script.dataset.academyAssessmentGateV135 = 'true';
-    document.body.appendChild(script);
-  }
-
-  function ensureCoursesStabilityV136() {
-    if (window.ACADEMIA_YAMILET_COURSES_STABILITY_V136 || $('script[data-academy-courses-stability-v136]')) return;
-    const script = document.createElement('script');
-    script.src = './academy-courses-stability-v136.js?v=136';
-    script.async = true;
-    script.dataset.academyCoursesStabilityV136 = 'true';
     document.body.appendChild(script);
   }
 
@@ -94,7 +88,8 @@
   function start() {
     ensureStyle();
     ensureAssessmentGateV135();
-    ensureCoursesStabilityV136();
+    // v136 is loaded explicitly from index.html. Do not inject a second copy
+    // here; duplicate listeners created competing normalization passes.
     apply();
     startObserver();
     window.addEventListener('hashchange', () => schedule(0));
