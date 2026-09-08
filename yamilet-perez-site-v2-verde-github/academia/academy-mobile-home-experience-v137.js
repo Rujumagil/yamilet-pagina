@@ -1,7 +1,10 @@
 (() => {
   'use strict';
 
-  const VERSION = '137';
+  if (window.__ACADEMIA_YAMILET_MOBILE_HOME_V137_INIT__) return;
+  window.__ACADEMIA_YAMILET_MOBILE_HOME_V137_INIT__ = true;
+
+  const VERSION = '137.1';
   const mq = window.matchMedia('(max-width:760px)');
   let raf = 0;
 
@@ -12,31 +15,19 @@
     if (!document.querySelector('link[data-academy-mobile-home-polish-v138]')) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = './academy-mobile-home-polish-v138.css?v=138';
+      link.href = './academy-mobile-home-polish-v138.css?v=1381';
       link.dataset.academyMobileHomePolishV138 = 'true';
       document.head.appendChild(link);
     }
     if (!document.querySelector('script[data-academy-mobile-home-polish-v138]')) {
       const script = document.createElement('script');
-      script.src = './academy-mobile-home-polish-v138.js?v=138';
+      script.src = './academy-mobile-home-polish-v138.js?v=1381';
       script.defer = true;
       script.dataset.academyMobileHomePolishV138 = 'true';
       document.body.appendChild(script);
     }
-    if (!document.querySelector('link[data-academy-mobile-lesson-v139]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = './academy-mobile-lesson-experience-v139.css?v=139';
-      link.dataset.academyMobileLessonV139 = 'true';
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[data-academy-mobile-lesson-v139]')) {
-      const script = document.createElement('script');
-      script.src = './academy-mobile-lesson-experience-v139.js?v=139';
-      script.defer = true;
-      script.dataset.academyMobileLessonV139 = 'true';
-      document.body.appendChild(script);
-    }
+    // v139 se carga explícitamente desde index.html. No volver a inyectarlo aquí:
+    // hacerlo creaba una segunda instancia del runtime de lecciones con una URL de caché anterior.
   }
 
   function route() {
@@ -60,6 +51,12 @@
     return Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : 0;
   }
 
+  function setText(node, value) {
+    if (!node) return;
+    const next = String(value ?? '');
+    if (node.textContent !== next) node.textContent = next;
+  }
+
   function ensureHomebar(page) {
     if ($('.v137-homebar', page)) return;
     const hero = $('.v71-welcome', page);
@@ -80,30 +77,25 @@
   function enhanceHero(page) {
     const hero = $('.v71-welcome', page);
     if (!hero) return;
-    const copy = hero.querySelector('p');
-    if (copy) copy.textContent = 'Continúa donde lo dejaste y avanza a tu propio ritmo dentro del Método MES®.';
+    setText(hero.querySelector('p'), 'Continúa donde lo dejaste y avanza a tu propio ritmo dentro del Método MES®.');
   }
 
   function enhanceFeatured(page) {
     const card = $('.v71-featured-course', page);
     if (!card) return;
 
-    const badge = $('.v71-badge', card);
-    if (badge) badge.textContent = 'Tu siguiente paso';
+    setText($('.v71-badge', card), 'Tu siguiente paso');
 
     const progress = numericProgress(card);
-    const progressLabel = $('.v71-progress-label span', card);
-    if (progressLabel) progressLabel.textContent = 'Progreso del curso';
+    setText($('.v71-progress-label span', card), 'Progreso del curso');
 
     const primary = $('.v71-featured-actions .v71-btn.primary', card);
     if (primary) {
-      if (progress >= 100) primary.textContent = '✓ Repasar Método MES®';
-      else if (progress > 0) primary.textContent = '▶ Reanudar aprendizaje';
-      else primary.textContent = '▶ Comenzar Método MES®';
+      const label = progress >= 100 ? '✓ Repasar Método MES®' : progress > 0 ? '▶ Reanudar aprendizaje' : '▶ Comenzar Método MES®';
+      setText(primary, label);
     }
 
-    const ghost = $('.v71-featured-actions .v71-btn.ghost', card);
-    if (ghost) ghost.textContent = 'Ver temario';
+    setText($('.v71-featured-actions .v71-btn.ghost', card), 'Ver temario');
 
     let note = $('.v137-progress-note', card);
     if (!note) {
@@ -112,25 +104,22 @@
       $('.v71-progress.large', card)?.insertAdjacentElement('afterend', note);
     }
     if (note) {
-      note.textContent = progress >= 100
+      const message = progress >= 100
         ? 'Curso completado. Puedes volver a cualquier lección cuando quieras.'
         : progress > 0
           ? `${progress}% completado · tu avance se guarda automáticamente.`
           : 'Tu avance se guardará automáticamente desde la primera lección.';
+      setText(note, message);
     }
   }
 
   function enhanceStats(page) {
     const cards = $$('.v71-summary-card', page);
     const labels = ['Cursos', 'Lecciones', 'Biblioteca', 'Próxima sesión'];
-    cards.forEach((card, index) => {
-      const small = $('small', card);
-      if (small && labels[index]) small.textContent = labels[index];
-    });
+    cards.forEach((card, index) => setText($('small', card), labels[index] || $('small', card)?.textContent || ''));
 
-    const next = cards[3];
-    const value = next?.querySelector('strong');
-    if (value && /sin fecha/i.test(value.textContent || '')) value.textContent = 'Pendiente';
+    const value = cards[3]?.querySelector('strong');
+    if (value && /sin fecha/i.test(value.textContent || '')) setText(value, 'Pendiente');
   }
 
   function enhanceEvent(page) {
@@ -138,16 +127,13 @@
     if (!card) return;
     const title = $('h2', card);
     const empty = /aparecerá aquí|no tienes sesiones|sin eventos/i.test(title?.textContent || '');
-    card.dataset.v137Empty = empty ? 'true' : 'false';
+    if (card.dataset.v137Empty !== (empty ? 'true' : 'false')) card.dataset.v137Empty = empty ? 'true' : 'false';
 
     if (empty) {
-      const eyebrow = $('.v71-eyebrow', card);
-      const copy = $('p', card);
-      const action = $('.v71-btn', card);
-      if (eyebrow) eyebrow.textContent = 'Próxima sesión';
-      if (title) title.textContent = 'No tienes sesiones programadas';
-      if (copy) copy.textContent = 'Cuando Yamilet publique una sesión o encuentro, aparecerá aquí.';
-      if (action) action.textContent = 'Ver calendario →';
+      setText($('.v71-eyebrow', card), 'Próxima sesión');
+      setText(title, 'No tienes sesiones programadas');
+      setText($('p', card), 'Cuando Yamilet publique una sesión o encuentro, aparecerá aquí.');
+      setText($('.v71-btn', card), 'Ver calendario →');
     }
   }
 
@@ -188,17 +174,13 @@
   }
 
   function enhanceLower(page) {
-    const newsTitle = $('.v71-news .v71-section-heading h2', page);
-    if (newsTitle) newsTitle.textContent = 'Novedades y recursos';
+    setText($('.v71-news .v71-section-heading h2', page), 'Novedades y recursos');
 
     const support = $('.v71-support', page);
     if (support) {
-      const title = $('h2', support);
-      const copy = $('p', support);
-      const action = $('.v71-btn', support);
-      if (title) title.textContent = '¿Necesitas ayuda?';
-      if (copy) copy.textContent = 'Encuentra respuestas sobre acceso, cursos, recursos, progreso y certificados.';
-      if (action) action.textContent = 'Abrir centro de ayuda';
+      setText($('h2', support), '¿Necesitas ayuda?');
+      setText($('p', support), 'Encuentra respuestas sobre acceso, cursos, recursos, progreso y certificados.');
+      setText($('.v71-btn', support), 'Abrir centro de ayuda');
     }
   }
 
@@ -209,7 +191,7 @@
     if (!page) return;
 
     page.classList.add('v137-home');
-    page.dataset.v137Home = VERSION;
+    if (page.dataset.v137Home !== VERSION) page.dataset.v137Home = VERSION;
     ensureHomebar(page);
     enhanceHero(page);
     enhanceFeatured(page);
@@ -227,7 +209,9 @@
 
   loadPolishV138();
   const target = $('[data-dashboard]') || document.body;
-  new MutationObserver(schedule).observe(target, { childList: true, subtree: true });
+  new MutationObserver(() => {
+    if (route() === 'home') schedule();
+  }).observe(target, { childList: true, subtree: true });
   window.addEventListener('hashchange', () => setTimeout(schedule, 40));
   window.addEventListener('pageshow', schedule);
   if (typeof mq.addEventListener === 'function') mq.addEventListener('change', schedule);
