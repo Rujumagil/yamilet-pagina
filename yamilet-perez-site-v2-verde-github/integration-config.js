@@ -33,6 +33,7 @@ window.YAMILET_INTEGRATION_CONFIG = {
     const script = document.createElement('script');
     script.src = COMPAS_TRACKER_URL;
     script.async = true;
+    try { script.fetchPriority = 'low'; } catch (_) {}
     script.dataset.key = COMPAS_PUBLIC_KEY;
     script.dataset.product = 'yamilet-metodo-mes';
     script.dataset.funnel = 'yamilet-site';
@@ -40,7 +41,35 @@ window.YAMILET_INTEGRATION_CONFIG = {
     document.head.appendChild(script);
   }
 
-  ensureCompasTracker();
+  // El tracker no compite con el hero ni con el primer render. Se carga en la
+  // primera intención real del usuario o, si no hay interacción, cuando la
+  // página ya terminó de cargar y el navegador tiene tiempo ocioso.
+  let trackerScheduleReady = false;
+  function scheduleCompasTracker(){
+    if (trackerScheduleReady) return;
+    trackerScheduleReady = true;
+
+    const intentEvents = ['pointerdown','keydown','touchstart'];
+    const onIntent = () => {
+      intentEvents.forEach(type => window.removeEventListener(type,onIntent,true));
+      ensureCompasTracker();
+    };
+    intentEvents.forEach(type => window.addEventListener(type,onIntent,{once:true,passive:true,capture:true}));
+
+    const afterLoad = () => {
+      window.setTimeout(() => {
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(ensureCompasTracker,{timeout:1500});
+        } else {
+          window.setTimeout(ensureCompasTracker,0);
+        }
+      },2200);
+    };
+    if (document.readyState === 'complete') afterLoad();
+    else window.addEventListener('load',afterLoad,{once:true});
+  }
+
+  scheduleCompasTracker();
 
   function currentAttribution(defaultCampaign = '', defaultContent = '') {
     const params = new URLSearchParams(window.location.search);
