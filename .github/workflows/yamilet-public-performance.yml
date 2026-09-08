@@ -108,23 +108,34 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          targets=(public/es/index.html public/it/index.html public/app.js public/ux-enhancements.js)
-          names=(
-            logo-yamilet hero-yamilet sobre-yamilet curso-metodo-mes curso-metodo-mes-vertical
-            libro-metodo-mes libro-apegos libro-expresia libro-retazos-de-mi-alma
-            libro-en-la-raiz-del-perdon libro-nel-silenzio-del-dovere
-          )
-          for target in "${targets[@]}"; do
-            test -s "$target"
-            for name in "${names[@]}"; do
-              sed -i "s#../assets/${name}\\.png#../assets/${name}.webp#g" "$target"
-            done
-          done
+          python3 - <<'PY'
+          from pathlib import Path
+
+          targets = [
+              Path('public/es/index.html'),
+              Path('public/it/index.html'),
+              Path('public/app.js'),
+              Path('public/ux-enhancements.js'),
+          ]
+          names = [
+              'logo-yamilet','hero-yamilet','sobre-yamilet','curso-metodo-mes','curso-metodo-mes-vertical',
+              'libro-metodo-mes','libro-apegos','libro-expresia','libro-retazos-de-mi-alma',
+              'libro-en-la-raiz-del-perdon','libro-nel-silenzio-del-dovere',
+          ]
+          for target in targets:
+              text = target.read_text(encoding='utf-8')
+              for name in names:
+                  text = text.replace(f'../assets/{name}.png', f'../assets/{name}.webp')
+              target.write_text(text, encoding='utf-8')
+          PY
 
           grep -q '../assets/hero-yamilet.webp' public/es/index.html
           grep -q '../assets/hero-yamilet.webp' public/it/index.html
           grep -q "hero: '../assets/hero-yamilet.webp'" public/app.js
           grep -q '../assets/curso-metodo-mes.webp' public/es/index.html
+          grep -q 'https://www.yamiletperez.com/assets/curso-metodo-mes.png' public/es/index.html
+          ! grep -q 'yamiletperez.c../assets' public/es/index.html
+          ! grep -q 'yamiletperez.c../assets' public/it/index.html
 
       - name: Guard public deployment scope
         shell: bash
@@ -161,5 +172,7 @@ jobs:
           sleep 12
           html=$(curl -fsSL --retry 4 --retry-delay 5 'https://www.yamiletperez.com/es/?perf-check=1')
           echo "$html" | grep -q 'Método MES'
+          echo "$html" | grep -q 'https://www.yamiletperez.com/assets/curso-metodo-mes.png'
+          ! echo "$html" | grep -q 'yamiletperez.c../assets'
           curl -fsSI --retry 4 --retry-delay 5 'https://www.yamiletperez.com/assets/hero-yamilet.webp' | grep -qi '200\|304'
           echo 'Live public site responded successfully.'
