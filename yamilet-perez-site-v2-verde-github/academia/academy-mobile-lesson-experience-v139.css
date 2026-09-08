@@ -27,11 +27,13 @@
     margin:0 0 9px!important;
     padding:15px 16px 16px!important;
     border-radius:18px!important;
+    background:linear-gradient(120deg,#103d34 0%,#164b40 100%)!important;
     box-shadow:0 10px 24px rgba(18,63,53,.10)!important;
   }
   body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-breadcrumb{
     gap:5px!important;
     margin:0 0 7px!important;
+    color:rgba(205,225,216,.82)!important;
     font-size:7.5px!important;
     line-height:1.3!important;
     letter-spacing:.07em!important;
@@ -41,17 +43,21 @@
   }
   body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-title .eyebrow{
     margin-bottom:6px!important;
+    color:#d9b354!important;
     font-size:7.5px!important;
   }
   body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-title h2{
     max-width:100%!important;
     margin:0 0 6px!important;
+    color:#fff!important;
     font-size:clamp(26px,7.4vw,31px)!important;
     line-height:1.01!important;
     letter-spacing:-.035em!important;
     text-wrap:balance!important;
+    text-shadow:0 2px 14px rgba(0,0,0,.16)!important;
   }
   body.yamilet-player-mode.v139-lesson-enhanced .mes-player-heading .lesson-title p{
+    color:rgba(239,247,243,.90)!important;
     font-size:10.5px!important;
   }
   /* El estado ya vive en la franja de estudio. Evita la píldora blanca casi vacía. */
