@@ -151,8 +151,19 @@
     card.insertAdjacentHTML('afterbegin', `<img class="academy-continue-visual" src="${VISUALS.continue}" alt="" aria-hidden="true" decoding="async">`);
   }
 
+  function setCourseImage(img, title) {
+    if (!img) return;
+    img.classList.add('academy-mes-cover');
+    if (img.src !== VISUALS.course) img.src = VISUALS.course;
+    img.alt = `Portada de ${title.trim() || 'Método MES'}`;
+    img.loading = 'eager';
+    img.decoding = 'async';
+  }
+
   function decorateCourses() {
-    const mobile = window.matchMedia('(max-width:760px)').matches;
+    // The official horizontal MES cover is now the single source of truth on
+    // every breakpoint. Older code used a separate mobile asset, which could
+    // overwrite v140 after a dashboard refresh and visually restore the old UI.
     $$('.learning-course-card').forEach(card => {
       const title = $('h3', card)?.textContent || '';
       if (!/m[eé]todo\s+mes/i.test(title)) return;
@@ -162,18 +173,14 @@
         img.className = 'course-cover';
         card.prepend(img);
       }
-      img.classList.add('academy-mes-cover');
-      img.src = mobile ? VISUALS.courseVertical : VISUALS.courseThumb;
-      img.alt = `Portada de ${title.trim() || 'Método MES'}`;
-      img.loading = 'eager';
-      img.decoding = 'async';
+      setCourseImage(img, title);
     });
 
     $$('.v71-course-card').forEach(card => {
       if (!/m[eé]todo\s+mes/i.test(card.textContent || '')) return;
       const img = $('.v71-course-cover img', card);
       if (img) {
-        img.src = mobile ? VISUALS.courseVertical : VISUALS.courseThumb;
+        setCourseImage(img, 'Método MES®');
         img.classList.add('academy-v91-image');
       }
     });
