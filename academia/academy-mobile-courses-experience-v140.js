@@ -4,7 +4,8 @@
   if (window.__ACADEMIA_YAMILET_MOBILE_COURSES_V140_INIT__) return;
   window.__ACADEMIA_YAMILET_MOBILE_COURSES_V140_INIT__ = true;
 
-  const VERSION = '140.1';
+  const VERSION = '140';
+  const RUNTIME_VERSION = '140.2';
   const mq = window.matchMedia('(max-width:760px)');
   const METHOD_COVER = '../imagenes-academia-yamilet-final/10-metodo-mes-cover.webp';
   let timer = 0;
@@ -208,5 +209,5 @@
   else if (typeof mq.addListener === 'function') mq.addListener(() => schedule(20));
 
   [120, 500, 1400].forEach(delay => window.setTimeout(() => schedule(20), delay));
-  window.ACADEMIA_YAMILET_MOBILE_COURSES_V140 = Object.freeze({ version:VERSION, refresh:enhance });
+  window.ACADEMIA_YAMILET_MOBILE_COURSES_V140 = Object.freeze({ version:RUNTIME_VERSION, refresh:enhance });
 })();
