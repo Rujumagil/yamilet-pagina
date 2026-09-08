@@ -1,0 +1,145 @@
+/* V12 · Optimización móvil, conversión, SEO visual y rendimiento */
+
+/* Ritmo general: menos scroll sin perder aire */
+section{padding:72px 0}
+.section-head{margin-bottom:30px}
+.trustbar{padding:8px 0 46px}
+section[id]{scroll-margin-top:96px}
+
+/* Reduce trabajo de renderizado en contenido fuera de pantalla */
+#academia,#libros,#yamilet,#blog,#contacto{
+  content-visibility:auto;
+  contain-intrinsic-size:900px;
+}
+
+/* Hero */
+.hero{padding:62px 0 42px}
+.hero .lead{max-width:620px}
+.hero-signals{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.hero-signals span{display:inline-flex;align-items:center;padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.48);font-size:11px;font-weight:750;color:var(--forest)}
+
+/* Método MES: tarjetas más compactas y CTA visible */
+.method-grid{gap:16px}
+.method-card{padding:26px}
+.method-card .letter{margin-bottom:15px}
+.method-card h3{margin-bottom:7px}
+.method-card p{font-size:15px;line-height:1.55}
+.section-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:24px}
+.section-actions .text-link{font-size:13px;font-weight:850;color:var(--forest);text-decoration:none}
+
+/* Clase gratuita */
+.class-meta{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.class-meta span{display:inline-flex;align-items:center;padding:7px 11px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.07);font-size:11px;font-weight:800;color:#f3f7f5}
+.booking-context{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.booking-context span{display:inline-flex;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);font-size:11px;color:#e8f1ed}
+.booking-timezone{grid-column:1/-1;margin:-2px 0 0;font-size:11px;color:#c9dbd4}
+.booking-timezone strong{color:#f2d58e}
+.booking-note a{color:#fff4da;font-weight:750}
+.booking-next{grid-column:1/-1;margin:0;padding-top:4px;font-size:11px;color:#dbe8e4}
+
+/* Academia */
+.course-copy{gap:2px}
+.course-copy p{margin-bottom:18px}
+.academy-login-link{display:inline-block;margin-top:13px;font-size:12px;font-weight:850;color:var(--forest);text-decoration:none}
+.academy-login-link:hover{text-decoration:underline}
+.academy-grid{margin-top:20px}
+.academy-card{min-height:220px}
+.course-media-lazy{border-radius:28px;overflow:hidden;background:var(--teal);box-shadow:0 24px 58px rgba(24,62,52,.16)}
+.course-media-lazy img{width:100%;height:auto;display:block;object-fit:cover}
+
+/* Biblioteca */
+.books .section-head{margin-bottom:24px}
+.books-track{scroll-padding-inline:8px}
+.book{scroll-snap-align:center}
+.reel-hint{margin-top:2px}
+.reel-dots{display:flex;justify-content:center;gap:7px;margin-top:12px}
+.reel-dot{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:rgba(18,63,53,.22);cursor:pointer;transition:transform .2s ease,background .2s ease}
+.reel-dot.is-active{background:var(--forest);transform:scale(1.28)}
+
+/* Sobre Yamilet */
+#yamilet .about-grid{align-items:center}
+#yamilet .credentials{margin-bottom:14px}
+.about-authority{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
+.about-authority span{padding:8px 11px;border-radius:14px;background:rgba(255,255,255,.5);border:1px solid var(--line);font-size:11px;font-weight:800;color:var(--forest)}
+
+/* Blog */
+#blog .post-body{padding:20px 22px 22px}
+.post-meta{font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:850;color:var(--forest);margin-bottom:7px}
+.post-note{display:block;margin-top:11px;font-size:12px;font-weight:800;color:var(--forest)}
+
+/* Newsletter */
+.newsletter{padding-bottom:72px}
+.newsletter-box{padding:38px}
+
+/* Menú móvil: panel más claro y con mejor jerarquía */
+@media(max-width:980px){
+  .navlinks{left:auto;right:14px;top:78px;width:min(340px,calc(100vw - 28px));padding:20px;border-radius:24px;gap:10px}
+  .navlinks>a{padding:8px 6px}
+  .navlinks>a.btn-primary{padding:13px 18px;text-align:center}
+  .navlinks .lang{margin-top:4px;align-self:flex-start}
+}
+
+@media(max-width:620px){
+  section{padding:50px 0}
+  section[id]{scroll-margin-top:82px}
+  #academia,#libros,#yamilet,#blog,#contacto{contain-intrinsic-size:1100px}
+  .section-head{margin-bottom:24px}
+  .hero{padding:34px 0 30px}
+  .hero-grid{gap:28px}
+  .hero .lead{font-size:16px;line-height:1.55}
+  .hero .actions{gap:10px}
+  .hero .actions .btn{width:100%}
+  .hero .micro{margin-top:13px}
+  .hero-media{margin-top:2px}
+  .trustbar{padding:6px 0 34px}
+  .trustgrid{gap:8px}
+  .trustitem{padding:14px 8px}
+  .trustitem strong{font-size:18px}
+
+  #metodo{padding-top:42px}
+  .method-grid{gap:12px}
+  .method-card{display:grid;grid-template-columns:48px minmax(0,1fr);column-gap:15px;row-gap:2px;padding:20px 19px;border-radius:24px}
+  .method-card .letter{grid-row:1 / span 2;width:48px;height:48px;margin:0;font-size:23px}
+  .method-card h3{margin:1px 0 3px;font-size:26px}
+  .method-card p{grid-column:2;font-size:14px;line-height:1.48}
+  .section-actions{margin-top:18px}
+  .section-actions .btn{width:100%}
+
+  .freeclass .container{gap:28px}
+  .freeclass h2{font-size:40px}
+  .freeclass-benefits{gap:8px;margin-top:20px}
+  .freeclass-benefits span{font-size:11px;padding:8px 10px}
+  .booking-shell{padding:22px 18px;border-radius:26px}
+  .booking-shell h3{font-size:31px}
+  .booking-context{margin-bottom:16px}
+
+  #academia .course-feature{gap:18px;margin-bottom:20px}
+  .course-copy{padding:24px 22px}
+  .academy-grid{gap:12px;margin-top:16px}
+  .academy-card{min-height:0;padding:22px}
+
+  .books-reel{padding:4px 0 14px}
+  .books-track{gap:12px;padding:8px 8px 18px;scroll-padding-inline:8px}
+  .book{flex:0 0 calc(100vw - 54px);max-width:338px;padding:16px 14px 20px}
+  .book .cover{max-width:190px}
+  .book h3{font-size:22px}
+  .reel-hint{font-size:11px}
+
+  #yamilet .about-grid{gap:28px}
+  #yamilet h2{font-size:42px}
+  .about-media{max-width:330px}
+  .credentials{gap:6px}
+  .pill{padding:7px 10px;font-size:11px}
+
+  #blog .blog-grid{gap:14px}
+  #blog .post{border-radius:24px}
+  #blog .post-body{padding:18px 20px 20px}
+  #blog .post h3{font-size:23px}
+
+  .newsletter{padding-bottom:54px}
+  .newsletter-box{padding:28px 20px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .reel-dot,.method-card,.academy-card,.post{transition:none!important}
+}
