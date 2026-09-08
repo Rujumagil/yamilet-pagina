@@ -8,6 +8,23 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
+  function loadPolishV138() {
+    if (!document.querySelector('link[data-academy-mobile-home-polish-v138]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-mobile-home-polish-v138.css?v=138';
+      link.dataset.academyMobileHomePolishV138 = 'true';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-academy-mobile-home-polish-v138]')) {
+      const script = document.createElement('script');
+      script.src = './academy-mobile-home-polish-v138.js?v=138';
+      script.defer = true;
+      script.dataset.academyMobileHomePolishV138 = 'true';
+      document.body.appendChild(script);
+    }
+  }
+
   function route() {
     return decodeURIComponent(String(location.hash || '#home').replace(/^#/, '').split('/')[0] || 'home');
   }
@@ -194,6 +211,7 @@
     raf = requestAnimationFrame(enhance);
   }
 
+  loadPolishV138();
   const target = $('[data-dashboard]') || document.body;
   new MutationObserver(schedule).observe(target, { childList: true, subtree: true });
   window.addEventListener('hashchange', () => setTimeout(schedule, 40));
