@@ -3,25 +3,25 @@
 
   // Assets oficiales HD alojados directamente en GitHub Pages.
   const HD = {
-    logo: '../assets/logo-yamilet.png',
-    hero: '../assets/hero-yamilet.png',
-    about: '../assets/sobre-yamilet.png',
-    author: '../assets/sobre-yamilet.png',
-    courseHorizontal: '../assets/curso-metodo-mes.png',
-    courseVertical: '../assets/curso-metodo-mes-vertical.png',
+    logo: '../assets/logo-yamilet.webp',
+    hero: '../assets/hero-yamilet.webp',
+    about: '../assets/sobre-yamilet.webp',
+    author: '../assets/sobre-yamilet.webp',
+    courseHorizontal: '../assets/curso-metodo-mes.webp',
+    courseVertical: '../assets/curso-metodo-mes-vertical.webp',
     books: {
-      'libro-en-la-raiz-del-perdon.webp': '../assets/libro-en-la-raiz-del-perdon.png',
-      'libro-en-la-raiz-del-perdon.png': '../assets/libro-en-la-raiz-del-perdon.png',
-      'libro-metodo-mes.webp': '../assets/libro-metodo-mes.png',
-      'libro-metodo-mes.png': '../assets/libro-metodo-mes.png',
-      'libro-expresia.webp': '../assets/libro-expresia.png',
-      'libro-expresia.png': '../assets/libro-expresia.png',
-      'libro-retazos-de-mi-alma.webp': '../assets/libro-retazos-de-mi-alma.png',
-      'libro-retazos-de-mi-alma.png': '../assets/libro-retazos-de-mi-alma.png',
-      'libro-nel-silenzio-del-dovere.webp': '../assets/libro-nel-silenzio-del-dovere.png',
-      'libro-nel-silenzio-del-dovere.png': '../assets/libro-nel-silenzio-del-dovere.png',
-      'libro-apegos.webp': '../assets/libro-apegos.png',
-      'libro-apegos.png': '../assets/libro-apegos.png'
+      'libro-en-la-raiz-del-perdon.webp': '../assets/libro-en-la-raiz-del-perdon.webp',
+      'libro-en-la-raiz-del-perdon.png': '../assets/libro-en-la-raiz-del-perdon.webp',
+      'libro-metodo-mes.webp': '../assets/libro-metodo-mes.webp',
+      'libro-metodo-mes.png': '../assets/libro-metodo-mes.webp',
+      'libro-expresia.webp': '../assets/libro-expresia.webp',
+      'libro-expresia.png': '../assets/libro-expresia.webp',
+      'libro-retazos-de-mi-alma.webp': '../assets/libro-retazos-de-mi-alma.webp',
+      'libro-retazos-de-mi-alma.png': '../assets/libro-retazos-de-mi-alma.webp',
+      'libro-nel-silenzio-del-dovere.webp': '../assets/libro-nel-silenzio-del-dovere.webp',
+      'libro-nel-silenzio-del-dovere.png': '../assets/libro-nel-silenzio-del-dovere.webp',
+      'libro-apegos.webp': '../assets/libro-apegos.webp',
+      'libro-apegos.png': '../assets/libro-apegos.webp'
     },
     // Se conservan como respaldo hasta que las 4 imágenes editoriales se suban al repo.
     blog: [

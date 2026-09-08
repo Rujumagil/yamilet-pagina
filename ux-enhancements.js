@@ -281,7 +281,7 @@
   function enhanceSeoMeta(){
     const base='https://www.yamiletperez.com';
     const canonical=isItalian ? `${base}/it/` : `${base}/es/`;
-    const image=`${base}/assets/curso-metodo-mes.png`;
+    const image=`${bas../assets/curso-metodo-mes.webp`;
     upsertMeta('meta[name="robots"]',{name:'robots',content:'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'});
     upsertMeta('meta[name="author"]',{name:'author',content:'Yamilet Pérez'});
     upsertMeta('meta[property="og:url"]',{property:'og:url',content:canonical});
@@ -316,7 +316,7 @@
       },
       {
         '@type':'Person','@id':personId,name:'Yamilet Pérez',url:page,
-        image:`${base}/assets/sobre-yamilet.png`,
+        image:`${bas../assets/sobre-yamilet.webp`,
         jobTitle:isItalian?'Autrice, educatrice e creatrice del Metodo MES®':'Autora, educadora y creadora del Método MES®',
         knowsAbout:isItalian
           ? ['Mindfulness','Scrittura terapeutica','Scrittura creativa','Crescita personale']
@@ -326,7 +326,7 @@
         '@type':'WebPage','@id':`${page}#webpage`,url:page,
         name:isItalian?'Yamilet Pérez | Metodo MES®':'Yamilet Pérez | Método MES®',
         isPartOf:{'@id':`${base}/#website`},about:{'@id':personId},
-        primaryImageOfPage:{'@type':'ImageObject',url:`${base}/assets/hero-yamilet.png`},
+        primaryImageOfPage:{'@type':'ImageObject',url:`${bas../assets/hero-yamilet.webp`},
         inLanguage:isItalian?'it-IT':'es-MX'
       },
       {
@@ -360,7 +360,7 @@
     if(!img) return;
     const mq=window.matchMedia('(max-width: 620px)');
     const apply=()=>{
-      const target=mq.matches?'../assets/curso-metodo-mes-vertical.png':'../assets/curso-metodo-mes.png';
+      const target=mq.matches?'../assets/curso-metodo-mes-vertical.webp':'../assets/curso-metodo-mes.webp';
       if(img.getAttribute('src')!==target) img.setAttribute('src',target);
       img.loading='lazy';
       img.decoding='async';
