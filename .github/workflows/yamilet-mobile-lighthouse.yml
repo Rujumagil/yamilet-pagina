@@ -1,21 +1,28 @@
 name: Yamilet mobile Lighthouse audit
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/yamilet-mobile-lighthouse.yml'
+  workflow_run:
+    workflows: ['Yamilet public performance deploy']
+    types: [completed]
   workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: yamilet-mobile-lighthouse
+  cancel-in-progress: true
+
 jobs:
   lighthouse-mobile:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main
+      - name: Checkout latest main
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
 
       - name: Audit live mobile landing
         shell: bash
@@ -49,6 +56,7 @@ jobs:
           python3 - <<'PY'
           import json
           from pathlib import Path
+          from datetime import datetime, timezone
 
           data=json.loads(Path('/tmp/yamilet-lighthouse-mobile.json').read_text())
           cats=data['categories']
@@ -60,7 +68,38 @@ jobs:
               a=audits.get(key,{})
               return a.get('displayValue') or 'N/A'
 
-          report=f'''# Yamilet Pérez — Lighthouse móvil\n\nFecha de auditoría: 2026-09-08\nURL: https://www.yamiletperez.com/es/\n\n## Puntuaciones\n\n| Categoría | Resultado |\n|---|---:|\n| Performance | {score('performance')} |\n| Accessibility | {score('accessibility')} |\n| Best Practices | {score('best-practices')} |\n| SEO | {score('seo')} |\n\n## Métricas de laboratorio\n\n| Métrica | Resultado |\n|---|---:|\n| First Contentful Paint | {metric('first-contentful-paint')} |\n| Largest Contentful Paint | {metric('largest-contentful-paint')} |\n| Speed Index | {metric('speed-index')} |\n| Total Blocking Time | {metric('total-blocking-time')} |\n| Cumulative Layout Shift | {metric('cumulative-layout-shift')} |\n\n## Límites SEO verificados\n\n- Landing ES: indexable, canonical y Schema presentes.\n- Academia privada: noindex/nofollow/noarchive/nosnippet.\n- Catálogo público: indexable.\n\n> Lighthouse son datos de laboratorio; Core Web Vitals de campo dependen de tráfico real suficiente en Chrome UX Report.\n'''
+          refs=cats['performance'].get('auditRefs',[])
+          weighted=[]
+          for ref in refs:
+              if not ref.get('weight'):
+                  continue
+              audit=audits.get(ref.get('id'),{})
+              s=audit.get('score')
+              if isinstance(s,(int,float)) and s < .9:
+                  weighted.append((ref.get('weight',0), audit.get('title',ref.get('id')), audit.get('displayValue',''), s))
+          weighted.sort(reverse=True,key=lambda row:row[0])
+
+          opportunities=[]
+          for key,audit in audits.items():
+              details=audit.get('details') or {}
+              if details.get('type') != 'opportunity':
+                  continue
+              savings=details.get('overallSavingsMs') or 0
+              if savings <= 0:
+                  continue
+              opportunities.append((savings,audit.get('title',key),audit.get('displayValue','')))
+          opportunities.sort(reverse=True)
+
+          diagnostic_lines='\n'.join(
+              f'- {title}: {display or f"score {round(s*100)}"}' for _,title,display,s in weighted[:8]
+          ) or '- Sin diagnósticos ponderados por debajo de 90.'
+          opportunity_lines='\n'.join(
+              f'- {title}: ahorro estimado {round(ms)} ms' + (f' · {display}' if display else '')
+              for ms,title,display in opportunities[:8]
+          ) or '- Lighthouse no reportó oportunidades con ahorro de tiempo estimado.'
+
+          stamp=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
+          report=f'''# Yamilet Pérez — Lighthouse móvil\n\nFecha de auditoría: {stamp}\nURL: https://www.yamiletperez.com/es/\n\n## Puntuaciones\n\n| Categoría | Resultado |\n|---|---:|\n| Performance | {score('performance')} |\n| Accessibility | {score('accessibility')} |\n| Best Practices | {score('best-practices')} |\n| SEO | {score('seo')} |\n\n## Métricas de laboratorio\n\n| Métrica | Resultado |\n|---|---:|\n| First Contentful Paint | {metric('first-contentful-paint')} |\n| Largest Contentful Paint | {metric('largest-contentful-paint')} |\n| Speed Index | {metric('speed-index')} |\n| Total Blocking Time | {metric('total-blocking-time')} |\n| Cumulative Layout Shift | {metric('cumulative-layout-shift')} |\n\n## Diagnósticos de rendimiento prioritarios\n\n{diagnostic_lines}\n\n## Oportunidades detectadas\n\n{opportunity_lines}\n\n## Límites SEO verificados\n\n- Landing ES: indexable, canonical y Schema presentes.\n- Academia privada: noindex/nofollow/noarchive/nosnippet.\n- Catálogo público: indexable.\n\n> Lighthouse son datos de laboratorio; Core Web Vitals de campo dependen de tráfico real suficiente en Chrome UX Report.\n'''
           Path('docs/YAMILET-LIGHTHOUSE-MOBILE-LATEST.md').write_text(report,encoding='utf-8')
           print(report)
           PY
