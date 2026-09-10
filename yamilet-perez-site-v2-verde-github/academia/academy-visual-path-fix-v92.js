@@ -13,6 +13,23 @@
     document.head.appendChild(link);
   }
 
+  function loadBookingsV142() {
+    if (!document.querySelector('link[data-academy-bookings-v142]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = './academy-bookings-v142.css?v=142';
+      link.dataset.academyBookingsV142 = 'true';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[data-academy-bookings-v142]')) {
+      const script = document.createElement('script');
+      script.src = './academy-bookings-v142.js?v=142';
+      script.defer = true;
+      script.dataset.academyBookingsV142 = 'true';
+      document.head.appendChild(script);
+    }
+  }
+
   function corrected(value = '') {
     const text = String(value || '');
     const index = text.indexOf(MARKER);
@@ -52,6 +69,7 @@
   }
 
   loadV94Styles();
+  loadBookingsV142();
 
   const style = document.createElement('style');
   style.id = 'academy-visual-path-fix-v92';
@@ -83,9 +101,10 @@
 
   window.addEventListener('pageshow', () => {
     loadV94Styles();
+    loadBookingsV142();
     patchAll();
   });
-  window.setTimeout(() => { loadV94Styles(); patchAll(); }, 100);
-  window.setTimeout(() => { loadV94Styles(); patchAll(); }, 500);
-  window.setTimeout(() => { loadV94Styles(); patchAll(); }, 1500);
+  window.setTimeout(() => { loadV94Styles(); loadBookingsV142(); patchAll(); }, 100);
+  window.setTimeout(() => { loadV94Styles(); loadBookingsV142(); patchAll(); }, 500);
+  window.setTimeout(() => { loadV94Styles(); loadBookingsV142(); patchAll(); }, 1500);
 })();
