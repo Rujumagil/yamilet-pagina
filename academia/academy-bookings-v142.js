@@ -489,16 +489,20 @@
       window.setTimeout(schedule, 80);
     });
 
-    const observer = new MutationObserver(records => {
-      if (records.some(record => record.type === 'childList' || record.type === 'attributes')) {
-        schedule();
+    const observer = new MutationObserver(() => {
+      const nav = $('.admin-v79-nav');
+      if (!nav) return;
+      const tabMissing = !$('[data-booking144-admin-tab]', nav);
+      const nativeWasReplaced = nativeOpen && !currentRoot();
+      if (nativeWasReplaced) {
+        nativeOpen = false;
+        restoreAdminRefresh();
       }
+      if (tabMissing || nativeWasReplaced) schedule();
     });
     observer.observe(document.body, {
       childList:true,
-      subtree:true,
-      attributes:true,
-      attributeFilter:['class']
+      subtree:true
     });
 
     window.addEventListener('pageshow', () => window.setTimeout(schedule, 80));
