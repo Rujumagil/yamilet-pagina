@@ -17,13 +17,13 @@
     if (!document.querySelector('link[data-academy-bookings-v142]')) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = './academy-bookings-v142.css?v=143';
+      link.href = './academy-bookings-v142.css?v=144';
       link.dataset.academyBookingsV142 = 'true';
       document.head.appendChild(link);
     }
     if (!document.querySelector('script[data-academy-bookings-v142]')) {
       const script = document.createElement('script');
-      script.src = './academy-bookings-v142.js?v=143';
+      script.src = './academy-bookings-v142.js?v=144';
       script.defer = true;
       script.dataset.academyBookingsV142 = 'true';
       document.head.appendChild(script);
