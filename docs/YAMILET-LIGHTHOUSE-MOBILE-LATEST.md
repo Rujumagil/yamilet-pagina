@@ -1,13 +1,13 @@
 # Yamilet Pérez — Lighthouse móvil
 
-Fecha de auditoría: 2026-09-08 16:45 UTC
+Fecha de auditoría: 2026-09-24 17:31 UTC
 URL: https://www.yamiletperez.com/es/
 
 ## Puntuaciones
 
 | Categoría | Resultado |
 |---|---:|
-| Performance | 90 |
+| Performance | 52 |
 | Accessibility | 95 |
 | Best Practices | 96 |
 | SEO | 100 |
@@ -16,15 +16,17 @@ URL: https://www.yamiletperez.com/es/
 
 | Métrica | Resultado |
 |---|---:|
-| First Contentful Paint | 0.9 s |
-| Largest Contentful Paint | 1.8 s |
-| Speed Index | 1.6 s |
-| Total Blocking Time | 390 ms |
+| First Contentful Paint | 1.8 s |
+| Largest Contentful Paint | 4.2 s |
+| Speed Index | 4.8 s |
+| Total Blocking Time | 4,750 ms |
 | Cumulative Layout Shift | 0 |
 
 ## Diagnósticos de rendimiento prioritarios
 
-- Total Blocking Time: 390 ms
+- Total Blocking Time: 4,750 ms
+- Largest Contentful Paint: 4.2 s
+- Speed Index: 4.8 s
 
 ## Oportunidades detectadas
 
