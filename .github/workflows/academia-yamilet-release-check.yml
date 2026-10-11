@@ -128,7 +128,7 @@ jobs:
             v2/academy-v2.css v2/academy-v2.js
             inicio/index.html cursos/index.html cursos/metodo-mes/index.html
             cursos/metodo-mes/semana/index.html cursos/metodo-mes/leccion/index.html
-            biblioteca/index.html perfil/index.html
+            descubre/index.html biblioteca/index.html perfil/index.html
           )
           for asset in "${required_v2[@]}"; do
             test -s "$base/$asset" || { echo "Missing Academy V2 asset: $asset" >&2; exit 1; }
@@ -139,7 +139,11 @@ jobs:
           grep -q 'data-v2-page="course"' "$base/cursos/metodo-mes/index.html"
           grep -q 'data-v2-page="week"' "$base/cursos/metodo-mes/semana/index.html"
           grep -q 'data-v2-page="lesson"' "$base/cursos/metodo-mes/leccion/index.html"
-          grep -q 'academy-v2.js?v=2' "$base/inicio/index.html"
+          grep -q 'data-v2-page="discover"' "$base/descubre/index.html"
+          grep -q 'data-v2-nav="discover"' "$base/inicio/index.html"
+          grep -q 'academy-v2.js?v=3' "$base/inicio/index.html"
+          grep -q 'academy-v2.css?v=3' "$base/inicio/index.html"
+          grep -q 'BOOK_CATALOG' "$base/v2/academy-v2.js"
           grep -q 'yamilet_academy_v2_warm' "$base/inicio/index.html"
           grep -q 'WARM_SESSION_KEY' "$base/v2/academy-v2.js"
           grep -q 'yamilet_academy_v2_next' "$base/app.js"
