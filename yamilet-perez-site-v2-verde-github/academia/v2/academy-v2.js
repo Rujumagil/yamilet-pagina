@@ -2,6 +2,7 @@
   'use strict';
 
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
+  const CATALOG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-catalog';
   const STREAM_ORIGIN = 'https://customer-l4ebvl2tw1zhwagv.cloudflarestream.com';
   const DEFAULT_COVER = '/imagenes-academia-yamilet-final/10-metodo-mes-cover.webp';
   const WORKSPACE_SLUG = 'yamilet-mes';
@@ -56,6 +57,7 @@
   let workspace = null;
   let membership = null;
   let courses = [];
+  let catalogCourses = [];
   let modules = [];
   let lessons = [];
   let progress = [];
@@ -151,6 +153,18 @@
     membership=m?.status==='active'?m:null;
     markWarmSession();
     return true;
+  }
+
+  async function loadPublicCatalog(){
+    try{
+      const response=await fetch(CATALOG_ENDPOINT,{headers:{Accept:'application/json'},cache:'no-store'});
+      if(!response.ok) throw new Error('catalog_unavailable');
+      const payload=await response.json();
+      catalogCourses=Array.isArray(payload?.courses)?payload.courses:[];
+    }catch(error){
+      console.warn('Academia Yamilet V2 catalog',error);
+      catalogCourses=[];
+    }
   }
 
   async function loadLearningData(){
@@ -564,20 +578,40 @@
     return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(amount);
   }
 
+  function isWorkshopProduct(item){
+    return /taller|workshop|laboratorio|masterclass|evento/i.test(String(item?.category||'')+' '+String(item?.title||''));
+  }
+
+  function catalogProductCard(item,typeLabel){
+    const state=item.catalog_status==='upcoming'?'upcoming':'available';
+    const regular=money(item.price);
+    const sale=money(item.sale_price);
+    const current=sale||regular;
+    const payment=String(item.payment_url||'').trim();
+    const detail='/academia/catalogo.html?curso='+encodeURIComponent(item.id);
+    const action=state==='upcoming'
+      ? '<button class="v2-btn secondary" type="button" disabled>Próximamente</button>'
+      : payment
+        ? '<a class="v2-btn primary" href="'+esc(payment)+'" target="_blank" rel="noopener noreferrer">Comprar ahora →</a>'
+        : '<a class="v2-btn secondary" href="'+detail+'">Ver programa →</a>';
+    return '<article class="store-card v2-card"><div class="store-media landscape"><img src="'+esc(item.cover_url||DEFAULT_COVER)+'" alt="'+esc(item.title)+'"><span class="store-status '+state+'">'+(state==='upcoming'?'PRÓXIMAMENTE':'DISPONIBLE')+'</span></div><div class="store-copy"><span class="v2-pill gold">'+esc(typeLabel)+'</span><h3>'+esc(item.title)+'</h3><p>'+esc(item.subtitle||item.description||'Experiencia de Academia Yamilet.')+'</p><div class="store-facts">'+(item.duration_label?'<span>'+esc(item.duration_label)+'</span>':'')+(item.instructor_name?'<span>'+esc(item.instructor_name)+'</span>':'')+'</div><div class="store-price">'+(current?'<strong>'+current+'</strong>':'')+(sale&&regular?'<del>'+regular+'</del>':'')+'</div>'+action+'</div></article>';
+  }
+
   function renderDiscover(){
     const host=$('[data-v2-discover]');
     if(!host) return;
 
-    const enrolledIds=new Set(enrollments.filter(e=>['active','completed'].includes(e.status)).map(e=>e.course_id));
-    const purchasable=courses.filter(c=>c.payment_url && !enrolledIds.has(c.id));
-    const comingCourses=courses.filter(c=>!enrolledIds.has(c.id) && !c.payment_url);
+    const enrolledIds=new Set(enrollments.filter(e=>['active','completed'].includes(e.status)).map(e=>String(e.course_id)));
+    const availableToBuy=catalogCourses.filter(c=>!enrolledIds.has(String(c.id)));
+    const courseProducts=availableToBuy.filter(c=>!isWorkshopProduct(c));
+    const workshopProducts=availableToBuy.filter(isWorkshopProduct);
 
     host.innerHTML=`
       <section class="discover-hero">
         <div>
           <span class="v2-eyebrow">Continúa creciendo</span>
           <h1>Descubre lo que sigue en tu camino.</h1>
-          <p>Cursos, libros y talleres de Yamilet reunidos en un solo lugar. Lo que ya compraste permanece en <strong>Mis cursos</strong>; aquí encuentras nuevas experiencias para continuar.</p>
+          <p>Cursos, libros y talleres de Yamilet reunidos en un solo lugar. Lo que ya forma parte de tu cuenta permanece en <strong>Mis cursos</strong>; aquí encuentras nuevas experiencias para continuar.</p>
         </div>
         <div class="discover-hero-tags"><span>Cursos</span><span>Libros</span><span>Talleres</span></div>
       </section>
@@ -589,13 +623,11 @@
       <section class="discover-section" id="cursos">
         <div class="section-title">
           <div><span class="v2-eyebrow">Formación</span><h2>Nuevos cursos</h2></div>
-          <span class="discover-count">${purchasable.length+comingCourses.length}</span>
+          <span class="discover-count">${courseProducts.length}</span>
         </div>
-        ${purchasable.length ? '<div class="store-grid">'+purchasable.map(c=>{
-          const regular=money(c.price);
-          const sale=money(c.sale_price);
-          return '<article class="store-card v2-card"><div class="store-media landscape"><img src="'+esc(c.cover_url||DEFAULT_COVER)+'" alt="'+esc(c.title)+'"></div><div class="store-copy"><span class="v2-pill gold">Curso</span><h3>'+esc(c.title)+'</h3><p>'+esc(c.subtitle||c.description||'Programa de Academia Yamilet.')+'</p><div class="store-price">'+(sale?'<strong>'+sale+'</strong>'+(regular?'<del>'+regular+'</del>':''):(regular?'<strong>'+regular+'</strong>':''))+'</div><a class="v2-btn primary" href="'+esc(c.payment_url)+'" target="_blank" rel="noopener noreferrer">Comprar curso →</a></div></article>';
-        }).join('')+'</div>' : '<div class="discover-empty"><span>✦</span><div><strong>Los próximos cursos aparecerán aquí.</strong><p>En cuanto Yamilet publique un nuevo programa con su enlace de pago, la alumna podrá comprarlo directamente desde esta sección.</p></div></div>'}
+        ${courseProducts.length
+          ? '<div class="store-grid">'+courseProducts.map(c=>catalogProductCard(c,'Curso')).join('')+'</div>'
+          : '<div class="discover-empty"><span>✦</span><div><strong>Los próximos cursos aparecerán aquí.</strong><p>Cuando Yamilet publique un nuevo programa, podrá mostrarse como disponible o próximamente y, si tiene enlace de pago, comprarse desde aquí.</p></div></div>'}
       </section>
 
       <section class="discover-section" id="libros">
@@ -621,11 +653,11 @@
       <section class="discover-section" id="talleres">
         <div class="section-title">
           <div><span class="v2-eyebrow">Experiencias en vivo</span><h2>Próximos talleres</h2></div>
+          <span class="discover-count">${workshopProducts.length}</span>
         </div>
-        <div class="discover-empty">
-          <span>○</span>
-          <div><strong>Este espacio queda listo para los próximos talleres.</strong><p>Cuando definamos nombre, fecha, imagen, precio y enlace de compra, aparecerán aquí con reservación o pago directo.</p></div>
-        </div>
+        ${workshopProducts.length
+          ? '<div class="store-grid">'+workshopProducts.map(c=>catalogProductCard(c,'Taller')).join('')+'</div>'
+          : '<div class="discover-empty"><span>○</span><div><strong>Este espacio está listo para los próximos talleres.</strong><p>Al publicar un programa con categoría “Taller”, fecha o duración y enlace de pago, aparecerá aquí automáticamente.</p></div></div>'}
       </section>`;
   }
 
@@ -669,6 +701,7 @@
       const slug=await initClient();
       if(!await loadIdentity(slug)) return;
       await loadLearningData();
+      if(page==='discover') await loadPublicCatalog();
       nav();
       if(page==='home') renderHome();
       if(page==='courses') renderCourses();
