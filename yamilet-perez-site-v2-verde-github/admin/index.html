@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta name="theme-color" content="#0f473d">
+  <title>Yamilet Admin | CRM y Operación</title>
+  <meta name="description" content="Sistema privado de administración, CRM, alumnas y operación de Yamilet Pérez.">
+  <link rel="icon" href="../assets/logo-yamilet.png">
+  <link rel="stylesheet" href="./styles.css?v=1">
+</head>
+<body>
+  <div class="boot-screen" data-boot>
+    <div class="boot-mark"><img src="../assets/logo-yamilet.png" alt="Yamilet Pérez"></div>
+    <strong>Yamilet Admin</strong>
+    <span>Preparando tu centro de operación…</span>
+  </div>
+
+  <main class="auth-view hidden" data-auth-view>
+    <section class="auth-brand">
+      <a href="../es/" class="auth-logo"><img src="../assets/logo-yamilet.png" alt="Yamilet Pérez"></a>
+      <div class="auth-copy">
+        <span class="eyebrow">Centro privado de operación</span>
+        <h1>Todo tu negocio,<br><em>en un solo lugar.</em></h1>
+        <p>CRM, alumnas, agenda, progreso y contenido conectados con la página y la Academia.</p>
+      </div>
+      <div class="auth-signals">
+        <span>CRM</span><span>Academia</span><span>Agenda</span><span>Compás Fly</span>
+      </div>
+    </section>
+    <section class="auth-panel">
+      <form class="login-card" data-login-form>
+        <div class="mobile-logo"><img src="../assets/logo-yamilet.png" alt="Yamilet Pérez"></div>
+        <span class="eyebrow">Yamilet Admin</span>
+        <h2>Entrar al sistema</h2>
+        <p>Utiliza la cuenta administrativa de Academia Yamilet.</p>
+        <label>Correo
+          <input type="email" name="email" autocomplete="email" required placeholder="correo@ejemplo.com">
+        </label>
+        <label>Contraseña
+          <input type="password" name="password" autocomplete="current-password" required placeholder="••••••••">
+        </label>
+        <button class="primary-btn" type="submit">Entrar al Dashboard</button>
+        <p class="form-status" data-login-status aria-live="polite"></p>
+        <a href="../academia/" class="text-link">Ir a Academia Yamilet →</a>
+      </form>
+    </section>
+  </main>
+
+  <main class="denied-view hidden" data-denied-view>
+    <div class="denied-card">
+      <img src="../assets/logo-yamilet.png" alt="Yamilet Pérez">
+      <span class="eyebrow">Acceso restringido</span>
+      <h1>Este sistema es solo para administración.</h1>
+      <p>Tu cuenta puede seguir utilizando Academia Yamilet, pero no tiene permisos para entrar al CRM.</p>
+      <a href="../academia/" class="primary-btn">Volver a la Academia</a>
+      <button type="button" class="secondary-btn" data-denied-signout>Cerrar sesión</button>
+    </div>
+  </main>
+
+  <div class="admin-shell hidden" data-admin>
+    <aside class="sidebar" data-sidebar>
+      <div class="side-head">
+        <a href="#dashboard" class="side-brand" data-route="dashboard">
+          <img src="../assets/logo-yamilet.png" alt="">
+          <div><strong>Yamilet</strong><span>Admin</span></div>
+        </a>
+        <button class="side-close" type="button" data-close-menu aria-label="Cerrar menú">×</button>
+      </div>
+
+      <nav class="side-nav" aria-label="Administración">
+        <small>OPERACIÓN</small>
+        <button class="nav-item active" type="button" data-route="dashboard"><i>⌂</i><span>Resumen</span></button>
+        <button class="nav-item" type="button" data-route="crm"><i>◎</i><span>CRM</span><b data-nav-crm-count>0</b></button>
+        <button class="nav-item" type="button" data-route="pipeline"><i>⇢</i><span>Pipeline</span></button>
+        <button class="nav-item" type="button" data-route="students"><i>◉</i><span>Alumnas</span><b data-nav-student-count>0</b></button>
+        <button class="nav-item" type="button" data-route="agenda"><i>□</i><span>Agenda</span><b data-nav-booking-count>0</b></button>
+        <small>CRECIMIENTO</small>
+        <button class="nav-item" type="button" data-route="blog"><i>✎</i><span>Blog</span></button>
+        <button class="nav-item" type="button" data-route="agents"><i>✦</i><span>Agentes</span><em>IA</em></button>
+      </nav>
+
+      <div class="side-bottom">
+        <div class="system-pill"><span></span><div><strong>Sistema conectado</strong><small>Web · Academia · CRM</small></div></div>
+        <a href="../es/" target="_blank" rel="noopener">Ver página pública ↗</a>
+        <a href="../academia/" target="_blank" rel="noopener">Abrir Academia ↗</a>
+      </div>
+    </aside>
+
+    <div class="sidebar-scrim" data-menu-scrim></div>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div class="top-left">
+          <button class="menu-btn" type="button" data-open-menu aria-label="Abrir menú">☰</button>
+          <div><small data-breadcrumb>Yamilet Admin · Resumen</small><strong data-page-title>Dashboard general</strong></div>
+        </div>
+        <div class="top-actions">
+          <button class="refresh-btn" type="button" data-refresh title="Actualizar datos">↻ <span>Actualizar</span></button>
+          <div class="user-menu">
+            <button type="button" data-user-menu>
+              <span class="avatar" data-avatar>YP</span>
+              <span class="user-copy"><strong data-admin-name>Yamilet</strong><small data-admin-role>Administradora</small></span>
+              <span>⌄</span>
+            </button>
+            <div class="user-dropdown hidden" data-user-dropdown>
+              <a href="../academia/">Academia Yamilet</a>
+              <button type="button" data-signout>Cerrar sesión</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="page active" data-page="dashboard">
+          <div class="welcome-row">
+            <div>
+              <span class="eyebrow">Centro de control</span>
+              <h1><span data-greeting>Buenos días</span>, <em data-first-name>Yamilet</em>.</h1>
+              <p>Este es el estado general de tu ecosistema hoy.</p>
+            </div>
+            <div class="live-stamp"><span></span><div><small>Datos en vivo</small><strong data-last-update>Actualizando…</strong></div></div>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric-card">
+              <div class="metric-icon">◎</div>
+              <div class="metric-head"><span>Prospectos</span><small>CRM actual</small></div>
+              <strong data-metric-prospects>—</strong>
+              <p><b data-metric-new>—</b> registros pendientes</p>
+            </article>
+            <article class="metric-card">
+              <div class="metric-icon">◉</div>
+              <div class="metric-head"><span>Alumnas activas</span><small>Academia</small></div>
+              <strong data-metric-students>—</strong>
+              <p><b data-metric-student-risk>—</b> requieren seguimiento</p>
+            </article>
+            <article class="metric-card">
+              <div class="metric-icon">□</div>
+              <div class="metric-head"><span>Citas pendientes</span><small>Agenda</small></div>
+              <strong data-metric-bookings>—</strong>
+              <p><b data-metric-next-booking>—</b> próxima sesión</p>
+            </article>
+            <article class="metric-card accent">
+              <div class="metric-icon">↗</div>
+              <div class="metric-head"><span>Progreso promedio</span><small>Método MES®</small></div>
+              <strong data-metric-progress>—</strong>
+              <p><b data-metric-lessons>—</b> lecciones disponibles</p>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel pipeline-panel">
+              <div class="panel-head">
+                <div><span class="eyebrow">Conversión</span><h2>Pipeline actual</h2></div>
+                <button type="button" class="panel-link" data-route="pipeline">Ver pipeline →</button>
+              </div>
+              <div class="funnel" data-dashboard-funnel></div>
+            </article>
+
+            <article class="panel attention-panel">
+              <div class="panel-head">
+                <div><span class="eyebrow">Prioridades</span><h2>Necesita tu atención</h2></div>
+                <span class="attention-count" data-attention-count>0</span>
+              </div>
+              <div class="attention-list" data-attention-list>
+                <div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div>
+              </div>
+            </article>
+
+            <article class="panel appointments-panel">
+              <div class="panel-head">
+                <div><span class="eyebrow">Agenda</span><h2>Próximas citas</h2></div>
+                <button type="button" class="panel-link" data-route="agenda">Abrir agenda →</button>
+              </div>
+              <div class="appointment-list" data-upcoming-bookings></div>
+            </article>
+
+            <article class="panel students-panel">
+              <div class="panel-head">
+                <div><span class="eyebrow">Academia</span><h2>Progreso de alumnas</h2></div>
+                <button type="button" class="panel-link" data-route="students">Ver alumnas →</button>
+              </div>
+              <div class="student-progress-list" data-student-progress></div>
+            </article>
+
+            <article class="panel activity-panel">
+              <div class="panel-head">
+                <div><span class="eyebrow">Movimiento</span><h2>Actividad reciente</h2></div>
+              </div>
+              <div class="activity-list" data-activity-list></div>
+            </article>
+
+            <article class="panel agents-panel">
+              <div class="panel-head">
+                <div><span class="eyebrow">Compás Fly</span><h2>Agentes de apoyo</h2></div>
+                <button type="button" class="panel-link" data-route="agents">Ver agentes →</button>
+              </div>
+              <div class="agent-mini-grid">
+                <div><span>✦</span><strong>Comercial</strong><small>CRM y seguimiento</small><em>Próxima fase</em></div>
+                <div><span>✦</span><strong>Académico</strong><small>Progreso de alumnas</small><em>Próxima fase</em></div>
+                <div><span>✦</span><strong>Contenido</strong><small>Blog y publicaciones</small><em>Próxima fase</em></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" data-page="crm">
+          <div class="page-heading">
+            <div><span class="eyebrow">Relaciones</span><h1>CRM</h1><p>Todos los contactos captados desde página, Academia y citas en una sola vista.</p></div>
+            <div class="toolbar"><input type="search" placeholder="Buscar nombre o correo…" data-crm-search></div>
+          </div>
+          <div class="table-card">
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Contacto</th><th>Etapa</th><th>Origen</th><th>Última actividad</th><th>Siguiente acción</th></tr></thead>
+                <tbody data-crm-table></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-page="pipeline">
+          <div class="page-heading">
+            <div><span class="eyebrow">Conversión</span><h1>Pipeline</h1><p>Visualiza en qué etapa está cada prospecto hasta convertirse en alumna.</p></div>
+          </div>
+          <div class="pipeline-board" data-pipeline-board></div>
+        </section>
+
+        <section class="page" data-page="students">
+          <div class="page-heading">
+            <div><span class="eyebrow">Academia</span><h1>Alumnas</h1><p>Inscripciones, actividad y progreso de aprendizaje.</p></div>
+          </div>
+          <div class="student-card-grid" data-students-grid></div>
+        </section>
+
+        <section class="page" data-page="agenda">
+          <div class="page-heading">
+            <div><span class="eyebrow">Seguimiento</span><h1>Agenda de citas</h1><p>Solicitudes recibidas desde la página de Yamilet.</p></div>
+            <div class="segmented" data-agenda-filter>
+              <button class="active" data-status-filter="all">Todas</button>
+              <button data-status-filter="requested">Solicitadas</button>
+              <button data-status-filter="confirmed">Confirmadas</button>
+              <button data-status-filter="completed">Realizadas</button>
+            </div>
+          </div>
+          <div class="agenda-list" data-agenda-list></div>
+        </section>
+
+        <section class="page" data-page="blog">
+          <div class="module-coming">
+            <span class="big-icon">✎</span>
+            <span class="eyebrow">Contenido</span>
+            <h1>Publicaciones del blog</h1>
+            <p>Este módulo será el editor desde el que Yamilet podrá crear, revisar y publicar artículos directamente en su página.</p>
+            <div class="future-features"><span>Borradores</span><span>SEO</span><span>Programación</span><span>Publicar</span></div>
+            <div class="phase-pill">Siguiente fase del CRM</div>
+          </div>
+        </section>
+
+        <section class="page" data-page="agents">
+          <div class="page-heading">
+            <div><span class="eyebrow">Compás Fly</span><h1>Agentes inteligentes</h1><p>Los agentes trabajarán sobre el CRM de Yamilet; no serán un sistema separado.</p></div>
+          </div>
+          <div class="agent-grid">
+            <article><span class="agent-orb">✦</span><div><small>FRONT</small><h2>Agente Comercial</h2><p>Detectará prospectos sin respuesta, citas por atender y oportunidades de seguimiento.</p></div><em>Próxima fase</em></article>
+            <article><span class="agent-orb">✦</span><div><small>OPS</small><h2>Agente Académico</h2><p>Revisará progreso, inactividad y alumnas que podrían necesitar acompañamiento.</p></div><em>Próxima fase</em></article>
+            <article><span class="agent-orb">✦</span><div><small>OPS</small><h2>Agente de Contenido</h2><p>Ayudará a preparar artículos, títulos, extractos y SEO para el blog.</p></div><em>Próxima fase</em></article>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>
+  <script src="./app.js?v=1"></script>
+</body>
+</html>
