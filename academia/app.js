@@ -79,6 +79,24 @@
     target?.classList.remove('hidden');
   }
 
+  function resumeAcademyV2IfPending() {
+    try {
+      const raw = sessionStorage.getItem('yamilet_academy_v2_next');
+      if (!raw) return false;
+      const target = new URL(raw, window.location.href);
+      const allowed = target.origin === window.location.origin &&
+        target.pathname.startsWith('/academia/') &&
+        target.pathname !== '/academia/';
+      sessionStorage.removeItem('yamilet_academy_v2_next');
+      if (!allowed) return false;
+      window.location.replace(target.href);
+      return true;
+    } catch {
+      try { sessionStorage.removeItem('yamilet_academy_v2_next'); } catch {}
+      return false;
+    }
+  }
+
   function setManagerVisibility(visible) {
     document.querySelectorAll('[data-manager-only]').forEach(el => el.classList.toggle('hidden', !visible));
   }
@@ -422,6 +440,7 @@
       const canManageBookings = isPlatformAdmin || (!!membership && ['owner', 'admin'].includes(membership.role));
       const hasAcademyAccess = isPlatformAdmin || isWorkspaceStaff || visibleCourses.length > 0;
       if (!hasAcademyAccess) { showView(deniedView); return; }
+      if (resumeAcademyV2IfPending()) return;
 
       document.querySelector('[data-user-name]').textContent = profile?.full_name || user.email?.split('@')[0] || 'Alumno';
       document.querySelector('[data-user-role]').textContent = `${ws.name} · ${membership?.role || profile?.role || 'alumno'}`;
