@@ -1,0 +1,35 @@
+{
+  "id": "/admin/",
+  "name": "Yamilet Admin · CRM",
+  "short_name": "Yamilet Admin",
+  "description": "CRM, alumnas, agenda, progreso y operación de Yamilet Pérez.",
+  "lang": "es-MX",
+  "dir": "ltr",
+  "start_url": "/admin/#dashboard",
+  "scope": "/admin/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#f4f6f3",
+  "theme_color": "#0f473d",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "../assets/logo-yamilet.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../assets/logo-yamilet.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {"name":"CRM","short_name":"CRM","url":"/admin/#crm"},
+    {"name":"Agenda","short_name":"Agenda","url":"/admin/#agenda"},
+    {"name":"Alumnas","short_name":"Alumnas","url":"/admin/#students"}
+  ],
+  "prefer_related_applications": false
+}

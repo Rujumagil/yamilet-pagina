@@ -78,3 +78,20 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
   .page-heading{display:grid;align-items:start}.toolbar input{width:100%}.student-card-grid,.agent-grid{grid-template-columns:1fr}
   .agenda-card{grid-template-columns:52px 1fr}.agenda-card>select{grid-column:1/-1;width:100%}.segmented{max-width:100%;overflow:auto}
 }
+
+.pwa-panel{position:relative;overflow:hidden;background:linear-gradient(145deg,#fff,#f7faf7)}
+.pwa-panel::after{content:"";position:absolute;right:-35px;bottom:-55px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,61,.12),transparent 68%);pointer-events:none}
+.pwa-ready{display:inline-flex;align-items:center;justify-content:center;height:24px;padding:0 8px;border-radius:999px;background:#eaf4ee;color:#337b56;font-size:8px;font-weight:900;letter-spacing:.08em}
+.pwa-device{display:grid;grid-template-columns:42px 1fr;gap:11px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:14px;background:#fbfcfa}
+.pwa-device-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--g);color:#e7c274}
+.pwa-device strong{display:block;font-size:11px}.pwa-device small{display:block;margin-top:2px;color:#85928c;font-size:9px}
+.pwa-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.pwa-btn{min-height:41px;border-radius:11px;border:1px solid var(--line);padding:0 12px;font-size:9px;font-weight:900}
+.pwa-btn.install{background:#fff;color:var(--g)}.pwa-btn.push{background:var(--g);border-color:var(--g);color:#fff}
+.pwa-btn.push[data-active="true"]{background:#e8f4ec;border-color:#cfe6d7;color:#347c56}
+.pwa-btn:disabled{cursor:default;opacity:.68}
+.pwa-status{min-height:30px;margin:10px 2px 0;color:#7f8d87;font-size:9px}
+.pwa-events{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pwa-events span{padding:5px 8px;border-radius:999px;background:#eef4ef;color:#547068;font-size:8px;font-weight:850}
+.pwa-toast{position:fixed;z-index:120;right:18px;bottom:18px;max-width:min(380px,calc(100% - 36px));padding:12px 15px;border-radius:13px;background:#103f36;color:#fff;box-shadow:0 18px 50px rgba(8,42,35,.25);font-size:11px;font-weight:750;opacity:0;transform:translateY(18px);pointer-events:none;transition:.22s}
+.pwa-toast.show{opacity:1;transform:none}.pwa-toast.error{background:#7f403b}
+@media(max-width:620px){.pwa-actions{grid-template-columns:1fr}.pwa-toast{left:14px;right:14px;bottom:14px;max-width:none}}

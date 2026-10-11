@@ -394,6 +394,8 @@
   }
 
   async function startAdmin(){
+    window.YAMILET_ADMIN_CONTEXT = Object.freeze({ sb, workspace, user, profile, membership });
+    document.dispatchEvent(new CustomEvent('yamilet-admin-ready'));
     renderHeader();
     show(admin);
     wire();
