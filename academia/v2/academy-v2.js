@@ -5,6 +5,7 @@
   const STREAM_ORIGIN = 'https://customer-l4ebvl2tw1zhwagv.cloudflarestream.com';
   const DEFAULT_COVER = '/imagenes-academia-yamilet-final/10-metodo-mes-cover.webp';
   const WORKSPACE_SLUG = 'yamilet-mes';
+  const WARM_SESSION_KEY = 'yamilet_academy_v2_warm';
   const $ = (s,r=document) => r.querySelector(s);
   const $$ = (s,r=document) => Array.from(r.querySelectorAll(s));
   const esc = (v='') => String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -27,11 +28,32 @@
   let courseById = new Map();
   let toastTimer = 0;
 
+  function isWarmSession(){
+    try{return sessionStorage.getItem(WARM_SESSION_KEY)==='1';}catch{return false;}
+  }
+
+  function markWarmSession(){
+    try{sessionStorage.setItem(WARM_SESSION_KEY,'1');}catch{}
+    document.documentElement.classList.add('v2-warm');
+  }
+
+  function clearWarmSession(){
+    try{sessionStorage.removeItem(WARM_SESSION_KEY);}catch{}
+    document.documentElement.classList.remove('v2-warm');
+  }
+
   function finishLoading(){
     const el=$('[data-v2-loading]');
     if(!el) return;
     el.classList.add('done');
-    setTimeout(()=>el.remove(),260);
+    setTimeout(()=>el.remove(),180);
+  }
+
+  function revealWarmNavigation(){
+    if(!isWarmSession()) return;
+    document.documentElement.classList.add('v2-warm');
+    const el=$('[data-v2-loading]');
+    if(el) el.remove();
   }
 
   function toast(message,error=false){
@@ -71,6 +93,7 @@
   async function loadIdentity(workspaceSlug){
     const {data:{user:current},error}=await sb.auth.getUser();
     if(error || !current){
+      clearWarmSession();
       try{ sessionStorage.setItem('yamilet_academy_v2_next',location.href); }catch{}
       location.replace('/academia/');
       return false;
@@ -88,6 +111,7 @@
 
     const {data:m}=await sb.from('workspace_members').select('role,status').eq('workspace_id',workspace.id).eq('user_id',user.id).maybeSingle();
     membership=m?.status==='active'?m:null;
+    markWarmSession();
     return true;
   }
 
@@ -523,6 +547,8 @@
       profile.full_name=value;nav();toast('Perfil actualizado.');
     });
   }
+
+  revealWarmNavigation();
 
   async function boot(){
     try{
