@@ -229,3 +229,51 @@ img{max-width:100%;display:block}
   .v2-mobile-nav a.active{background:var(--ay-soft);color:var(--ay-green)}
   .v2-toast{left:14px;right:14px;bottom:82px;max-width:none}
 }
+
+/* Descubre / tienda */
+.discover-hero{position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:space-between;gap:30px;padding:32px;border-radius:28px;background:linear-gradient(125deg,#0f4036,#1c5d4e);color:#fff;box-shadow:var(--ay-shadow)}
+.discover-hero::after{content:"";position:absolute;right:-100px;top:-130px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(235,197,115,.18),transparent 68%)}
+.discover-hero>div{position:relative;z-index:1}
+.discover-hero .v2-eyebrow{color:#e8c374}
+.discover-hero h1{max-width:720px;margin:8px 0 10px;font:600 clamp(38px,5vw,58px)/1 Georgia,serif;letter-spacing:-.04em}
+.discover-hero p{max-width:720px;margin:0;color:rgba(255,255,255,.7);font-size:13px;line-height:1.65}
+.discover-hero-tags{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}
+.discover-hero-tags span{padding:8px 10px;border:1px solid rgba(255,255,255,.16);border-radius:999px;color:#fff;font-size:9px;font-weight:850}
+.discover-tabs{position:sticky;top:82px;z-index:24;display:flex;gap:6px;width:max-content;max-width:100%;margin:16px auto 0;padding:5px;border:1px solid var(--ay-line);border-radius:14px;background:rgba(255,255,255,.94);backdrop-filter:blur(15px);box-shadow:var(--ay-shadow-sm);overflow:auto}
+.discover-tabs a{padding:8px 14px;border-radius:10px;text-decoration:none;color:#687870;font-size:10px;font-weight:850;white-space:nowrap}
+.discover-tabs a:hover{background:var(--ay-soft);color:var(--ay-green)}
+.discover-section{scroll-margin-top:145px;margin-top:34px}
+.discover-section .section-title h2{font-size:28px}
+.discover-count{display:grid;place-items:center;min-width:30px;height:30px;padding:0 8px;border-radius:999px;background:var(--ay-soft);color:var(--ay-green);font-size:10px;font-weight:900}
+.store-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:15px}
+.store-card{overflow:hidden}
+.store-media{overflow:hidden;background:#eef3ef}
+.store-media.landscape{aspect-ratio:16/9}
+.store-media img{width:100%;height:100%;object-fit:cover}
+.store-copy{padding:19px}
+.store-copy h3,.book-store-copy h3{margin:10px 0 6px;color:var(--ay-green);font:600 21px Georgia,serif}
+.store-copy p,.book-store-copy p{margin:0;color:var(--ay-muted);font-size:10px;line-height:1.55}
+.store-price{min-height:27px;display:flex;align-items:center;gap:8px;margin:14px 0}
+.store-price strong{color:var(--ay-green);font:700 18px Georgia,serif}
+.store-price del{color:#99a29e;font-size:9px}
+.book-store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.book-store-card{overflow:hidden;display:grid;grid-template-columns:120px 1fr;min-height:215px}
+.book-store-cover{padding:14px;background:linear-gradient(145deg,#f7f2e8,#eef3ef);display:grid;place-items:center}
+.book-store-cover img{width:100%;height:180px;object-fit:contain;filter:drop-shadow(0 10px 16px rgba(20,45,37,.13))}
+.book-store-copy{display:flex;flex-direction:column;align-items:flex-start;padding:18px}
+.book-store-copy .v2-btn{margin-top:auto}
+.discover-empty{display:grid;grid-template-columns:48px 1fr;gap:14px;align-items:center;padding:20px;border:1px dashed var(--ay-line-2);border-radius:18px;background:#fafbf9}
+.discover-empty>span{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:var(--ay-soft);color:var(--ay-gold);font-size:20px}
+.discover-empty strong{display:block;color:var(--ay-green);font-size:12px}
+.discover-empty p{margin:3px 0 0;color:var(--ay-muted);font-size:10px}
+@media(max-width:1050px){.book-store-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){
+  .discover-hero{display:grid;align-items:start;padding:21px;border-radius:22px}
+  .discover-hero h1{font-size:36px}
+  .discover-hero-tags{justify-content:flex-start}
+  .discover-tabs{top:70px;margin-top:12px}
+  .discover-section{margin-top:28px}
+  .book-store-grid{grid-template-columns:1fr}
+  .book-store-card{grid-template-columns:105px 1fr;min-height:190px}
+  .book-store-cover{padding:10px}.book-store-cover img{height:160px}
+}
