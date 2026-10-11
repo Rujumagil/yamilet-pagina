@@ -277,3 +277,9 @@ img{max-width:100%;display:block}
   .book-store-card{grid-template-columns:105px 1fr;min-height:190px}
   .book-store-cover{padding:10px}.book-store-cover img{height:160px}
 }
+
+.home-discover-banner{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:16px;padding:19px 22px;border:1px solid #eadfc8;border-radius:20px;background:linear-gradient(120deg,#fffaf0,#f6f8f4);text-decoration:none;box-shadow:var(--ay-shadow-sm)}
+.home-discover-banner strong{display:block;margin-top:5px;color:var(--ay-green);font:600 18px Georgia,serif}
+.home-discover-banner small{display:block;margin-top:2px;color:#7b8882;font-size:9px}
+.home-discover-arrow{flex:0 0 auto;display:inline-flex;align-items:center;min-height:38px;padding:0 12px;border-radius:11px;background:var(--ay-green);color:#fff;font-size:9px;font-weight:900}
+@media(max-width:680px){.home-discover-banner{align-items:flex-start;padding:16px}.home-discover-banner strong{font-size:16px}.home-discover-arrow{margin-top:3px}}
