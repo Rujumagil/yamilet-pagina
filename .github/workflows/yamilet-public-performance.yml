@@ -7,6 +7,7 @@ on:
       - '.github/workflows/yamilet-public-performance.yml'
       - 'yamilet-perez-site-v2-verde-github/es/**'
       - 'yamilet-perez-site-v2-verde-github/it/**'
+      - 'yamilet-perez-site-v2-verde-github/admin/**'
       - 'yamilet-perez-site-v2-verde-github/assets/*.png'
       - 'yamilet-perez-site-v2-verde-github/index.html'
       - 'yamilet-perez-site-v2-verde-github/app.js'
@@ -96,10 +97,12 @@ jobs:
         run: |
           set -euo pipefail
           src='source/yamilet-perez-site-v2-verde-github'
-          test -d "$src/es" && test -d "$src/it" && test -d "$src/assets"
+          test -d "$src/es" && test -d "$src/it" && test -d "$src/admin" && test -d "$src/assets"
 
           rsync -a --delete "$src/es/" public/es/
           rsync -a --delete "$src/it/" public/it/
+          mkdir -p public/admin
+          rsync -a --delete "$src/admin/" public/admin/
           mkdir -p public/assets
           rsync -a "$src/assets/" public/assets/
 
@@ -147,7 +150,7 @@ jobs:
         run: |
           set -euo pipefail
           cd public
-          unexpected="$(git status --porcelain | awk '{print $2}' | grep -Ev '^(es/|it/|assets/|index\.html$|app\.js$|integration-config\.js$|styles\.css$|styles-base\.css$|layout-fixes\.css$|ux-enhancements\.css$|ux-enhancements\.js$|robots\.txt$|sitemap\.xml$)' || true)"
+          unexpected="$(git status --porcelain | awk '{print $2}' | grep -Ev '^(es/|it/|admin/|assets/|index\.html$|app\.js$|integration-config\.js$|styles\.css$|styles-base\.css$|layout-fixes\.css$|ux-enhancements\.css$|ux-enhancements\.js$|robots\.txt$|sitemap\.xml$)' || true)"
           if [ -n "$unexpected" ]; then
             echo 'Deployment attempted to change files outside the public-site scope:' >&2
             echo "$unexpected" >&2
@@ -161,7 +164,7 @@ jobs:
           cd public
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A es it assets index.html app.js integration-config.js styles.css styles-base.css layout-fixes.css ux-enhancements.css ux-enhancements.js robots.txt sitemap.xml
+          git add -A es it admin assets index.html app.js integration-config.js styles.css styles-base.css layout-fixes.css ux-enhancements.css ux-enhancements.js robots.txt sitemap.xml
           if git diff --cached --quiet; then
             echo 'Public site already matches optimized production output.'
             exit 0
