@@ -146,7 +146,7 @@ jobs:
           grep -q 'academy-v2.js?v=6' "$base/descubre/index.html"
           grep -q 'academy-v2.css?v=6' "$base/descubre/index.html"
           grep -q 'personalizedPaymentUrl' "$base/v2/academy-v2.js"
-          grep -Fq "$('[data-v2-nav]').forEach" "$base/v2/academy-v2.js"
+          grep -Fq "data-v2-nav]').forEach" "$base/v2/academy-v2.js"
           grep -q 'BOOK_CATALOG' "$base/v2/academy-v2.js"
           grep -q 'CATALOG_ENDPOINT' "$base/v2/academy-v2.js"
           grep -q 'renderDiscover' "$base/v2/academy-v2.js"
