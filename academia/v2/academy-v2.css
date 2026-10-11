@@ -283,3 +283,9 @@ img{max-width:100%;display:block}
 .home-discover-banner small{display:block;margin-top:2px;color:#7b8882;font-size:9px}
 .home-discover-arrow{flex:0 0 auto;display:inline-flex;align-items:center;min-height:38px;padding:0 12px;border-radius:11px;background:var(--ay-green);color:#fff;font-size:9px;font-weight:900}
 @media(max-width:680px){.home-discover-banner{align-items:flex-start;padding:16px}.home-discover-banner strong{font-size:16px}.home-discover-arrow{margin-top:3px}}
+
+.store-media{position:relative}
+.store-status{position:absolute;left:12px;top:12px;padding:6px 9px;border-radius:999px;background:rgba(18,63,53,.9);color:#fff;font-size:8px;font-weight:900;letter-spacing:.06em;backdrop-filter:blur(8px)}
+.store-status.upcoming{background:rgba(152,112,44,.9)}
+.store-facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.store-facts span{padding:5px 7px;border-radius:999px;background:#f2f5f2;color:#6d7c75;font-size:8px;font-weight:800}
