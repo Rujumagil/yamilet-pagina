@@ -6,6 +6,44 @@
   const DEFAULT_COVER = '/imagenes-academia-yamilet-final/10-metodo-mes-cover.webp';
   const WORKSPACE_SLUG = 'yamilet-mes';
   const WARM_SESSION_KEY = 'yamilet_academy_v2_warm';
+  const BOOK_CATALOG = [
+    {
+      title:'Método MES',
+      description:'Medita, Escribe, Sana. Escritura terapéutica y transformación personal.',
+      image:'/assets/libro-metodo-mes.png',
+      url:'https://www.amazon.com/dp/B0F38BQGPT'
+    },
+    {
+      title:'Apegos',
+      description:'El Alma Despierta. Una obra vinculada a los procesos emocionales y la poesía.',
+      image:'/assets/libro-apegos.png',
+      url:'https://www.amazon.com/dp/B0CW1JNM5Z'
+    },
+    {
+      title:'Expresia',
+      description:'Poemario de escritura terapéutica y expresión emocional.',
+      image:'/assets/libro-expresia.png',
+      url:'https://www.amazon.com/dp/B0F5R1VX2V'
+    },
+    {
+      title:'Retazos de mi alma',
+      description:'Poesía, sensibilidad y fragmentos de una búsqueda interior.',
+      image:'/assets/libro-retazos-de-mi-alma.png',
+      url:'https://www.amazon.com/dp/B0DX6RN58F'
+    },
+    {
+      title:'En la raíz del perdón',
+      description:'Poesía que explora memoria, raíces y procesos de reconciliación.',
+      image:'/assets/libro-en-la-raiz-del-perdon.png',
+      url:'https://www.amazon.com/dp/B0G6JKFFCF'
+    },
+    {
+      title:'Nel silenzio del dovere',
+      description:'Edición italiana sobre dignidad, límites y espacios de cuidado auténtico.',
+      image:'/assets/libro-nel-silenzio-del-dovere.png',
+      url:'https://www.amazon.com/dp/B0GR6XF23R'
+    }
+  ];
   const $ = (s,r=document) => r.querySelector(s);
   const $$ = (s,r=document) => Array.from(r.querySelectorAll(s));
   const esc = (v='') => String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -117,7 +155,7 @@
 
   async function loadLearningData(){
     const {data:c,error:ce}=await sb.from('courses')
-      .select('id,title,slug,subtitle,description,cover_url,status,featured,instructor_name,duration_label,workspace_id')
+      .select('id,title,slug,subtitle,description,cover_url,status,featured,instructor_name,duration_label,workspace_id,price,sale_price,payment_url')
       .eq('workspace_id',workspace.id)
       .order('featured',{ascending:false})
       .order('created_at',{ascending:true});
@@ -214,7 +252,7 @@
     const name=profile?.full_name||profile?.email||user?.email||'Yamilet';
     $('[data-v2-user-name]') && ($('[data-v2-user-name]').textContent=name);
     $('[data-v2-avatar]') && ($('[data-v2-avatar]').textContent=initials(name));
-    $$('[data-v2-nav]').forEach(a=>a.classList.toggle('active',a.dataset.v2Nav===page || (page==='course'||page==='week'||page==='lesson')&&a.dataset.v2Nav==='courses'));
+    $('[data-v2-nav]').forEach(a=>a.classList.toggle('active',a.dataset.v2Nav===page || (page==='course'||page==='week'||page==='lesson')&&a.dataset.v2Nav==='courses'));
   }
 
   function renderHome(){
@@ -515,6 +553,78 @@
     }).join('')+'</div>':'<div class="v2-empty">Aún no tienes recursos disponibles en tu biblioteca.</div>';
   }
 
+  function money(value){
+    if(value===null || value===undefined || value==='') return '';
+    const amount=Number(value);
+    if(!Number.isFinite(amount)) return '';
+    return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(amount);
+  }
+
+  function renderDiscover(){
+    const host=$('[data-v2-discover]');
+    if(!host) return;
+
+    const enrolledIds=new Set(enrollments.filter(e=>['active','completed'].includes(e.status)).map(e=>e.course_id));
+    const purchasable=courses.filter(c=>c.payment_url && !enrolledIds.has(c.id));
+    const comingCourses=courses.filter(c=>!enrolledIds.has(c.id) && !c.payment_url);
+
+    host.innerHTML=`
+      <section class="discover-hero">
+        <div>
+          <span class="v2-eyebrow">Continúa creciendo</span>
+          <h1>Descubre lo que sigue en tu camino.</h1>
+          <p>Cursos, libros y talleres de Yamilet reunidos en un solo lugar. Lo que ya compraste permanece en <strong>Mis cursos</strong>; aquí encuentras nuevas experiencias para continuar.</p>
+        </div>
+        <div class="discover-hero-tags"><span>Cursos</span><span>Libros</span><span>Talleres</span></div>
+      </section>
+
+      <nav class="discover-tabs" aria-label="Categorías">
+        <a href="#cursos">Cursos</a><a href="#libros">Libros</a><a href="#talleres">Talleres</a>
+      </nav>
+
+      <section class="discover-section" id="cursos">
+        <div class="section-title">
+          <div><span class="v2-eyebrow">Formación</span><h2>Nuevos cursos</h2></div>
+          <span class="discover-count">${purchasable.length+comingCourses.length}</span>
+        </div>
+        ${purchasable.length ? '<div class="store-grid">'+purchasable.map(c=>{
+          const regular=money(c.price);
+          const sale=money(c.sale_price);
+          return '<article class="store-card v2-card"><div class="store-media landscape"><img src="'+esc(c.cover_url||DEFAULT_COVER)+'" alt="'+esc(c.title)+'"></div><div class="store-copy"><span class="v2-pill gold">Curso</span><h3>'+esc(c.title)+'</h3><p>'+esc(c.subtitle||c.description||'Programa de Academia Yamilet.')+'</p><div class="store-price">'+(sale?'<strong>'+sale+'</strong>'+(regular?'<del>'+regular+'</del>':''):(regular?'<strong>'+regular+'</strong>':''))+'</div><a class="v2-btn primary" href="'+esc(c.payment_url)+'" target="_blank" rel="noopener noreferrer">Comprar curso →</a></div></article>';
+        }).join('')+'</div>' : '<div class="discover-empty"><span>✦</span><div><strong>Los próximos cursos aparecerán aquí.</strong><p>En cuanto Yamilet publique un nuevo programa con su enlace de pago, la alumna podrá comprarlo directamente desde esta sección.</p></div></div>'}
+      </section>
+
+      <section class="discover-section" id="libros">
+        <div class="section-title">
+          <div><span class="v2-eyebrow">Biblioteca de Yamilet</span><h2>Libros disponibles</h2></div>
+          <span class="discover-count">${BOOK_CATALOG.length}</span>
+        </div>
+        <div class="book-store-grid">
+          ${BOOK_CATALOG.map(book=>`
+            <article class="book-store-card v2-card">
+              <div class="book-store-cover"><img src="${esc(book.image)}" alt="Portada de ${esc(book.title)}" loading="lazy"></div>
+              <div class="book-store-copy">
+                <span class="v2-pill">Libro</span>
+                <h3>${esc(book.title)}</h3>
+                <p>${esc(book.description)}</p>
+                <a class="v2-btn secondary" href="${esc(book.url)}" target="_blank" rel="noopener noreferrer">Comprar en Amazon →</a>
+              </div>
+            </article>
+          `).join('')}
+        </div>
+      </section>
+
+      <section class="discover-section" id="talleres">
+        <div class="section-title">
+          <div><span class="v2-eyebrow">Experiencias en vivo</span><h2>Próximos talleres</h2></div>
+        </div>
+        <div class="discover-empty">
+          <span>○</span>
+          <div><strong>Este espacio queda listo para los próximos talleres.</strong><p>Cuando definamos nombre, fecha, imagen, precio y enlace de compra, aparecerán aquí con reservación o pago directo.</p></div>
+        </div>
+      </section>`;
+  }
+
   function renderProfile(){
     const host=$('[data-v2-profile]');
     if(!host) return;
@@ -562,6 +672,7 @@
       if(page==='week') renderWeek();
       if(page==='lesson') await renderLesson();
       if(page==='library') await renderLibrary();
+      if(page==='discover') renderDiscover();
       if(page==='profile') renderProfile();
       finishLoading();
     }catch(err){
