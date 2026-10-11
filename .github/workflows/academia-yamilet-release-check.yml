@@ -119,6 +119,29 @@ jobs:
       - name: Smoke test hash navigation and admin guards
         run: node .github/scripts/academia-navigation-smoke-v89.mjs
 
+      - name: Validate multipage Academy V2
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='yamilet-perez-site-v2-verde-github/academia'
+          required_v2=(
+            v2/academy-v2.css v2/academy-v2.js
+            inicio/index.html cursos/index.html cursos/metodo-mes/index.html
+            cursos/metodo-mes/semana/index.html cursos/metodo-mes/leccion/index.html
+            biblioteca/index.html perfil/index.html
+          )
+          for asset in "${required_v2[@]}"; do
+            test -s "$base/$asset" || { echo "Missing Academy V2 asset: $asset" >&2; exit 1; }
+          done
+          node --check "$base/v2/academy-v2.js"
+          grep -q 'data-v2-page="home"' "$base/inicio/index.html"
+          grep -q 'data-v2-page="courses"' "$base/cursos/index.html"
+          grep -q 'data-v2-page="course"' "$base/cursos/metodo-mes/index.html"
+          grep -q 'data-v2-page="week"' "$base/cursos/metodo-mes/semana/index.html"
+          grep -q 'data-v2-page="lesson"' "$base/cursos/metodo-mes/leccion/index.html"
+          grep -q 'academy-v2.js?v=1' "$base/inicio/index.html"
+          grep -q 'yamilet_academy_v2_next' "$base/app.js"
+
       - name: Block retired and obsolete runtime layers
         shell: bash
         run: |
