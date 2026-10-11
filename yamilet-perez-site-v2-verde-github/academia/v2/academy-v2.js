@@ -310,7 +310,11 @@
             <div class="today-item"><span class="today-icon">◷</span><div><strong>Última actividad: ${dateLabel(lastActivity())}</strong><small>Tu progreso se guarda automáticamente</small></div></div>
           </div>
         </section>
-      </div>`;
+      </div>
+      <a class="home-discover-banner" href="/academia/descubre/">
+        <div><span class="v2-eyebrow">Más de Yamilet</span><strong>Libros, nuevos cursos y próximos talleres</strong><small>Descubre nuevas experiencias para continuar tu proceso.</small></div>
+        <span class="home-discover-arrow">Explorar →</span>
+      </a>`;
   }
 
   function renderCourses(){
