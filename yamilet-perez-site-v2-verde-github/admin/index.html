@@ -5,10 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta name="theme-color" content="#0f473d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Yamilet Admin">
   <title>Yamilet Admin | CRM y Operación</title>
   <meta name="description" content="Sistema privado de administración, CRM, alumnas y operación de Yamilet Pérez.">
+  <link rel="manifest" href="./manifest.webmanifest?build=2">
+  <link rel="apple-touch-icon" href="../assets/logo-yamilet.png">
   <link rel="icon" href="../assets/logo-yamilet.png">
-  <link rel="stylesheet" href="./styles.css?v=1">
+  <link rel="stylesheet" href="./styles.css?v=2">
 </head>
 <body>
   <div class="boot-screen" data-boot>
@@ -192,6 +198,23 @@
               <div class="activity-list" data-activity-list></div>
             </article>
 
+            <article class="panel pwa-panel">
+              <div class="panel-head">
+                <div><span class="eyebrow">Yamilet Admin</span><h2>App y notificaciones</h2></div>
+                <span class="pwa-ready">PWA</span>
+              </div>
+              <div class="pwa-device">
+                <span class="pwa-device-icon">◆</span>
+                <div><strong>Lleva tu CRM contigo</strong><small>Instálalo como app y recibe avisos aunque el navegador esté cerrado.</small></div>
+              </div>
+              <div class="pwa-actions">
+                <button type="button" class="pwa-btn install" data-install-app hidden>Instalar Yamilet Admin</button>
+                <button type="button" class="pwa-btn push" data-enable-push>Activar notificaciones</button>
+              </div>
+              <p class="pwa-status" data-pwa-status>Preparando notificaciones…</p>
+              <div class="pwa-events"><span>✓ Nuevas citas</span><span>✓ Nuevos registros</span></div>
+            </article>
+
             <article class="panel agents-panel">
               <div class="panel-head">
                 <div><span class="eyebrow">Compás Fly</span><h2>Agentes de apoyo</h2></div>
@@ -274,6 +297,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>
-  <script src="./app.js?v=1"></script>
+  <div class="pwa-toast" data-pwa-toast role="status" aria-live="polite"></div>
+  <script src="./app.js?v=2"></script>
+  <script src="./pwa.js?v=2"></script>
 </body>
 </html>
