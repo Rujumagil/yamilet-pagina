@@ -139,7 +139,9 @@ jobs:
           grep -q 'data-v2-page="course"' "$base/cursos/metodo-mes/index.html"
           grep -q 'data-v2-page="week"' "$base/cursos/metodo-mes/semana/index.html"
           grep -q 'data-v2-page="lesson"' "$base/cursos/metodo-mes/leccion/index.html"
-          grep -q 'academy-v2.js?v=1' "$base/inicio/index.html"
+          grep -q 'academy-v2.js?v=2' "$base/inicio/index.html"
+          grep -q 'yamilet_academy_v2_warm' "$base/inicio/index.html"
+          grep -q 'WARM_SESSION_KEY' "$base/v2/academy-v2.js"
           grep -q 'yamilet_academy_v2_next' "$base/app.js"
 
       - name: Block retired and obsolete runtime layers
