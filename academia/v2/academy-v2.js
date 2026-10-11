@@ -582,12 +582,27 @@
     return /taller|workshop|laboratorio|masterclass|evento/i.test(String(item?.category||'')+' '+String(item?.title||''));
   }
 
+  function personalizedPaymentUrl(value){
+    try{
+      const url=new URL(String(value||''));
+      if(!['http:','https:'].includes(url.protocol)) return '';
+      const email=cleanEmailForCheckout(profile?.email||user?.email||'');
+      if(email) url.searchParams.set('locked_prefilled_email',email);
+      if(user?.id) url.searchParams.set('client_reference_id',user.id);
+      return url.href;
+    }catch{return '';}
+  }
+
+  function cleanEmailForCheckout(value){
+    return String(value||'').trim().toLowerCase().slice(0,320);
+  }
+
   function catalogProductCard(item,typeLabel){
     const state=item.catalog_status==='upcoming'?'upcoming':'available';
     const regular=money(item.price);
     const sale=money(item.sale_price);
     const current=sale||regular;
-    const payment=String(item.payment_url||'').trim();
+    const payment=personalizedPaymentUrl(item.payment_url);
     const detail='/academia/catalogo.html?curso='+encodeURIComponent(item.id);
     const action=state==='upcoming'
       ? '<button class="v2-btn secondary" type="button" disabled>Próximamente</button>'
