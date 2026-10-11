@@ -266,7 +266,7 @@
     const name=profile?.full_name||profile?.email||user?.email||'Yamilet';
     $('[data-v2-user-name]') && ($('[data-v2-user-name]').textContent=name);
     $('[data-v2-avatar]') && ($('[data-v2-avatar]').textContent=initials(name));
-    $('[data-v2-nav]').forEach(a=>a.classList.toggle('active',a.dataset.v2Nav===page || (page==='course'||page==='week'||page==='lesson')&&a.dataset.v2Nav==='courses'));
+    $$('[data-v2-nav]').forEach(a=>a.classList.toggle('active',a.dataset.v2Nav===page || (page==='course'||page==='week'||page==='lesson')&&a.dataset.v2Nav==='courses'));
   }
 
   function renderHome(){
