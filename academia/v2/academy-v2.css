@@ -223,7 +223,7 @@ img{max-width:100%;display:block}
   .lesson-actions .complete-btn{grid-column:1/-1;grid-row:1}
   .lesson-actions .v2-btn:last-child{justify-self:stretch}
   .lesson-actions .v2-btn{width:100%}
-  .v2-mobile-nav{position:fixed;left:10px;right:10px;bottom:10px;z-index:60;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:5px;border:1px solid rgba(18,63,53,.09);border-radius:17px;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);box-shadow:0 15px 40px rgba(18,63,53,.16)}
+  .v2-mobile-nav{position:fixed;left:10px;right:10px;bottom:10px;z-index:60;display:grid;grid-template-columns:repeat(5,1fr);gap:3px;padding:5px;border:1px solid rgba(18,63,53,.09);border-radius:17px;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);box-shadow:0 15px 40px rgba(18,63,53,.16)}
   .v2-mobile-nav a{display:grid;place-items:center;gap:2px;min-height:48px;border-radius:12px;text-decoration:none;color:#7a8882;font-size:8px;font-weight:800}
   .v2-mobile-nav a b{font-size:17px;line-height:1}
   .v2-mobile-nav a.active{background:var(--ay-soft);color:var(--ay-green)}
