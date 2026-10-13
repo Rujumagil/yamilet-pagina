@@ -12,7 +12,7 @@
   <meta name="description" content="Crea tu cuenta para Academia Yamilet.">
   <link rel="icon" href="../../imagenes-academia-yamilet-final/04-favicon.png">
   <link rel="stylesheet" href="../gateway.css?v=143">
-  <link rel="stylesheet" href="./registro.css?v=143">
+  <link rel="stylesheet" href="./registro.css?v=144">
 </head>
 <body>
   <div class="gateway-loader" data-loader>
@@ -46,8 +46,15 @@
         <h2>Crea tu cuenta</h2>
         <p>Completa tus datos. Crear tu cuenta no activa automáticamente un curso de pago.</p>
         <form class="gateway-form" data-register-form novalidate>
-          <label>Nombre completo<input type="text" name="full_name" autocomplete="name" minlength="2" maxlength="120" required placeholder="Tu nombre"></label>
-          <label>Correo electrónico<input type="email" name="email" autocomplete="email" required placeholder="nombre@correo.com"></label>
+          <label class="field-full">Nombre completo<input type="text" name="full_name" autocomplete="name" minlength="2" maxlength="120" required placeholder="Tu nombre"></label>
+          <label class="field-full">Correo electrónico<input type="email" name="email" autocomplete="email" required placeholder="nombre@correo.com"></label>
+          <label class="field-country">País / región
+            <select name="country_code" data-country required aria-label="País o región"></select>
+          </label>
+          <label class="field-whatsapp">WhatsApp
+            <span class="phone-field"><b data-dial-code>+52</b><input type="tel" name="whatsapp" data-whatsapp autocomplete="tel-national" inputmode="tel" required placeholder="10 dígitos"></span>
+            <small>Escribe tu número sin el código del país.</small>
+          </label>
           <label>Contraseña<input type="password" name="password" autocomplete="new-password" minlength="8" required placeholder="Mínimo 8 caracteres"></label>
           <label>Confirmar contraseña<input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required placeholder="Repite tu contraseña"></label>
           <label class="check"><input type="checkbox" name="activation_understood" required><span>Entiendo que debo confirmar mi correo y que los cursos se activan cuando mi inscripción o compra sea confirmada.</span></label>
@@ -73,6 +80,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>
-  <script src="./registro.js?v=143"></script>
+  <script src="./registro.js?v=144"></script>
 </body>
 </html>
