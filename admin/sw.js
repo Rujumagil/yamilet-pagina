@@ -1,4 +1,4 @@
-const BUILD = new URL(self.location.href).searchParams.get('build') || '2';
+const BUILD = new URL(self.location.href).searchParams.get('build') || '4';
 const CACHE_PREFIX = 'yamilet-admin-pwa-';
 const CACHE_NAME = CACHE_PREFIX + BUILD;
 const BASE = new URL('./', self.location.href);
@@ -9,9 +9,9 @@ const PRECACHE = [
   new URL('./index.html', BASE).href,
   new URL('./offline.html', BASE).href,
   new URL('./manifest.webmanifest?build=' + BUILD, BASE).href,
-  new URL('./styles.css?v=2', BASE).href,
-  new URL('./app.js?v=2', BASE).href,
-  new URL('./pwa.js?v=2', BASE).href,
+  new URL('./styles.css?v=4', BASE).href,
+  new URL('./app.js?v=4', BASE).href,
+  new URL('./pwa.js?v=4', BASE).href,
   new URL('../assets/logo-yamilet.png', BASE).href
 ];
 
