@@ -50,7 +50,7 @@
     const trimmed=String(raw||'').trim();
     if(trimmed.startsWith('+')&&local.startsWith(country.dial))local=local.slice(country.dial.length);
     const e164='+'+country.dial+local;
-    if(local.length<6||!/^+[1-9][0-9]{6,14}$/.test(e164))return null;
+    if(local.length<6||!/^\+[1-9][0-9]{6,14}$/.test(e164))return null;
     return {country,local,e164};
   }
 
@@ -67,7 +67,7 @@
 
   form?.addEventListener('submit',async e=>{
     e.preventDefault();
-    const fd=new FormData(form),fullName=String(fd.get('full_name')||'').trim().replace(/s+/g,' '),email=String(fd.get('email')||'').trim().toLowerCase(),password=String(fd.get('password')||''),confirm=String(fd.get('confirm_password')||''),understood=fd.get('activation_understood')==='on';
+    const fd=new FormData(form),fullName=String(fd.get('full_name')||'').trim().replace(/\s+/g,' '),email=String(fd.get('email')||'').trim().toLowerCase(),password=String(fd.get('password')||''),confirm=String(fd.get('confirm_password')||''),understood=fd.get('activation_understood')==='on';
     const phone=whatsappData(fd.get('whatsapp'));
     if(!fullName||!email||!password||!confirm){setStatus('Completa todos los campos.');return}
     if(!phone){setStatus('Revisa tu país y escribe un número de WhatsApp válido.');return}
