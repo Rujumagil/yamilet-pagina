@@ -1,6 +1,6 @@
 const CACHE_PREFIX = 'academia-yamilet-pwa-';
 const params = new URL(self.location.href).searchParams;
-const BUILD = params.get('build') || '143';
+const BUILD = params.get('build') || '145';
 const CACHE_NAME = `${CACHE_PREFIX}v${BUILD}`;
 const BASE = new URL('./', self.location.href);
 const OFFLINE_URL = new URL('./offline.html', BASE).href;
