@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const BUILD = '5';
+  const BUILD = '6';
   const PUBLIC_VAPID_KEY = 'BMpalGhIpd9AipWKCNaHn8mMQjz1bdW-PF8q_NVUaRknw70fCid9yliJ5t4dFe6t8epibGWM6_tJkPn5M73Tw_o';
   const PUSH_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/yamilet-push-send';
   const $ = s => document.querySelector(s);
