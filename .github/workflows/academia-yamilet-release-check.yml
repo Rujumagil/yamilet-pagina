@@ -54,6 +54,7 @@ jobs:
           done
 
           node --check "$base/gateway.js"
+          node --check "$base/registro/registro.js"
           node --check "$base/v2/academy-v2.js"
 
           grep -q 'name="deployment" content="academia-yamilet-v2-gateway"' "$base/index.html"
@@ -69,7 +70,7 @@ jobs:
           ! grep -q 'academy-mobile-admin' "$base/index.html"
 
           grep -q '"start_url": "./inicio/"' "$base/manifest.webmanifest"
-          grep -q "const BUILD = params.get('build') || '143'" "$base/sw.js"
+          grep -q "const BUILD = params.get('build') || '145'" "$base/sw.js"
           grep -q "versioned('./gateway.js')" "$base/sw.js"
           grep -q "versioned('./v2/academy-v2.js')" "$base/sw.js"
           ! grep -q "versioned('./academy-dashboard.css')" "$base/sw.js"
@@ -254,7 +255,7 @@ jobs:
           grep -q 'name="academy-build" content="v143-registration-gateway"' public/academia/index.html
           grep -q 'gateway.js?v=143' public/academia/index.html
           grep -q '"start_url": "./inicio/"' public/academia/manifest.webmanifest
-          grep -q "const BUILD = params.get('build') || '143'" public/academia/sw.js
+          grep -q "const BUILD = params.get('build') || '145'" public/academia/sw.js
           grep -q 'academy-v2.js?v=7' public/academia/inicio/index.html
           ! grep -q 'academy-admin.js' public/academia/index.html
           ! grep -q 'academy-dashboard.js' public/academia/index.html
