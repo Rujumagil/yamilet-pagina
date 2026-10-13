@@ -14,7 +14,7 @@
   <link rel="manifest" href="./manifest.webmanifest?build=2">
   <link rel="apple-touch-icon" href="../assets/logo-yamilet.png">
   <link rel="icon" href="../assets/logo-yamilet.png">
-  <link rel="stylesheet" href="./styles.css?v=2">
+  <link rel="stylesheet" href="./styles.css?v=3">
 </head>
 <body>
   <div class="boot-screen" data-boot>
@@ -296,9 +296,18 @@
     </section>
   </div>
 
+  <div class="contact-drawer-scrim" data-contact-scrim></div>
+  <aside class="contact-drawer" data-contact-drawer aria-hidden="true" aria-label="Ficha del contacto">
+    <header class="contact-drawer-head">
+      <div><span class="eyebrow">CRM Yamilet</span><strong>Ficha del contacto</strong></div>
+      <button type="button" data-close-contact aria-label="Cerrar ficha">×</button>
+    </header>
+    <div class="contact-drawer-body" data-contact-detail></div>
+  </aside>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>
   <div class="pwa-toast" data-pwa-toast role="status" aria-live="polite"></div>
-  <script src="./app.js?v=2"></script>
+  <script src="./app.js?v=3"></script>
   <script src="./pwa.js?v=2"></script>
 </body>
 </html>
