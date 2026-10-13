@@ -11,13 +11,13 @@
   <meta name="apple-mobile-web-app-title" content="Academia Yamilet">
   <meta name="application-name" content="Academia Yamilet">
   <meta name="deployment" content="academia-yamilet-v2-gateway">
-  <meta name="academy-build" content="v142-gateway">
+  <meta name="academy-build" content="v143-registration-gateway">
   <title>Acceso | Academia Yamilet</title>
   <meta name="description" content="Acceso privado a Academia Yamilet y Método MES®.">
-  <link rel="manifest" href="./manifest.webmanifest?build=142">
+  <link rel="manifest" href="./manifest.webmanifest?build=143">
   <link rel="apple-touch-icon" href="../imagenes-academia-yamilet-final/04-favicon.png">
   <link rel="icon" href="../imagenes-academia-yamilet-final/04-favicon.png">
-  <link rel="stylesheet" href="./gateway.css?v=142">
+  <link rel="stylesheet" href="./gateway.css?v=143">
 </head>
 <body>
   <div class="gateway-loader" data-loader>
@@ -55,26 +55,20 @@
           </form>
           <div class="actions"><button class="secondary" type="button" data-magic>Entrar sin contraseña</button><button class="secondary" type="button" data-recovery>Cambiar contraseña</button></div>
           <p class="status" data-login-status aria-live="polite"></p>
-          <div class="switcher">¿Aún no tienes cuenta? <button type="button" data-show-register>Crear mi cuenta</button></div>
+          <div class="switcher">¿Aún no tienes cuenta? <a href="/academia/registro/">Crear mi cuenta</a></div>
           <a class="catalog-link" href="./catalogo.html">Ver catálogo público de cursos →</a>
           <p class="fine">Después de iniciar sesión entrarás directamente a la nueva Academia V2.</p>
         </div>
 
-        <div class="hidden" data-register-pane>
-          <span class="eyebrow">Registro a la Academia</span>
-          <h2>Crea tu cuenta</h2>
-          <p class="form-intro">Crear tu cuenta no activa automáticamente un curso de pago. Tu acceso aparecerá cuando tu inscripción esté confirmada.</p>
-          <form class="gateway-form" data-register-form>
-            <label>Nombre completo<input type="text" name="full_name" autocomplete="name" minlength="2" maxlength="120" required></label>
-            <label>Correo<input type="email" name="email" autocomplete="email" required></label>
-            <label>Contraseña<input type="password" name="password" autocomplete="new-password" minlength="8" required></label>
-            <label>Confirmar contraseña<input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required></label>
-            <label class="check"><input type="checkbox" name="activation_understood" required><span>Entiendo que los cursos se activan cuando mi inscripción sea confirmada.</span></label>
-            <button class="primary" type="submit">Registrarme en la Academia</button>
-          </form>
-          <p class="status" data-register-status aria-live="polite"></p>
-          <div class="switcher">¿Ya tienes cuenta? <button type="button" data-show-login>Volver al acceso</button></div>
-        </div>
+      </section>
+
+      <section class="card reset-card" data-confirmed-card>
+        <img class="card-logo" src="../imagenes-academia-yamilet-final/01-yamilet-logo-master.png" alt="Academia Yamilet">
+        <div class="success-mark" style="display:grid;place-items:center;width:70px;height:70px;margin:0 auto 18px;border-radius:50%;background:#e7f3eb;color:#347b56;font-size:31px;font-weight:900">✓</div>
+        <span class="eyebrow" style="text-align:center">Correo confirmado</span>
+        <h2 style="text-align:center">Tu cuenta está lista.</h2>
+        <p style="text-align:center">Gracias por confirmar tu correo. Ahora puedes ingresar a Academia Yamilet con tu correo y contraseña.</p>
+        <a class="primary" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="/academia/">Ingresar a mi Academia</a>
       </section>
 
       <section class="card reset-card" data-reset-card>
@@ -93,6 +87,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>
-  <script src="./gateway.js?v=142"></script>
+  <script src="./gateway.js?v=143"></script>
 </body>
 </html>
