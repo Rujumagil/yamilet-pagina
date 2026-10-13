@@ -42,6 +42,7 @@ jobs:
           base='yamilet-perez-site-v2-verde-github/academia'
           required=(
             index.html gateway.css gateway.js manifest.webmanifest sw.js offline.html catalogo.html
+            registro/index.html registro/registro.css registro/registro.js
             v2/academy-v2.css v2/academy-v2.js
             inicio/index.html cursos/index.html cursos/metodo-mes/index.html
             cursos/metodo-mes/semana/index.html cursos/metodo-mes/leccion/index.html
@@ -56,10 +57,10 @@ jobs:
           node --check "$base/v2/academy-v2.js"
 
           grep -q 'name="deployment" content="academia-yamilet-v2-gateway"' "$base/index.html"
-          grep -q 'name="academy-build" content="v142-gateway"' "$base/index.html"
-          grep -q 'gateway.css?v=142' "$base/index.html"
-          grep -q 'gateway.js?v=142' "$base/index.html"
-          grep -q 'manifest.webmanifest?build=142' "$base/index.html"
+          grep -q 'name="academy-build" content="v143-registration-gateway"' "$base/index.html"
+          grep -q 'gateway.css?v=143' "$base/index.html"
+          grep -q 'gateway.js?v=143' "$base/index.html"
+          grep -q 'manifest.webmanifest?build=143' "$base/index.html"
 
           ! grep -q 'academy-admin.js' "$base/index.html"
           ! grep -q 'academy-dashboard.js' "$base/index.html"
@@ -68,7 +69,7 @@ jobs:
           ! grep -q 'academy-mobile-admin' "$base/index.html"
 
           grep -q '"start_url": "./inicio/"' "$base/manifest.webmanifest"
-          grep -q "const BUILD = params.get('build') || '142'" "$base/sw.js"
+          grep -q "const BUILD = params.get('build') || '143'" "$base/sw.js"
           grep -q "versioned('./gateway.js')" "$base/sw.js"
           grep -q "versioned('./v2/academy-v2.js')" "$base/sw.js"
           ! grep -q "versioned('./academy-dashboard.css')" "$base/sw.js"
@@ -80,6 +81,11 @@ jobs:
           grep -q "capture_academy_registration_request" "$base/gateway.js"
           grep -q "resetPasswordForEmail" "$base/gateway.js"
           grep -q "signInWithPassword" "$base/gateway.js"
+          grep -q '/academia/registro/' "$base/index.html"
+          grep -q 'Gracias por inscribirte' "$base/registro/index.html"
+          grep -q "emailRedirectTo:CONFIRM_REDIRECT" "$base/registro/registro.js"
+          grep -q "/academia/?confirmed=1" "$base/registro/registro.js"
+          grep -q 'data-confirmed-card' "$base/index.html"
 
           grep -q "location.replace('/admin/')" "$base/admin/index.html"
 
@@ -236,6 +242,8 @@ jobs:
           test -s public/academia/gateway.js
           test -s public/academia/gateway.css
           test -s public/academia/inicio/index.html
+          test -s public/academia/registro/index.html
+          test -s public/academia/registro/registro.js
           test -s public/academia/cursos/index.html
           test -s public/academia/descubre/index.html
           test -s public/academia/biblioteca/index.html
@@ -243,10 +251,10 @@ jobs:
           test -s public/academia/sw.js
           test -s public/academia/manifest.webmanifest
           test -s public/assets/logo-yamilet.png
-          grep -q 'name="academy-build" content="v142-gateway"' public/academia/index.html
-          grep -q 'gateway.js?v=142' public/academia/index.html
+          grep -q 'name="academy-build" content="v143-registration-gateway"' public/academia/index.html
+          grep -q 'gateway.js?v=143' public/academia/index.html
           grep -q '"start_url": "./inicio/"' public/academia/manifest.webmanifest
-          grep -q "const BUILD = params.get('build') || '142'" public/academia/sw.js
+          grep -q "const BUILD = params.get('build') || '143'" public/academia/sw.js
           grep -q 'academy-v2.js?v=7' public/academia/inicio/index.html
           ! grep -q 'academy-admin.js' public/academia/index.html
           ! grep -q 'academy-dashboard.js' public/academia/index.html
