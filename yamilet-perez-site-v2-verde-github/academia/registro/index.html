@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta name="theme-color" content="#123f35">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Academia Yamilet">
+  <title>Registro | Academia Yamilet</title>
+  <meta name="description" content="Crea tu cuenta para Academia Yamilet.">
+  <link rel="icon" href="../../imagenes-academia-yamilet-final/04-favicon.png">
+  <link rel="stylesheet" href="../gateway.css?v=143">
+  <link rel="stylesheet" href="./registro.css?v=143">
+</head>
+<body>
+  <div class="gateway-loader" data-loader>
+    <img src="../../imagenes-academia-yamilet-final/01-yamilet-logo-master.png" alt="Academia Yamilet">
+    <strong>Academia Yamilet</strong>
+    <span>Preparando tu registro…</span>
+  </div>
+
+  <main class="registration-shell">
+    <section class="registration-brand">
+      <a class="gateway-logo" href="../../es/">
+        <img src="../../imagenes-academia-yamilet-final/02-yamilet-isotipo.png" alt="">
+        <div><strong>Academia Yamilet</strong><small>Método MES®</small></div>
+      </a>
+      <div class="registration-copy">
+        <span class="eyebrow">Únete a la Academia</span>
+        <h1>Tu espacio comienza con <em>una cuenta segura.</em></h1>
+        <p>Crea tu perfil. Después te enviaremos un correo para confirmar que la dirección es tuya antes de permitirte ingresar.</p>
+        <div class="registration-steps">
+          <div><b>1</b><span><strong>Crea tu cuenta</strong><small>Nombre, correo y contraseña.</small></span></div>
+          <div><b>2</b><span><strong>Confirma tu correo</strong><small>Recibirás un enlace seguro.</small></span></div>
+          <div><b>3</b><span><strong>Ingresa a la Academia</strong><small>Tus cursos aparecerán cuando estén activados.</small></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="registration-panel">
+      <article class="card registration-card" data-form-card>
+        <img class="card-logo" src="../../imagenes-academia-yamilet-final/01-yamilet-logo-master.png" alt="Academia Yamilet">
+        <span class="eyebrow">Registro a la Academia</span>
+        <h2>Crea tu cuenta</h2>
+        <p>Completa tus datos. Crear tu cuenta no activa automáticamente un curso de pago.</p>
+        <form class="gateway-form" data-register-form novalidate>
+          <label>Nombre completo<input type="text" name="full_name" autocomplete="name" minlength="2" maxlength="120" required placeholder="Tu nombre"></label>
+          <label>Correo electrónico<input type="email" name="email" autocomplete="email" required placeholder="nombre@correo.com"></label>
+          <label>Contraseña<input type="password" name="password" autocomplete="new-password" minlength="8" required placeholder="Mínimo 8 caracteres"></label>
+          <label>Confirmar contraseña<input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required placeholder="Repite tu contraseña"></label>
+          <label class="check"><input type="checkbox" name="activation_understood" required><span>Entiendo que debo confirmar mi correo y que los cursos se activan cuando mi inscripción o compra sea confirmada.</span></label>
+          <button class="primary" type="submit">Crear mi cuenta</button>
+        </form>
+        <p class="status" data-register-status aria-live="polite"></p>
+        <div class="switcher">¿Ya tienes cuenta? <a href="/academia/">Ingresar a mi Academia</a></div>
+      </article>
+
+      <article class="card registration-success hidden" data-success-card>
+        <div class="success-mark">✓</div>
+        <span class="eyebrow">Registro recibido</span>
+        <h2>Gracias por inscribirte.</h2>
+        <p>Enviamos un correo de confirmación a <strong data-success-email></strong>.</p>
+        <div class="success-box">
+          <strong>Revisa tu bandeja de entrada</strong>
+          <p>Abre el mensaje de Academia Yamilet y toca <b>“Confirmar mi correo”</b>. Después te llevaremos a la pantalla de ingreso.</p>
+        </div>
+        <a class="primary success-login" href="/academia/">Ya confirmé mi correo · Ingresar</a>
+        <button class="text-btn" type="button" data-back-register>Usar otro correo</button>
+      </article>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>
+  <script src="./registro.js?v=143"></script>
+</body>
+</html>
