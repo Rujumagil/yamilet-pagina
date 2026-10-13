@@ -4,8 +4,7 @@
   const params = new URLSearchParams(location.search);
 
   document.querySelectorAll('[data-academy-cta]').forEach(link => {
-    const url = new URL('/academia/', location.origin);
-    url.searchParams.set('register','1');
+    const url = new URL('/academia/registro/', location.origin);
     url.searchParams.set('course','metodo-mes');
     url.searchParams.set('cta', link.dataset.academyCta || 'metodo-mes-landing');
     let hasCampaign = false;
