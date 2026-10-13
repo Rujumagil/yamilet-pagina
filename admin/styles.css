@@ -95,3 +95,23 @@ button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
 .pwa-toast{position:fixed;z-index:120;right:18px;bottom:18px;max-width:min(380px,calc(100% - 36px));padding:12px 15px;border-radius:13px;background:#103f36;color:#fff;box-shadow:0 18px 50px rgba(8,42,35,.25);font-size:11px;font-weight:750;opacity:0;transform:translateY(18px);pointer-events:none;transition:.22s}
 .pwa-toast.show{opacity:1;transform:none}.pwa-toast.error{background:#7f403b}
 @media(max-width:620px){.pwa-actions{grid-template-columns:1fr}.pwa-toast{left:14px;right:14px;bottom:14px;max-width:none}}
+
+.crm-row{cursor:pointer}.crm-row:hover{background:#f8faf8}.crm-row:focus{outline:2px solid rgba(18,72,61,.18);outline-offset:-2px}
+.contact-open-btn{border:0;cursor:pointer}
+.student-card[data-contact-email],.deal-card[data-contact-email]{cursor:pointer}.student-card[data-contact-email]:hover,.deal-card[data-contact-email]:hover{border-color:#b9cec3;box-shadow:0 12px 30px rgba(18,72,61,.07)}
+.contact-detail-open{overflow:hidden}
+.contact-drawer-scrim{position:fixed;inset:0;z-index:74;background:rgba(7,31,26,.42);opacity:0;pointer-events:none;transition:.22s}
+.contact-drawer-scrim.show{opacity:1;pointer-events:auto}
+.contact-drawer{position:fixed;top:0;right:0;bottom:0;z-index:75;width:min(520px,94vw);background:#f7f9f6;border-left:1px solid var(--line);box-shadow:-22px 0 60px rgba(13,52,43,.16);transform:translateX(102%);transition:transform .24s ease;overflow:auto}
+.contact-drawer.open{transform:none}
+.contact-drawer-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 20px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.96);backdrop-filter:blur(16px)}
+.contact-drawer-head>div{display:grid}.contact-drawer-head strong{margin-top:3px;color:var(--gd);font:600 19px Georgia,serif}.contact-drawer-head button{display:grid;place-items:center;width:37px;height:37px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#64736d;font-size:24px}
+.contact-drawer-body{padding:20px}
+.contact-profile{display:grid;grid-template-columns:58px 1fr;gap:14px;align-items:center;padding:18px;border:1px solid var(--line);border-radius:19px;background:#fff}
+.contact-profile-avatar{display:grid;place-items:center;width:56px;height:56px;border-radius:17px;background:var(--g);color:#fff;font:700 16px Georgia,serif}.contact-profile h2{margin:6px 0 1px;color:var(--gd);font:600 23px Georgia,serif}.contact-profile p{margin:0;color:#84908b;font-size:10px}
+.contact-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 16px}.contact-actions a,.contact-actions span{min-height:42px;display:flex;align-items:center;justify-content:center;border-radius:12px;border:1px solid var(--line);background:#fff;text-decoration:none;color:var(--g);font-size:9px;font-weight:900}.contact-actions a.whatsapp{background:#e9f6ed;border-color:#d5eadc;color:#31764e}.contact-actions .disabled{color:#9aa39f;background:#f0f3f1}
+.contact-detail-section{margin-top:11px;padding:17px;border:1px solid var(--line);border-radius:17px;background:#fff}.contact-section-title h3{margin:4px 0 13px;color:var(--gd);font:600 17px Georgia,serif}
+.contact-data-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0}.contact-data-grid>div{padding:10px;border-radius:11px;background:#f6f8f5}.contact-data-grid dt{color:#8a9691;font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.04em}.contact-data-grid dd{margin:3px 0 0;color:#394a43;font-size:10px;font-weight:750;word-break:break-word}
+.contact-empty-block{padding:15px;border-radius:12px;background:#f6f8f5;color:#84908b;font-size:10px}
+.contact-progress-card>div:first-child{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:9px}.contact-progress-card>div:first-child strong{color:var(--g);font:700 27px Georgia,serif}.contact-progress-card>div:first-child span{color:#73827b;font-size:9px}.contact-progress-card small{display:block;margin-top:8px;color:#86918c;font-size:8px}
+@media(max-width:620px){.contact-drawer{width:100vw}.contact-drawer-body{padding:14px}.contact-data-grid{grid-template-columns:1fr}.contact-actions{grid-template-columns:1fr}.contact-drawer-head{padding:14px}}

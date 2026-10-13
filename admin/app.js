@@ -85,7 +85,7 @@
     const [courseRes,bookingRes,registrationRes] = await Promise.all([
       sb.from('courses').select('id,title,slug,status,workspace_id').eq('workspace_id',workspace.id).order('created_at',{ascending:true}),
       sb.from('free_class_bookings').select('id,booking_date,full_name,email,status,source,page_url,utm_source,utm_medium,utm_campaign,created_at,updated_at').eq('workspace_id',workspace.id).order('created_at',{ascending:false}).limit(250),
-      sb.rpc('get_academy_registration_requests',{target_workspace:workspace.id})
+      sb.rpc('get_academy_crm_registrations',{target_workspace:workspace.id})
     ]);
     if(courseRes.error) throw courseRes.error;
     if(bookingRes.error) throw bookingRes.error;
@@ -200,6 +200,8 @@
       else if(c.booking?.status==='requested') c.stage='Cita solicitada';
       else c.stage='Nuevo';
       c.nextAction=c.stage==='Nuevo'?'Contactar':c.stage==='Cita solicitada'?'Confirmar cita':c.stage==='Cita confirmada'?'Realizar sesión':c.stage==='Seguimiento'?'Dar seguimiento':c.stage==='Alumna'?(c.student?.risk?'Revisar progreso':'Acompañar'):'Revisar';
+      c.whatsapp=c.registration?.whatsapp_e164||'';
+      c.country=c.registration?.country_name||'';
       return c;
     }).sort((a,b)=>new Date(b.lastActivity||0)-new Date(a.lastActivity||0));
 
@@ -304,27 +306,141 @@
       <div class="activity-item"><span class="activity-icon">${x.type==='booking'?'□':x.type==='student'?'◉':'◎'}</span><div><strong>${esc(x.title)}</strong><small>${esc(x.copy)}</small></div><time>${fmtDate(x.at,{year:false})}</time></div>`).join('');
   }
 
+  function whatsappHref(value=''){
+    const digits=String(value||'').replace(/[^0-9]/g,'');
+    return digits.length>=7?'https://wa.me/'+digits:'';
+  }
+
+  function registrationStatusLabel(value=''){
+    return ({requested:'Registro recibido',account_created:'Cuenta creada',email_confirmed:'Correo confirmado',dismissed:'Descartado'})[value]||'Sin estado';
+  }
+
+  function bookingStatusLabel(value=''){
+    return ({requested:'Solicitada',confirmed:'Confirmada',completed:'Realizada',cancelled:'Cancelada'})[value]||value||'Sin cita';
+  }
+
+  function closeContactDetail(){
+    $('[data-contact-drawer]')?.classList.remove('open');
+    $('[data-contact-scrim]')?.classList.remove('show');
+    $('[data-contact-drawer]')?.setAttribute('aria-hidden','true');
+    document.body.classList.remove('contact-detail-open');
+  }
+
+  function openContactDetail(email){
+    const key=String(email||'').trim().toLowerCase();
+    const contact=model?.contacts?.find(c=>c.email===key);
+    if(!contact)return;
+    const r=contact.registration||null;
+    const b=contact.booking||null;
+    const s=contact.student||null;
+    const whatsapp=contact.whatsapp||r?.whatsapp_e164||'';
+    const wa=whatsappHref(whatsapp);
+    const country=r?.country_name||contact.country||'No registrado';
+    const source=r?.utm_source||r?.registration_source||b?.utm_source||b?.source||contact.source||'Web';
+    const campaign=r?.utm_campaign||b?.utm_campaign||'—';
+    const detail=$('[data-contact-detail]');
+    detail.innerHTML=`
+      <section class="contact-profile">
+        <span class="contact-profile-avatar">${initials(contact.name)}</span>
+        <div><span class="status ${contact.stage==='Alumna'?'active':contact.stage.startsWith('Cita')?'confirmed':'requested'}">${esc(contact.stage)}</span><h2>${esc(contact.name)}</h2><p>${esc(contact.email)}</p></div>
+      </section>
+
+      <div class="contact-actions">
+        <a href="mailto:${encodeURIComponent(contact.email)}">✉ Enviar correo</a>
+        ${wa?'<a class="whatsapp" href="'+esc(wa)+'" target="_blank" rel="noopener">◉ Abrir WhatsApp</a>':'<span class="disabled">WhatsApp no registrado</span>'}
+      </div>
+
+      <section class="contact-detail-section">
+        <div class="contact-section-title"><span class="eyebrow">Contacto</span><h3>Datos personales</h3></div>
+        <dl class="contact-data-grid">
+          <div><dt>Correo</dt><dd>${esc(contact.email)}</dd></div>
+          <div><dt>WhatsApp</dt><dd>${whatsapp?esc(whatsapp):'No registrado'}</dd></div>
+          <div><dt>País / región</dt><dd>${esc(country)}</dd></div>
+          <div><dt>Código internacional</dt><dd>${r?.dial_code?esc(r.dial_code):'—'}</dd></div>
+        </dl>
+      </section>
+
+      <section class="contact-detail-section">
+        <div class="contact-section-title"><span class="eyebrow">Registro</span><h3>Ingreso a Academia Yamilet</h3></div>
+        ${r?`<dl class="contact-data-grid">
+          <div><dt>Estado</dt><dd>${esc(registrationStatusLabel(r.request_status))}</dd></div>
+          <div><dt>Fecha de registro</dt><dd>${fmtDate(r.registered_at)}</dd></div>
+          <div><dt>Correo confirmado</dt><dd>${r.email_confirmed_at?'Sí · '+fmtDate(r.email_confirmed_at):'Pendiente'}</dd></div>
+          <div><dt>Interés</dt><dd>${esc(r.course_interest||'Método MES®')}</dd></div>
+          <div><dt>Origen</dt><dd>${esc(source)}</dd></div>
+          <div><dt>Campaña</dt><dd>${esc(campaign)}</dd></div>
+        </dl>`:'<div class="contact-empty-block">No existe un registro de Academia asociado a este contacto.</div>'}
+      </section>
+
+      <section class="contact-detail-section">
+        <div class="contact-section-title"><span class="eyebrow">Agenda</span><h3>Cita y seguimiento</h3></div>
+        ${b?`<dl class="contact-data-grid">
+          <div><dt>Fecha</dt><dd>${fmtDate(b.booking_date)}</dd></div>
+          <div><dt>Estado</dt><dd>${esc(bookingStatusLabel(b.status))}</dd></div>
+          <div><dt>Origen</dt><dd>${esc(b.utm_source||b.source||'Página Yamilet')}</dd></div>
+          <div><dt>Registrada</dt><dd>${fmtDate(b.created_at)}</dd></div>
+        </dl>`:'<div class="contact-empty-block">Todavía no tiene una cita registrada.</div>'}
+      </section>
+
+      <section class="contact-detail-section">
+        <div class="contact-section-title"><span class="eyebrow">Academia</span><h3>Progreso de aprendizaje</h3></div>
+        ${s?`<div class="contact-progress-card">
+          <div><strong>${s.percent}%</strong><span>${s.active?'Alumna activa':'Sin curso activo'}</span></div>
+          <div class="progress-track"><span style="width:${s.percent}%"></span></div>
+          <small>${s.completedLessons} de ${s.totalLessons} lecciones completadas · Última actividad: ${s.lastActivity?fmtDate(s.lastActivity):'sin actividad'}</small>
+        </div>`:'<div class="contact-empty-block">Todavía no tiene un curso activo.</div>'}
+      </section>
+    `;
+    $('[data-contact-drawer]')?.classList.add('open');
+    $('[data-contact-scrim]')?.classList.add('show');
+    $('[data-contact-drawer]')?.setAttribute('aria-hidden','false');
+    document.body.classList.add('contact-detail-open');
+  }
+
+  function wireContactOpeners(root=document){
+    $('[data-contact-email]',root).forEach(el=>{
+      if(el.dataset.contactBound)return;
+      el.dataset.contactBound='1';
+      const open=()=>openContactDetail(el.dataset.contactEmail);
+      el.addEventListener('click',event=>{
+        if(event.target.closest('a,button,select,input'))return;
+        open();
+      });
+      el.addEventListener('keydown',event=>{
+        if(event.key==='Enter'||event.key===' '){event.preventDefault();open();}
+      });
+    });
+  }
+
   function renderCRM(filter=''){
     const q=filter.trim().toLowerCase();
-    const rows=model.contacts.filter(c=>!q||c.name.toLowerCase().includes(q)||c.email.toLowerCase().includes(q));
+    const rows=model.contacts.filter(c=>!q||c.name.toLowerCase().includes(q)||c.email.toLowerCase().includes(q)||String(c.whatsapp||'').includes(q));
     const host=$('[data-crm-table]');
     host.innerHTML=rows.length?rows.map(c=>`
-      <tr><td><strong>${esc(c.name)}</strong><small>${esc(c.email)}</small></td><td><span class="status ${c.stage==='Alumna'?'active':c.stage.startsWith('Cita')?'confirmed':'requested'}">${esc(c.stage)}</span></td><td>${esc(c.source||'Web')}</td><td>${c.lastActivity?fmtDate(c.lastActivity):'—'}</td><td><span class="action-chip">${esc(c.nextAction)}</span></td></tr>`).join(''):'<tr><td colspan="5">Sin resultados.</td></tr>';
+      <tr class="crm-row" tabindex="0" data-contact-email="${esc(c.email)}"><td><strong>${esc(c.name)}</strong><small>${esc(c.email)}${c.whatsapp?' · '+esc(c.whatsapp):''}</small></td><td><span class="status ${c.stage==='Alumna'?'active':c.stage.startsWith('Cita')?'confirmed':'requested'}">${esc(c.stage)}</span></td><td>${esc(c.source||'Web')}</td><td>${c.lastActivity?fmtDate(c.lastActivity):'—'}</td><td><button class="action-chip contact-open-btn" type="button" data-contact-email="${esc(c.email)}">Ver ficha →</button></td></tr>`).join(''):'<tr><td colspan="5">Sin resultados.</td></tr>';
+    $('[data-contact-email]',host).forEach(el=>{
+      if(el.tagName==='BUTTON'){
+        el.addEventListener('click',event=>{event.stopPropagation();openContactDetail(el.dataset.contactEmail);});
+      }
+    });
+    wireContactOpeners(host);
   }
 
   function renderPipeline(){
     const stages=['Nuevo','Cita solicitada','Cita confirmada','Seguimiento','Alumna'];
     $('[data-pipeline-board]').innerHTML=stages.map(stage=>{
       const rows=model.contacts.filter(c=>c.stage===stage);
-      return `<section class="pipeline-col"><div class="pipeline-col-head"><strong>${stage}</strong><span>${rows.length}</span></div>${rows.map(c=>`<article class="deal-card"><strong>${esc(c.name)}</strong><small>${esc(c.email)}</small><em>${esc(c.nextAction)} →</em></article>`).join('')||'<div class="empty-state">Vacío</div>'}</section>`;
+      return `<section class="pipeline-col"><div class="pipeline-col-head"><strong>${stage}</strong><span>${rows.length}</span></div>${rows.map(c=>`<article class="deal-card" tabindex="0" data-contact-email="${esc(c.email)}"><strong>${esc(c.name)}</strong><small>${esc(c.email)}</small><em>${esc(c.nextAction)} →</em></article>`).join('')||'<div class="empty-state">Vacío</div>'}</section>`;
     }).join('');
+    wireContactOpeners($('[data-pipeline-board]'));
   }
 
   function renderStudents(){
     const host=$('[data-students-grid]');
     const rows=model.students.filter(s=>s.active||s.completedCourses);
     host.innerHTML=rows.length?rows.map(s=>`
-      <article class="student-card"><div class="student-card-head"><span class="student-avatar">${initials(s.name)}</span><div><h3>${esc(s.name)}</h3><div class="email">${esc(s.email)}</div></div></div><div class="student-card-stats"><div><span>Estado</span><strong>${s.active?'Activa':'Completó'}</strong></div><div><span>Última actividad</span><strong>${s.lastActivity?fmtDate(s.lastActivity,{year:false}):'Sin actividad'}</strong></div></div><div class="progress-track"><span style="width:${s.percent}%"></span></div><footer><span>${s.completedLessons} de ${s.totalLessons} lecciones</span><strong>${s.percent}%</strong></footer></article>`).join(''):'<div class="empty-state">No hay alumnas registradas.</div>';
+      <article class="student-card" tabindex="0" data-contact-email="${esc(s.email)}"><div class="student-card-head"><span class="student-avatar">${initials(s.name)}</span><div><h3>${esc(s.name)}</h3><div class="email">${esc(s.email)}</div></div></div><div class="student-card-stats"><div><span>Estado</span><strong>${s.active?'Activa':'Completó'}</strong></div><div><span>Última actividad</span><strong>${s.lastActivity?fmtDate(s.lastActivity,{year:false}):'Sin actividad'}</strong></div></div><div class="progress-track"><span style="width:${s.percent}%"></span></div><footer><span>${s.completedLessons} de ${s.totalLessons} lecciones</span><strong>${s.percent}% · Ver ficha →</strong></footer></article>`).join(''):'<div class="empty-state">No hay alumnas registradas.</div>';
+    wireContactOpeners(host);
   }
 
   function renderAgenda(){
@@ -382,6 +498,9 @@
     $('[data-menu-scrim]')?.addEventListener('click',closeMenu);
     $('[data-refresh]')?.addEventListener('click',refresh);
     $('[data-user-menu]')?.addEventListener('click',()=> $('[data-user-dropdown]')?.classList.toggle('hidden'));
+    $('[data-close-contact]')?.addEventListener('click',closeContactDetail);
+    $('[data-contact-scrim]')?.addEventListener('click',closeContactDetail);
+    document.addEventListener('keydown',event=>{if(event.key==='Escape')closeContactDetail();});
     $('[data-signout]')?.addEventListener('click',async()=>{await sb.auth.signOut();location.reload();});
     $('[data-denied-signout]')?.addEventListener('click',async()=>{await sb?.auth.signOut();location.reload();});
     $('[data-crm-search]')?.addEventListener('input',e=>renderCRM(e.target.value));
