@@ -1,33 +1,14 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-MX">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <meta name="theme-color" content="#123f35">
-  <title>Administración | Academia Yamilet</title>
-  <style>
-    html,body{min-height:100%;margin:0;background:#f5f3ed;color:#243a32;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    body{display:grid;place-items:center;padding:24px;box-sizing:border-box}
-    main{width:min(460px,100%);padding:28px;border:1px solid rgba(18,63,53,.12);border-radius:22px;background:#fff;box-shadow:0 18px 50px rgba(18,63,53,.08);text-align:center}
-    h1{margin:0 0 8px;font:600 30px/1.05 Georgia,"Times New Roman",serif;color:#123f35}
-    p{margin:0;color:#728078;font-size:13px;line-height:1.6}
-    a{display:inline-flex;justify-content:center;align-items:center;min-height:44px;margin-top:18px;padding:0 18px;border-radius:999px;background:#123f35;color:#fff;text-decoration:none;font-size:12px;font-weight:800}
-  </style>
-  <script>
-    (() => {
-      const target = new URL('../', location.href);
-      target.search = location.search;
-      target.hash = '#admin';
-      location.replace(target.href);
-    })();
-  </script>
+  <meta http-equiv="refresh" content="0;url=/admin/">
+  <title>Redirigiendo a Yamilet Admin</title>
 </head>
 <body>
-  <main>
-    <h1>Administración de Academia Yamilet</h1>
-    <p>La administración ahora está integrada en el panel principal. Si no eres redirigida automáticamente, usa el botón.</p>
-    <a href="../#admin">Abrir administración</a>
-  </main>
+  <p>La administración ahora está separada de la Academia. <a href="/admin/">Abrir Yamilet Admin</a>.</p>
+  <script>location.replace('/admin/');</script>
 </body>
 </html>
