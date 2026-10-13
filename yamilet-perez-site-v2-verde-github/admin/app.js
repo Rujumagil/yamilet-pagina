@@ -398,7 +398,7 @@
   }
 
   function wireContactOpeners(root=document){
-    $('[data-contact-email]',root).forEach(el=>{
+    $$('[data-contact-email]',root).forEach(el=>{
       if(el.dataset.contactBound)return;
       el.dataset.contactBound='1';
       const open=()=>openContactDetail(el.dataset.contactEmail);
@@ -418,7 +418,7 @@
     const host=$('[data-crm-table]');
     host.innerHTML=rows.length?rows.map(c=>`
       <tr class="crm-row" tabindex="0" data-contact-email="${esc(c.email)}"><td><strong>${esc(c.name)}</strong><small>${esc(c.email)}${c.whatsapp?' · '+esc(c.whatsapp):''}</small></td><td><span class="status ${c.stage==='Alumna'?'active':c.stage.startsWith('Cita')?'confirmed':'requested'}">${esc(c.stage)}</span></td><td>${esc(c.source||'Web')}</td><td>${c.lastActivity?fmtDate(c.lastActivity):'—'}</td><td><button class="action-chip contact-open-btn" type="button" data-contact-email="${esc(c.email)}">Ver ficha →</button></td></tr>`).join(''):'<tr><td colspan="5">Sin resultados.</td></tr>';
-    $('[data-contact-email]',host).forEach(el=>{
+    $$('[data-contact-email]',host).forEach(el=>{
       if(el.tagName==='BUTTON'){
         el.addEventListener('click',event=>{event.stopPropagation();openContactDetail(el.dataset.contactEmail);});
       }
