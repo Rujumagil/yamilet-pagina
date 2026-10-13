@@ -1,6 +1,6 @@
 const CACHE_PREFIX = 'academia-yamilet-pwa-';
 const params = new URL(self.location.href).searchParams;
-const BUILD = params.get('build') || '124';
+const BUILD = params.get('build') || '142';
 const CACHE_NAME = `${CACHE_PREFIX}v${BUILD}`;
 const BASE = new URL('./', self.location.href);
 const OFFLINE_URL = new URL('./offline.html', BASE).href;
@@ -15,13 +15,18 @@ const versioned = path => {
 const PRECACHE = [
   new URL('./', BASE).href,
   new URL('./index.html', BASE).href,
+  new URL('./inicio/', BASE).href,
+  new URL('./cursos/', BASE).href,
+  new URL('./descubre/', BASE).href,
+  new URL('./biblioteca/', BASE).href,
+  new URL('./perfil/', BASE).href,
   new URL('./catalogo.html', BASE).href,
   OFFLINE_URL,
   versioned('./manifest.webmanifest'),
-  versioned('./styles.css'),
-  versioned('./academy-shell-v21.css'),
-  versioned('./academy-dashboard.css'),
-  versioned('./academy-pwa-v57.css'),
+  versioned('./gateway.css'),
+  versioned('./gateway.js'),
+  versioned('./v2/academy-v2.css'),
+  versioned('./v2/academy-v2.js'),
   versioned('../imagenes-academia-yamilet-final/04-favicon.png'),
   versioned('../imagenes-academia-yamilet-final/03-yamilet-logo-header.png')
 ];

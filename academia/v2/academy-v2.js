@@ -6,6 +6,7 @@
   const STREAM_ORIGIN = 'https://customer-l4ebvl2tw1zhwagv.cloudflarestream.com';
   const DEFAULT_COVER = '/imagenes-academia-yamilet-final/10-metodo-mes-cover.webp';
   const WORKSPACE_SLUG = 'yamilet-mes';
+  const PWA_BUILD = '142';
   const WARM_SESSION_KEY = 'yamilet_academy_v2_warm';
   const BOOK_CATALOG = [
     {
@@ -710,6 +711,15 @@
   }
 
   revealWarmNavigation();
+
+  function refreshAcademyServiceWorker(){
+    if(!('serviceWorker' in navigator)||location.protocol!=='https:')return;
+    navigator.serviceWorker.register('/academia/sw.js?build='+PWA_BUILD,{scope:'/academia/',updateViaCache:'none'})
+      .then(registration=>registration.update().catch(()=>null))
+      .catch(()=>null);
+  }
+
+  refreshAcademyServiceWorker();
 
   async function boot(){
     try{
