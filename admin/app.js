@@ -338,6 +338,8 @@
     const country=r?.country_name||contact.country||'No registrado';
     const source=r?.utm_source||r?.registration_source||b?.utm_source||b?.source||contact.source||'Web';
     const campaign=r?.utm_campaign||b?.utm_campaign||'—';
+    const academyUserId=r?.user_id||s?.userId||null;
+    const userEnrollments=academyUserId?model.enrollments.filter(e=>e.user_id===academyUserId):[];
     const detail=$('[data-contact-detail]');
     detail.innerHTML=`
       <section class="contact-profile">
@@ -383,6 +385,30 @@
       </section>
 
       <section class="contact-detail-section">
+        <div class="contact-section-title"><span class="eyebrow">Accesos</span><h3>Cursos de la alumna</h3></div>
+        <div class="course-access-list">
+          ${academyUserId?model.courses.map(course=>{
+            const enrollment=userEnrollments.find(e=>e.course_id===course.id);
+            const status=enrollment?.status||'none';
+            const active=['active','completed'].includes(status);
+            const paused=status==='paused';
+            const statusLabel=status==='active'?'Acceso activo':status==='completed'?'Completado · acceso vigente':status==='paused'?'Acceso pausado':status==='cancelled'?'Acceso cancelado':'Sin acceso';
+            const action=active?'pause':'grant';
+            const actionLabel=active?'Pausar acceso':paused?'Reactivar acceso':'Dar acceso';
+            return `<article class="course-access-row">
+              <div><strong>${esc(course.title)}</strong><small>${esc(statusLabel)}</small></div>
+              <button class="course-access-btn ${active?'pause':'grant'}" type="button"
+                data-course-access-action="${action}"
+                data-course-id="${course.id}"
+                data-user-id="${academyUserId}"
+                data-contact-email="${esc(contact.email)}">${actionLabel}</button>
+            </article>`;
+          }).join(''):'<div class="contact-empty-block">Esta persona todavía no tiene una cuenta de Academia vinculada. En cuanto complete el registro podrás asignarle un curso desde aquí.</div>'}
+        </div>
+        <p class="course-access-feedback" data-access-feedback></p>
+      </section>
+
+      <section class="contact-detail-section">
         <div class="contact-section-title"><span class="eyebrow">Academia</span><h3>Progreso de aprendizaje</h3></div>
         ${s?`<div class="contact-progress-card">
           <div><strong>${s.percent}%</strong><span>${s.active?'Alumna activa':'Sin curso activo'}</span></div>
@@ -391,10 +417,54 @@
         </div>`:'<div class="contact-empty-block">Todavía no tiene un curso activo.</div>'}
       </section>
     `;
+    wireCourseAccessActions(detail);
     $('[data-contact-drawer]')?.classList.add('open');
     $('[data-contact-scrim]')?.classList.add('show');
     $('[data-contact-drawer]')?.setAttribute('aria-hidden','false');
     document.body.classList.add('contact-detail-open');
+  }
+
+  function setAccessFeedback(message,error=false){
+    const el=$('[data-access-feedback]');
+    if(!el)return;
+    el.textContent=message||'';
+    el.classList.toggle('error',!!error);
+  }
+
+  function wireCourseAccessActions(root=document){
+    $('[data-course-access-action]',root).forEach(btn=>{
+      if(btn.dataset.accessBound)return;
+      btn.dataset.accessBound='1';
+      btn.addEventListener('click',async event=>{
+        event.stopPropagation();
+        const action=btn.dataset.courseAccessAction;
+        const courseId=btn.dataset.courseId;
+        const userId=btn.dataset.userId;
+        const email=btn.dataset.contactEmail;
+        if(!courseId||!userId)return;
+        if(action==='pause'&&!confirm('¿Pausar el acceso de esta alumna al curso? Podrás reactivarlo después.'))return;
+        btn.disabled=true;
+        const original=btn.textContent;
+        btn.textContent=action==='grant'?'Activando…':'Pausando…';
+        setAccessFeedback('Actualizando acceso…');
+        const {error}=await sb.rpc('manage_academy_course_access',{
+          target_workspace:workspace.id,
+          target_user:userId,
+          target_course:courseId,
+          target_action:action
+        });
+        if(error){
+          console.error('Yamilet Admin course access',error);
+          btn.disabled=false;
+          btn.textContent=original;
+          setAccessFeedback('No fue posible actualizar el acceso.',true);
+          return;
+        }
+        await refresh();
+        openContactDetail(email);
+        setAccessFeedback(action==='grant'?'Acceso concedido correctamente.':'Acceso pausado correctamente.');
+      });
+    });
   }
 
   function wireContactOpeners(root=document){
