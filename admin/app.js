@@ -432,7 +432,7 @@
   }
 
   function wireCourseAccessActions(root=document){
-    $('[data-course-access-action]',root).forEach(btn=>{
+    $$('[data-course-access-action]',root).forEach(btn=>{
       if(btn.dataset.accessBound)return;
       btn.dataset.accessBound='1';
       btn.addEventListener('click',async event=>{
