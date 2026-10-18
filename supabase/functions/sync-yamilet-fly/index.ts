@@ -51,6 +51,25 @@ function localStatus(remoteStatus: unknown, remoteStage: unknown) {
   return "prospect";
 }
 
+function productFromConversation(conversation: any) {
+  const metadata = conversation?.metadata && typeof conversation.metadata === "object"
+    ? conversation.metadata
+    : null;
+  const pageUrl = clean(metadata?.page_url, 1000);
+  if (!pageUrl) return null;
+  try {
+    const url = new URL(pageUrl);
+    const explicit = clean(url.searchParams.get("compas_product"), 120);
+    if (explicit) return explicit;
+    const path = url.pathname.toLowerCase();
+    if (path.includes("/metodo-mes")) return "metodo-mes";
+    if (path.includes("/academia")) return "academia-yamilet";
+    return "orientacion-yamilet";
+  } catch {
+    return null;
+  }
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return json(405, { error: "method_not_allowed" });
 
@@ -194,7 +213,7 @@ Deno.serve(async (req: Request) => {
         ? clean(remote.ai_lead_temperature, 20)
         : null,
       fly_last_intent: clean(remote.ai_last_intent, 160) || null,
-      fly_service_interest: clean(remote.ai_service_interest, 500) || null,
+      fly_service_interest: clean(remote.ai_service_interest, 500) || productFromConversation(conversation) || null,
       fly_need: clean(remote.ai_need, 1000) || null,
       fly_next_action: clean(remote.ai_next_action, 1000) || null,
       fly_summary: clean(remote.ai_summary, 3000) || null,
