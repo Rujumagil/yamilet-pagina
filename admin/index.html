@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta name="theme-color" content="#0f473d">
-  <meta name="admin-build" content="crm-course-access-v8">
+  <meta name="admin-build" content="compas-control-fly-v9">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Yamilet Admin">
   <title>Yamilet Admin | CRM y Operación</title>
   <meta name="description" content="Sistema privado de administración, CRM, alumnas y operación de Yamilet Pérez.">
-  <link rel="manifest" href="./manifest.webmanifest?build=8">
+  <link rel="manifest" href="./manifest.webmanifest?build=9">
   <link rel="apple-touch-icon" href="../assets/logo-yamilet.png">
   <link rel="icon" href="../assets/logo-yamilet.png">
-  <link rel="stylesheet" href="./styles.css?v=7">
+  <link rel="stylesheet" href="./styles.css?v=9">
 </head>
 <body>
   <div class="boot-screen" data-boot>
@@ -83,9 +83,11 @@
         <button class="nav-item" type="button" data-route="pipeline"><i>⇢</i><span>Pipeline</span></button>
         <button class="nav-item" type="button" data-route="students"><i>◉</i><span>Alumnas</span><b data-nav-student-count>0</b></button>
         <button class="nav-item" type="button" data-route="agenda"><i>□</i><span>Agenda</span><b data-nav-booking-count>0</b></button>
+        <small>COMPÁS ONE</small>
+        <button class="nav-item" type="button" data-route="control"><i>◆</i><span>Centro Compás</span><em>ONE</em></button>
+        <button class="nav-item" type="button" data-route="agents"><i>✦</i><span>Agentes Fly</span><em>IA</em></button>
         <small>CRECIMIENTO</small>
         <button class="nav-item" type="button" data-route="blog"><i>✎</i><span>Blog</span></button>
-        <button class="nav-item" type="button" data-route="agents"><i>✦</i><span>Agentes</span><em>IA</em></button>
       </nav>
 
       <div class="side-bottom">
@@ -222,10 +224,25 @@
                 <button type="button" class="panel-link" data-route="agents">Ver agentes →</button>
               </div>
               <div class="agent-mini-grid">
-                <div><span>✦</span><strong>Comercial</strong><small>CRM y seguimiento</small><em>Próxima fase</em></div>
-                <div><span>✦</span><strong>Académico</strong><small>Progreso de alumnas</small><em>Próxima fase</em></div>
-                <div><span>✦</span><strong>Contenido</strong><small>Blog y publicaciones</small><em>Próxima fase</em></div>
+                <div><span>✦</span><strong>Director</strong><small>Prioridades del negocio</small><em class="agent-live">Activo</em></div>
+                <div><span>✦</span><strong>Ventas</strong><small>CRM y seguimiento</small><em class="agent-live">Activo</em></div>
+                <div><span>✦</span><strong>Académico</strong><small>Progreso de alumnas</small><em class="agent-live">Activo</em></div>
+                <div><span>✦</span><strong>Contenido</strong><small>Blog y publicaciones</small><em class="agent-live">Activo</em></div>
               </div>
+            </article>
+
+            <article class="panel compas-control-panel">
+              <div class="panel-head">
+                <div><span class="eyebrow">Compás One</span><h2>Centro de control</h2></div>
+                <button type="button" class="panel-link" data-route="control">Abrir controles →</button>
+              </div>
+              <div class="compas-quick-grid">
+                <button type="button" data-route="crm"><span>◎</span><strong>CRM</strong><small>Contactos y seguimiento</small></button>
+                <button type="button" data-route="pipeline"><span>⇢</span><strong>Pipeline</strong><small>Conversión comercial</small></button>
+                <button type="button" data-route="agenda"><span>□</span><strong>Agenda</strong><small>Citas y pendientes</small></button>
+                <button type="button" data-route="agents"><span>✦</span><strong>Fly</strong><small>Agentes inteligentes</small></button>
+              </div>
+              <div class="compas-status-line"><span></span><strong>Web · Academia · CRM · Fly conectados</strong></div>
             </article>
           </div>
         </section>
@@ -272,6 +289,63 @@
           <div class="agenda-list" data-agenda-list></div>
         </section>
 
+        <section class="page" data-page="control">
+          <div class="page-heading compas-heading">
+            <div><span class="eyebrow">Compás One · Entender → Decidir → Actuar</span><h1>Centro Compás</h1><p>Una sola vista para controlar captación, CRM, Academia, agenda, automatizaciones, atribución y agentes.</p></div>
+            <a class="compas-external" href="https://app.proyectocompas.app/" target="_blank" rel="noopener">Abrir Compás One ↗</a>
+          </div>
+
+          <div class="control-pulse">
+            <article><span>Prospectos</span><strong data-control-prospects>—</strong><small>Contactos por convertir</small></article>
+            <article><span>Alumnas</span><strong data-control-students>—</strong><small>Accesos activos</small></article>
+            <article><span>Citas</span><strong data-control-bookings>—</strong><small>Pendientes</small></article>
+            <article><span>Progreso</span><strong data-control-progress>—</strong><small>Promedio de alumnas</small></article>
+          </div>
+
+          <div class="control-grid">
+            <article class="control-card">
+              <div class="control-card-head"><span class="control-icon">◎</span><div><small>RELACIONES</small><h2>CRM + Pipeline</h2></div><em class="control-ok">Activo</em></div>
+              <p>Registros, contactos, WhatsApp, citas, etapas, acceso a cursos y seguimiento en una sola ficha.</p>
+              <div class="control-actions"><button type="button" data-route="crm">Abrir CRM</button><button type="button" data-route="pipeline">Ver pipeline</button></div>
+            </article>
+
+            <article class="control-card">
+              <div class="control-card-head"><span class="control-icon">◉</span><div><small>ACADEMIA</small><h2>Alumnas + progreso</h2></div><em class="control-ok">Activo</em></div>
+              <p>Altas, cursos, accesos, porcentaje de avance, inactividad y acompañamiento académico.</p>
+              <div class="control-actions"><button type="button" data-route="students">Ver alumnas</button><a href="../academia/" target="_blank" rel="noopener">Abrir Academia ↗</a></div>
+            </article>
+
+            <article class="control-card">
+              <div class="control-card-head"><span class="control-icon">□</span><div><small>OPERACIÓN</small><h2>Agenda + notificaciones</h2></div><em class="control-ok">Activo</em></div>
+              <p>Solicitudes de clase, confirmaciones, cambios de estado y avisos push para nuevos registros y citas.</p>
+              <div class="control-actions"><button type="button" data-route="agenda">Abrir agenda</button><button type="button" data-enable-push>Notificaciones</button></div>
+            </article>
+
+            <article class="control-card">
+              <div class="control-card-head"><span class="control-icon">↗</span><div><small>CAPTACIÓN</small><h2>Web + atribución</h2></div><em class="control-ok">Activo</em></div>
+              <p>UTM, fuentes de tráfico, registro de Academia, clase gratuita y seguimiento desde la página pública.</p>
+              <div class="control-actions"><a href="../es/" target="_blank" rel="noopener">Ver página ↗</a><button type="button" data-route="crm">Ver prospectos</button></div>
+            </article>
+
+            <article class="control-card">
+              <div class="control-card-head"><span class="control-icon">✦</span><div><small>COMPÁS FLY</small><h2>Ventas en la página</h2></div><em class="control-ok">Supervisado</em></div>
+              <p>El agente público orienta sobre Método MES®, Academia, clase gratuita, libros y talleres y registra conversaciones en Compás One.</p>
+              <div class="control-actions"><button type="button" data-route="agents">Ver agentes</button><a href="https://app.proyectocompas.app/conversations" target="_blank" rel="noopener">Conversaciones ↗</a></div>
+            </article>
+
+            <article class="control-card">
+              <div class="control-card-head"><span class="control-icon">⚙</span><div><small>AUTOMATIZACIONES</small><h2>Flujos conectados</h2></div><em class="control-ok">Operando</em></div>
+              <ul class="automation-list">
+                <li><span></span>Registro → CRM</li>
+                <li><span></span>Confirmación → cuenta</li>
+                <li><span></span>CRM → acceso a curso</li>
+                <li><span class="pending"></span>Compra → acceso automático</li>
+              </ul>
+              <small class="control-note">La compra automática queda preparada para activarse cuando Stripe LIVE de Yamilet esté conectado.</small>
+            </article>
+          </div>
+        </section>
+
         <section class="page" data-page="blog">
           <div class="module-coming">
             <span class="big-icon">✎</span>
@@ -285,13 +359,21 @@
 
         <section class="page" data-page="agents">
           <div class="page-heading">
-            <div><span class="eyebrow">Compás Fly</span><h1>Agentes inteligentes</h1><p>Los agentes trabajarán sobre el CRM de Yamilet; no serán un sistema separado.</p></div>
+            <div><span class="eyebrow">Compás Fly</span><h1>Agentes inteligentes</h1><p>Analizan el CRM de Yamilet y convierten los datos actuales en prioridades concretas. El agente público de ventas opera en modo supervisado.</p></div>
+            <span class="fly-online"><i></i> Fly conectado</span>
           </div>
-          <div class="agent-grid">
-            <article><span class="agent-orb">✦</span><div><small>FRONT</small><h2>Agente Comercial</h2><p>Detectará prospectos sin respuesta, citas por atender y oportunidades de seguimiento.</p></div><em>Próxima fase</em></article>
-            <article><span class="agent-orb">✦</span><div><small>OPS</small><h2>Agente Académico</h2><p>Revisará progreso, inactividad y alumnas que podrían necesitar acompañamiento.</p></div><em>Próxima fase</em></article>
-            <article><span class="agent-orb">✦</span><div><small>OPS</small><h2>Agente de Contenido</h2><p>Ayudará a preparar artículos, títulos, extractos y SEO para el blog.</p></div><em>Próxima fase</em></article>
+          <div class="agent-grid agent-grid-live">
+            <article data-agent-card="director"><span class="agent-orb">◆</span><div><small>OPS · DIRECTOR</small><h2>Compás Director</h2><p>Resume qué necesita atención hoy y coordina las prioridades entre ventas, Academia y operación.</p><button type="button" data-agent-run="director">Analizar hoy →</button></div><em class="agent-live">Activo</em></article>
+            <article data-agent-card="sales"><span class="agent-orb">✦</span><div><small>FRONT · VENTAS</small><h2>Fly Comercial</h2><p>Detecta prospectos sin convertir, citas pendientes y contactos que requieren seguimiento comercial.</p><button type="button" data-agent-run="sales">Priorizar ventas →</button></div><em class="agent-live">Supervisado</em></article>
+            <article data-agent-card="academic"><span class="agent-orb">◉</span><div><small>OPS · ACADEMIA</small><h2>Fly Académico</h2><p>Revisa avance, inactividad y alumnas que podrían necesitar acompañamiento.</p><button type="button" data-agent-run="academic">Revisar alumnas →</button></div><em class="agent-live">Activo</em></article>
+            <article data-agent-card="content"><span class="agent-orb">✎</span><div><small>OPS · CONTENIDO</small><h2>Fly Contenido</h2><p>Transforma señales comerciales y académicas en temas para blog, publicaciones y educación de prospectos.</p><button type="button" data-agent-run="content">Generar enfoque →</button></div><em class="agent-live">Activo</em></article>
           </div>
+          <article class="agent-output-panel">
+            <div class="panel-head"><div><span class="eyebrow">Resultado</span><h2 data-agent-output-title>Selecciona un agente</h2></div><span class="agent-evidence">Basado en datos del CRM</span></div>
+            <div class="agent-output" data-agent-output>
+              <div class="empty-state">Elige un agente para generar una lectura operativa del estado actual de Yamilet.</div>
+            </div>
+          </article>
         </section>
       </div>
     </section>
@@ -308,7 +390,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>
   <div class="pwa-toast" data-pwa-toast role="status" aria-live="polite"></div>
-  <script src="./app.js?v=8"></script>
-  <script src="./pwa.js?v=8"></script>
+  <script src="./app.js?v=9"></script>
+  <script src="./pwa.js?v=9"></script>
 </body>
 </html>
