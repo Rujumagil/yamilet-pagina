@@ -205,7 +205,10 @@
   function install(){
     bind();
     new MutationObserver(bind).observe(document.documentElement,{childList:true,subtree:true});
-    const warm=()=>{ensureAttribution().catch(()=>{});ensureChat().then(()=>customizeChat()).catch(()=>{});};
+    const warm=()=>{ensureAttribution().catch(()=>{});ensureChat().then(()=>{
+      window.dispatchEvent(new CustomEvent('compas:chat-route',{detail:{route:ROUTE}}));
+      customizeChat();
+    }).catch(()=>{});};
     if(document.readyState==='complete')setTimeout(warm,1800);
     else addEventListener('load',()=>setTimeout(warm,1800),{once:true});
   }
