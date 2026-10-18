@@ -82,14 +82,22 @@
   }
 
   async function fetchData(){
-    const [courseRes,bookingRes,registrationRes] = await Promise.all([
+    const flySyncPromise=sb.functions.invoke('sync-yamilet-fly',{body:{source:'yamilet-admin'}}).catch(error=>{
+      console.warn('Yamilet Fly sync',error);
+      return null;
+    });
+    await Promise.race([flySyncPromise,new Promise(resolve=>setTimeout(resolve,4500))]);
+
+    const [courseRes,bookingRes,registrationRes,crmContactRes] = await Promise.all([
       sb.from('courses').select('id,title,slug,status,workspace_id').eq('workspace_id',workspace.id).order('created_at',{ascending:true}),
       sb.from('free_class_bookings').select('id,booking_date,full_name,email,status,source,page_url,utm_source,utm_medium,utm_campaign,created_at,updated_at').eq('workspace_id',workspace.id).order('created_at',{ascending:false}).limit(250),
-      sb.rpc('get_academy_crm_registrations',{target_workspace:workspace.id})
+      sb.rpc('get_academy_crm_registrations',{target_workspace:workspace.id}),
+      sb.from('contacts').select('id,display_name,email,phone,source,status,country_code,country_name,whatsapp_e164,last_contact_at,created_at,updated_at,compas_one_contact_id,fly_stage,fly_lead_score,fly_lead_temperature,fly_last_intent,fly_service_interest,fly_need,fly_next_action,fly_summary,fly_last_analyzed_at,fly_conversation_id,fly_last_conversation_at,fly_last_message_preview,fly_follow_up_id,fly_follow_up_title,fly_follow_up_status,fly_follow_up_at,fly_synced_at').eq('workspace_id',workspace.id).order('updated_at',{ascending:false}).limit(500)
     ]);
     if(courseRes.error) throw courseRes.error;
     if(bookingRes.error) throw bookingRes.error;
     if(registrationRes.error) throw registrationRes.error;
+    if(crmContactRes.error) throw crmContactRes.error;
 
     const courses = courseRes.data || [];
     const courseIds = courses.map(x=>x.id);
@@ -127,7 +135,7 @@
     }
 
     return buildModel({
-      registrations:registrationRes.data||[],bookings:bookingRes.data||[],courses,enrollments,modules,lessons,studentProfiles,progress
+      registrations:registrationRes.data||[],bookings:bookingRes.data||[],crmContacts:crmContactRes.data||[],courses,enrollments,modules,lessons,studentProfiles,progress
     });
   }
 
@@ -176,15 +184,31 @@
     const studentEmails=new Set(students.map(s=>s.email.toLowerCase()).filter(Boolean));
 
     const contacts=new Map();
-    const touch=(email,patch)=>{
-      const key=(email||'').trim().toLowerCase();
+    const touch=(email,patch={})=>{
+      const normalizedEmail=(email||'').trim().toLowerCase();
+      const phoneDigits=String(patch.phone||'').replace(/\D/g,'');
+      const fallbackId=String(patch.id||patch.compasOneId||'').trim();
+      const key=normalizedEmail||(phoneDigits?'phone:'+phoneDigits:(fallbackId?'id:'+fallbackId:''));
       if(!key) return;
-      const prev=contacts.get(key)||{email:key,name:key,source:'Web',stage:'Nuevo',lastActivity:null,registration:null,booking:null,student:null};
+      const prev=contacts.get(key)||{email:normalizedEmail,name:normalizedEmail||patch.name||'Contacto',source:'Web',stage:'Nuevo',lastActivity:null,registration:null,booking:null,student:null,crm:null};
       const next={...prev,...patch};
+      if(normalizedEmail) next.email=normalizedEmail;
       if(patch.name && patch.name!==key) next.name=patch.name;
       if(patch.lastActivity && (!prev.lastActivity || new Date(patch.lastActivity)>new Date(prev.lastActivity))) next.lastActivity=patch.lastActivity;
       contacts.set(key,next);
     };
+
+    raw.crmContacts.forEach(c=>touch(c.email,{
+      id:c.id,
+      compasOneId:c.compas_one_contact_id,
+      name:c.display_name||c.email||c.phone||'Contacto',
+      phone:c.phone||c.whatsapp_e164||'',
+      whatsapp:c.whatsapp_e164||'',
+      country:c.country_name||'',
+      source:c.source||'CRM',
+      lastActivity:c.fly_last_conversation_at||c.last_contact_at||c.updated_at||c.created_at,
+      crm:c
+    }));
 
     raw.registrations.forEach(r=>touch(r.email,{name:r.full_name||r.email,source:r.utm_source||r.registration_source||'Academia',stage:'Nuevo',lastActivity:r.registered_at,registration:r}));
     raw.bookings.forEach(b=>{
@@ -194,20 +218,25 @@
     students.forEach(s=>touch(s.email,{name:s.name,source:'Academia',stage:s.active?'Alumna':'Exalumna',lastActivity:s.lastActivity,student:s}));
 
     const contactRows=[...contacts.values()].map(c=>{
+      const flyStage=c.crm?.fly_stage||'';
       if(c.student?.active) c.stage='Alumna';
       else if(c.booking?.status==='completed') c.stage='Seguimiento';
       else if(c.booking?.status==='confirmed') c.stage='Cita confirmada';
       else if(c.booking?.status==='requested') c.stage='Cita solicitada';
+      else if(flyStage==='appointment') c.stage='Cita solicitada';
+      else if(['contacted','qualifying','qualified','proposal','negotiation'].includes(flyStage)) c.stage='Seguimiento';
+      else if(flyStage==='lost') c.stage='Cancelada';
       else c.stage='Nuevo';
-      c.nextAction=c.stage==='Nuevo'?'Contactar':c.stage==='Cita solicitada'?'Confirmar cita':c.stage==='Cita confirmada'?'Realizar sesión':c.stage==='Seguimiento'?'Dar seguimiento':c.stage==='Alumna'?(c.student?.risk?'Revisar progreso':'Acompañar'):'Revisar';
-      c.whatsapp=c.registration?.whatsapp_e164||'';
-      c.country=c.registration?.country_name||'';
+      c.nextAction=c.crm?.fly_follow_up_title||c.crm?.fly_next_action||(c.stage==='Nuevo'?'Contactar':c.stage==='Cita solicitada'?'Confirmar cita':c.stage==='Cita confirmada'?'Realizar sesión':c.stage==='Seguimiento'?'Dar seguimiento':c.stage==='Alumna'?(c.student?.risk?'Revisar progreso':'Acompañar'):'Revisar');
+      c.whatsapp=c.registration?.whatsapp_e164||c.crm?.whatsapp_e164||c.crm?.phone||c.whatsapp||'';
+      c.country=c.registration?.country_name||c.crm?.country_name||c.country||'';
       return c;
     }).sort((a,b)=>new Date(b.lastActivity||0)-new Date(a.lastActivity||0));
 
     const prospects=contactRows.filter(c=>!studentEmails.has(c.email));
     const upcoming=raw.bookings.filter(b=>['requested','confirmed'].includes(b.status)&&String(b.booking_date||'')>=new Date().toISOString().slice(0,10)).sort((a,b)=>String(a.booking_date).localeCompare(String(b.booking_date)));
     const attention=[];
+    raw.crmContacts.filter(c=>c.fly_lead_temperature==='hot').slice(0,4).forEach(c=>attention.push({type:'lead',title:c.display_name||c.email||'Prospecto',copy:'Fly detectó prospecto caliente'+(c.fly_service_interest?' · '+c.fly_service_interest:''),route:'crm'}));
     raw.registrations.slice(0,5).forEach(r=>attention.push({type:'lead',title:r.full_name||r.email,copy:'Registro pendiente de atención',route:'crm'}));
     raw.bookings.filter(b=>b.status==='requested').slice(0,5).forEach(b=>attention.push({type:'booking',title:b.full_name||b.email,copy:'Solicitó una cita · '+fmtDate(b.booking_date,{year:false}),route:'agenda'}));
     activeStudents.filter(s=>s.risk).slice(0,5).forEach(s=>attention.push({type:'student',title:s.name,copy:'Sin actividad reciente · '+s.percent+'% de avance',route:'students'}));
@@ -334,7 +363,8 @@
     const r=contact.registration||null;
     const b=contact.booking||null;
     const s=contact.student||null;
-    const whatsapp=contact.whatsapp||r?.whatsapp_e164||'';
+    const fly=contact.crm||null;
+    const whatsapp=contact.whatsapp||r?.whatsapp_e164||fly?.whatsapp_e164||fly?.phone||'';
     const wa=whatsappHref(whatsapp);
     const country=r?.country_name||contact.country||'No registrado';
     const source=r?.utm_source||r?.registration_source||b?.utm_source||b?.source||contact.source||'Web';
@@ -383,6 +413,21 @@
           <div><dt>Origen</dt><dd>${esc(b.utm_source||b.source||'Página Yamilet')}</dd></div>
           <div><dt>Registrada</dt><dd>${fmtDate(b.created_at)}</dd></div>
         </dl>`:'<div class="contact-empty-block">Todavía no tiene una cita registrada.</div>'}
+      </section>
+
+      <section class="contact-detail-section fly-detail-section">
+        <div class="contact-section-title"><span class="eyebrow">Compás Fly</span><h3>Lectura comercial</h3></div>
+        ${fly?.compas_one_contact_id?`<div class="fly-detail-grid">
+          <div><span>Temperatura</span><strong class="fly-temp ${esc(fly.fly_lead_temperature||'cold')}">${fly.fly_lead_temperature==='hot'?'Alta':fly.fly_lead_temperature==='warm'?'Media':fly.fly_lead_temperature==='cold'?'Inicial':'Sin calificar'}</strong></div>
+          <div><span>Puntuación</span><strong>${fly.fly_lead_score!=null?esc(fly.fly_lead_score)+'/100':'—'}</strong></div>
+          <div><span>Interés</span><strong>${esc(fly.fly_service_interest||'Por identificar')}</strong></div>
+          <div><span>Etapa Fly</span><strong>${esc(fly.fly_stage||'lead')}</strong></div>
+        </div>
+        ${fly.fly_summary?'<div class="fly-summary"><b>Resumen</b><p>'+esc(fly.fly_summary)+'</p></div>':''}
+        ${fly.fly_need?'<div class="fly-summary"><b>Necesidad detectada</b><p>'+esc(fly.fly_need)+'</p></div>':''}
+        <div class="fly-next"><span>Siguiente acción</span><strong>${esc(fly.fly_follow_up_title||fly.fly_next_action||'Dar seguimiento')}</strong>${fly.fly_follow_up_at?'<small>'+fmtDate(fly.fly_follow_up_at)+'</small>':''}</div>
+        ${fly.fly_last_message_preview?'<div class="fly-last-message"><b>Último mensaje</b><p>'+esc(fly.fly_last_message_preview)+'</p></div>':''}
+        `:'<div class="contact-empty-block">Este contacto todavía no tiene una conversación analizada por Fly.</div>'}
       </section>
 
       <section class="contact-detail-section">
@@ -485,7 +530,7 @@
 
   function renderCRM(filter=''){
     const q=filter.trim().toLowerCase();
-    const rows=model.contacts.filter(c=>!q||c.name.toLowerCase().includes(q)||c.email.toLowerCase().includes(q)||String(c.whatsapp||'').includes(q));
+    const rows=model.contacts.filter(c=>!q||c.name.toLowerCase().includes(q)||c.email.toLowerCase().includes(q)||String(c.whatsapp||'').includes(q)||String(c.crm?.fly_service_interest||'').toLowerCase().includes(q)||String(c.crm?.fly_summary||'').toLowerCase().includes(q));
     const host=$('[data-crm-table]');
     host.innerHTML=rows.length?rows.map(c=>`
       <tr class="crm-row" tabindex="0" data-contact-email="${esc(c.email)}"><td><strong>${esc(c.name)}</strong><small>${esc(c.email)}${c.whatsapp?' · '+esc(c.whatsapp):''}</small></td><td><span class="status ${c.stage==='Alumna'?'active':c.stage.startsWith('Cita')?'confirmed':'requested'}">${esc(c.stage)}</span></td><td>${esc(c.source||'Web')}</td><td>${c.lastActivity?fmtDate(c.lastActivity):'—'}</td><td><button class="action-chip contact-open-btn" type="button" data-contact-email="${esc(c.email)}">Ver ficha →</button></td></tr>`).join(''):'<tr><td colspan="5">Sin resultados.</td></tr>';
