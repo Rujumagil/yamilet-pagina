@@ -652,7 +652,7 @@
     const host=$('[data-agent-output]');
     if(title)title.textContent=result.title;
     if(host)host.innerHTML='<p class="agent-result-intro">'+esc(result.intro)+'</p>'+agentList(result.items,'Sin señales relevantes.');
-    $('[data-agent-card]').forEach(card=>card.classList.toggle('selected',card.dataset.agentCard===kind));
+    $$('[data-agent-card]').forEach(card=>card.classList.toggle('selected',card.dataset.agentCard===kind));
   }
 
   function setRoute(route){
@@ -699,7 +699,7 @@
     $('[data-signout]')?.addEventListener('click',async()=>{await sb.auth.signOut();location.reload();});
     $('[data-denied-signout]')?.addEventListener('click',async()=>{await sb?.auth.signOut();location.reload();});
     $('[data-crm-search]')?.addEventListener('input',e=>renderCRM(e.target.value));
-    $('[data-agent-run]').forEach(btn=>btn.addEventListener('click',()=>runAgent(btn.dataset.agentRun)));
+    $$('[data-agent-run]').forEach(btn=>btn.addEventListener('click',()=>runAgent(btn.dataset.agentRun)));
     $$('[data-status-filter]').forEach(btn=>btn.addEventListener('click',()=>{
       agendaFilter=btn.dataset.statusFilter;
       $$('[data-status-filter]').forEach(x=>x.classList.toggle('active',x===btn));
