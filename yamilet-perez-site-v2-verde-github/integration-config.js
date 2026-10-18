@@ -17,7 +17,7 @@ window.YAMILET_INTEGRATION_CONFIG = {
   'use strict';
 
   const CONFIG_ENDPOINT = 'https://pvpgvzaasnkukhoziiyg.supabase.co/functions/v1/academy-public-config';
-  const COMPAS_TRACKER_URL = 'https://app.proyectocompas.com/compas-attribution.js';
+  const COMPAS_TRACKER_URL = 'https://app.proyectocompas.app/compas-attribution.js';
   const COMPAS_PUBLIC_KEY = 'wc_94eeb529d09ab712b4961646af31d03e4d1b';
   const cfg = window.YAMILET_INTEGRATION_CONFIG || {};
   const nativeFetch = window.fetch.bind(window);
@@ -100,11 +100,10 @@ window.YAMILET_INTEGRATION_CONFIG = {
   }
 
   function academyUrl({register = false, cta = 'academy-link'} = {}) {
-    const url = new URL('../academia/', window.location.href);
+    const url = new URL(register ? '../academia/registro/' : '../academia/', window.location.href);
     const a = currentAttribution(register ? 'academy-registration' : 'academy-login', cta);
     ATTRIBUTION_KEYS.forEach(key => { if (a[key]) url.searchParams.set(key, a[key]); });
     url.searchParams.set('cta', cta);
-    if (register) url.searchParams.set('register','1');
     return url.href;
   }
 
