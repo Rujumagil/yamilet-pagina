@@ -5,7 +5,7 @@
 (() => {
   'use strict';
 
-  const CHAT_SCRIPT_URL='https://app.proyectocompas.app/compas-chat.js?v=58.8';
+  const CHAT_SCRIPT_URL='https://app.proyectocompas.app/compas-chat.js?v=58.9';
   const ATTRIBUTION_SCRIPT_URL='https://app.proyectocompas.app/compas-attribution.js?v=1.1';
   const PUBLIC_KEY='wc_94eeb529d09ab712b4961646af31d03e4d1b';
   const ROUTE='sales';
@@ -115,6 +115,57 @@
     if(subtitle)subtitle.textContent=isItalian?'Metodo MES® · orientamento personale':'Método MES® · orientación personal';
     if(launcher)launcher.setAttribute('aria-label',isItalian?'Apri l’assistente di Yamilet':'Abrir asistente de Yamilet');
 
+    const patchConversation=()=>{
+      const note=root.querySelector('.conversation-note');
+      if(note&&!note.dataset.yamiletBranded){
+        note.dataset.yamiletBranded='1';
+        const link=note.querySelector('a');
+        note.childNodes.forEach(node=>{if(node.nodeType===Node.TEXT_NODE)node.textContent='';});
+        note.prepend(document.createTextNode(isItalian
+          ? 'Scrivendo accetti l’'
+          : 'Al escribir aceptas el '));
+        if(link){
+          link.textContent=isItalian?'informativa sulla privacy':'aviso de privacidad';
+          note.append(document.createTextNode(isItalian
+            ? ' e l’uso della conversazione per orientarti e darti seguito.'
+            : ' y el uso de la conversación para orientarte y darte seguimiento.'));
+        }
+      }
+
+      const composer=root.querySelector('form.composer');
+      const textarea=composer?.querySelector('textarea');
+      if(textarea){
+        textarea.placeholder=isItalian
+          ? 'Scrivi cosa vorresti conoscere…'
+          : 'Escribe qué te gustaría conocer…';
+      }
+
+      const messages=root.querySelector('.messages');
+      const footer=root.querySelector('.footer');
+      if(!composer||!footer||messages?.querySelector('.bubble.user')||footer.querySelector('.yamilet-quick-actions'))return;
+
+      const quick=document.createElement('div');
+      quick.className='yamilet-quick-actions';
+      quick.style.cssText='display:flex;gap:6px;overflow-x:auto;padding:8px 12px 0;background:#fff;scrollbar-width:none';
+      const options=isItalian
+        ? [['Metodo MES®','Vorrei conoscere il Metodo MES®'],['Lezione gratuita','Vorrei sapere della lezione gratuita'],['Accademia','Vorrei conoscere l’Accademia Yamilet'],['Libri','Vorrei conoscere i libri di Yamilet']]
+        : [['Método MES®','Quiero conocer el Método MES®'],['Clase gratuita','Quiero saber de la clase gratuita'],['Academia','Quiero conocer la Academia Yamilet'],['Libros','Quiero conocer los libros de Yamilet']];
+      options.forEach(([label,value])=>{
+        const button=document.createElement('button');
+        button.type='button';
+        button.textContent=label;
+        button.style.cssText='flex:0 0 auto;border:1px solid #dce7e5;border-radius:999px;background:#fff;color:#334e68;padding:7px 10px;font-size:10px;font-weight:800;cursor:pointer';
+        button.addEventListener('click',()=>{
+          if(!textarea)return;
+          textarea.value=value;
+          composer.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));
+        });
+        quick.appendChild(button);
+      });
+      footer.insertBefore(quick,composer);
+      composer.addEventListener('submit',()=>quick.remove(),{once:true});
+    };
+
     const patchForm=()=>{
       const form=root.querySelector('.form');
       if(!form||form.dataset.yamiletBranded==='1')return;
@@ -159,8 +210,12 @@
       if(branding)branding.textContent=isItalian?'Assistente di Yamilet Pérez':'Asistente de Yamilet Pérez';
     };
 
+    patchConversation();
     patchForm();
-    const observer=new MutationObserver(patchForm);
+    const observer=new MutationObserver(()=>{
+      patchConversation();
+      patchForm();
+    });
     observer.observe(root,{childList:true,subtree:true});
   }
 
