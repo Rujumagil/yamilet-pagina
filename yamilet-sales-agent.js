@@ -117,18 +117,27 @@
 
     const patchForm=()=>{
       const form=root.querySelector('.form');
-      if(!form)return;
+      if(!form||form.dataset.yamiletBranded==='1')return;
+      form.dataset.yamiletBranded='1';
       const intro=form.querySelector('p');
       if(intro)intro.textContent=isItalian
         ? 'Useremo il tuo nome e i tuoi dati di contatto per rispondere alla tua richiesta e permettere a Yamilet di darti seguito. Evita di condividere dati sensibili non necessari.'
         : 'Usaremos tu nombre y tus datos de contacto para atender tu solicitud y permitir que Yamilet pueda darte seguimiento. Evita compartir datos sensibles que no sean necesarios.';
+      const email=form.querySelector('input[name="email"]');
+      if(email){
+        email.required=true;
+        const span=email.closest('label')?.querySelector('span');
+        if(span)span.textContent=isItalian?'Email *':'Correo *';
+      }
       const phone=form.querySelector('input[name="phone"]');
       if(phone){
+        phone.required=true;
         const label=phone.closest('label');
         const span=label?.querySelector('span');
-        if(span)span.textContent='WhatsApp';
+        if(span)span.textContent='WhatsApp *';
         phone.placeholder=isItalian?'+39 ...':'+52 ...';
         phone.setAttribute('inputmode','tel');
+        phone.setAttribute('aria-label',isItalian?'WhatsApp con prefisso internazionale':'WhatsApp con código de país');
       }
       const company=form.querySelector('input[name="company"]')?.closest('label');
       if(company)company.style.display='none';
