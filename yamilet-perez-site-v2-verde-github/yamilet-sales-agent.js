@@ -64,7 +64,7 @@
       return new Promise(resolve=>{
         if(document.querySelector('compas-one-web-chat'))return resolve();
         existing.addEventListener('load',resolve,{once:true});
-        setTimeout(resolve,1800);
+        setTimeout(resolve,3000);
       });
     }
     return new Promise((resolve,reject)=>{
@@ -179,7 +179,11 @@
       if(email){email.required=false;email.value='';}
       if(phone){phone.required=false;phone.value='';}
       if(company)company.value='';
-      if(consent)consent.checked=true;
+      if(consent && consent.required && !consent.checked){
+        form.style.display='';
+        form.dataset.yamiletConversationStarted='';
+        return;
+      }
 
       form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));
     };
@@ -200,7 +204,14 @@
 
   function openChat(attempt=0){
     const launcher=findLauncher();
-    if(launcher){launcher.click();return;}
+    if(launcher){
+      const root=launcher.getRootNode();
+      const expanded=launcher.getAttribute('aria-expanded');
+      const panel=root?.querySelector?.('.panel,.chat-panel,[role="dialog"]');
+      const visible=panel && getComputedStyle(panel).display!=='none' && getComputedStyle(panel).visibility!=='hidden';
+      if(expanded!=='true' && !visible)launcher.click();
+      return;
+    }
     if(attempt<40)setTimeout(()=>openChat(attempt+1),125);
   }
 
