@@ -116,21 +116,18 @@
     if(launcher)launcher.setAttribute('aria-label',isItalian?'Parla con Andy':'Hablar con Andy');
 
     const patchConversation=()=>{
-      const note=root.querySelector('.conversation-note');
-      if(note&&!note.dataset.yamiletBranded){
-        note.dataset.yamiletBranded='1';
-        const link=note.querySelector('a');
-        note.childNodes.forEach(node=>{if(node.nodeType===Node.TEXT_NODE)node.textContent='';});
-        note.prepend(document.createTextNode(isItalian
-          ? 'Scrivendo accetti l’'
-          : 'Al escribir aceptas el '));
-        if(link){
-          link.textContent=isItalian?'informativa sulla privacy':'aviso de privacidad';
-          note.append(document.createTextNode(isItalian
-            ? ' e l’uso della conversazione per orientarti e darti seguito.'
-            : ' y el uso de la conversación para orientarte y darte seguimiento.'));
-        }
+      let note=root.querySelector('.conversation-note');
+      const noteHost=root.querySelector('.messages');
+      if(!note&&noteHost&&root.querySelector('form.composer')){
+        note=document.createElement('div');
+        note.className='conversation-note';
+        note.style.cssText='justify-self:stretch;color:#718096;font-size:10px;line-height:1.45;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.72);border:1px solid #e3ece9';
+        note.innerHTML=isItalian
+          ? 'Scrivendo accetti l’<a href="https://www.yamiletperez.com/es/privacidad.html" target="_blank" rel="noopener noreferrer" style="color:#0f594f;font-weight:800;text-decoration:none">informativa sulla privacy</a> e l’uso della conversazione per orientarti e darti seguito.'
+          : 'Al escribir aceptas el <a href="https://www.yamiletperez.com/es/privacidad.html" target="_blank" rel="noopener noreferrer" style="color:#0f594f;font-weight:800;text-decoration:none">aviso de privacidad</a> y el uso de la conversación para orientarte y darte seguimiento.';
+        noteHost.appendChild(note);
       }
+      if(note&&!note.dataset.yamiletBranded)note.dataset.yamiletBranded='1';
 
       const composer=root.querySelector('form.composer');
       const textarea=composer?.querySelector('textarea');
@@ -166,55 +163,32 @@
       composer.addEventListener('submit',()=>quick.remove(),{once:true});
     };
 
-    const patchForm=()=>{
+    const bypassLegacyForm=()=>{
       const form=root.querySelector('.form');
-      if(!form||form.dataset.yamiletBranded==='1')return;
-      form.dataset.yamiletBranded='1';
-      const intro=form.querySelector('p');
-      if(intro)intro.textContent=isItalian
-        ? 'Useremo il tuo nome e i tuoi dati di contatto per rispondere alla tua richiesta e permettere a Yamilet di darti seguito. Evita di condividere dati sensibili non necessari.'
-        : 'Usaremos tu nombre y tus datos de contacto para atender tu solicitud y permitir que Yamilet pueda darte seguimiento. Evita compartir datos sensibles que no sean necesarios.';
+      if(!form||form.dataset.yamiletConversationStarted==='1')return;
+      form.dataset.yamiletConversationStarted='1';
+      form.style.display='none';
+
+      const name=form.querySelector('input[name="name"]');
       const email=form.querySelector('input[name="email"]');
-      if(email){
-        email.required=true;
-        const span=email.closest('label')?.querySelector('span');
-        if(span)span.textContent=isItalian?'Email *':'Correo *';
-      }
       const phone=form.querySelector('input[name="phone"]');
-      if(phone){
-        phone.required=true;
-        const label=phone.closest('label');
-        const span=label?.querySelector('span');
-        if(span)span.textContent='WhatsApp *';
-        phone.placeholder=isItalian?'+39 ...':'+52 ...';
-        phone.setAttribute('inputmode','tel');
-        phone.setAttribute('aria-label',isItalian?'WhatsApp con prefisso internazionale':'WhatsApp con código de país');
-      }
-      const company=form.querySelector('input[name="company"]')?.closest('label');
-      if(company)company.style.display='none';
-      const consent=form.querySelector('.consent span');
-      if(consent){
-        const link=consent.querySelector('a');
-        consent.childNodes.forEach(node=>{if(node.nodeType===Node.TEXT_NODE)node.textContent='';});
-        const prefix=document.createTextNode(isItalian?'Accetto l’':'Acepto el ');
-        const suffix=document.createTextNode(isItalian?' e il trattamento dei dati per ricevere orientamento e seguito da Yamilet.':' y el tratamiento de estos datos para recibir orientación y seguimiento de Yamilet.');
-        consent.prepend(prefix);
-        if(link){
-          link.textContent=isItalian?'informativa sulla privacy':'aviso de privacidad';
-          consent.append(suffix);
-        }
-      }
-      const start=form.querySelector('.start');
-      if(start)start.textContent=isItalian?'Parlare con Andy':'Hablar con Andy';
-      const branding=form.querySelector('.branding');
-      if(branding)branding.textContent=isItalian?'Andy · Assistente di Yamilet':'Andy · Asistente de Yamilet';
+      const company=form.querySelector('input[name="company"]');
+      const consent=form.querySelector('input[name="consent"]');
+
+      if(name)name.value='Visitante web';
+      if(email){email.required=false;email.value='';}
+      if(phone){phone.required=false;phone.value='';}
+      if(company)company.value='';
+      if(consent)consent.checked=true;
+
+      form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));
     };
 
+    bypassLegacyForm();
     patchConversation();
-    patchForm();
     const observer=new MutationObserver(()=>{
+      bypassLegacyForm();
       patchConversation();
-      patchForm();
     });
     observer.observe(root,{childList:true,subtree:true});
   }
