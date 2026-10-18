@@ -233,6 +233,7 @@
     renderPipeline();
     renderStudents();
     renderAgenda();
+    renderControlCenter();
   }
 
   function renderHeader(){
@@ -530,12 +531,91 @@
     }));
   }
 
+  function renderControlCenter(){
+    if(!model)return;
+    const requested=model.bookings.filter(x=>x.status==='requested').length;
+    $('[data-control-prospects]') && ($('[data-control-prospects]').textContent=model.prospects.length);
+    $('[data-control-students]') && ($('[data-control-students]').textContent=model.activeStudents.length);
+    $('[data-control-bookings]') && ($('[data-control-bookings]').textContent=requested);
+    $('[data-control-progress]') && ($('[data-control-progress]').textContent=model.avgProgress+'%');
+  }
+
+  function agentList(items,empty){
+    if(!items.length)return '<div class="agent-result-empty">'+esc(empty)+'</div>';
+    return '<div class="agent-result-list">'+items.map((item,index)=>'<article><b>'+(index+1)+'</b><div><strong>'+esc(item.title)+'</strong><small>'+esc(item.copy)+'</small></div></article>').join('')+'</div>';
+  }
+
+  function directorAnalysis(){
+    const pending=model.bookings.filter(b=>b.status==='requested');
+    const risk=model.activeStudents.filter(s=>s.risk);
+    const newLeads=model.contacts.filter(c=>c.stage==='Nuevo');
+    const tasks=[];
+    if(pending.length)tasks.push({title:'Confirmar '+pending.length+' cita'+(pending.length===1?'':'s'),copy:'Hay solicitudes que todavía esperan confirmación.'});
+    if(newLeads.length)tasks.push({title:'Atender '+newLeads.length+' prospecto'+(newLeads.length===1?'':'s')+' nuevo'+(newLeads.length===1?'':'s'),copy:'Conviene responder antes de que pierdan intención.'});
+    if(risk.length)tasks.push({title:'Acompañar '+risk.length+' alumna'+(risk.length===1?'':'s'),copy:'Presentan 7 días o más sin actividad reciente.'});
+    if(!tasks.length)tasks.push({title:'Operación al día',copy:'No hay alertas críticas en CRM, agenda o Academia.'});
+    return {
+      title:'Compás Director · prioridades de hoy',
+      intro:'Lectura ejecutiva con '+model.contacts.length+' contactos, '+model.activeStudents.length+' alumnas activas y '+model.bookings.length+' citas registradas.',
+      items:tasks
+    };
+  }
+
+  function salesAnalysis(){
+    const candidates=model.contacts.filter(c=>c.stage!=='Alumna'&&c.stage!=='Cancelada').slice(0,6).map(c=>({
+      title:c.name,
+      copy:c.stage+' · '+c.nextAction+(c.whatsapp?' · WhatsApp disponible':' · sin WhatsApp')
+    }));
+    return {
+      title:'Fly Comercial · oportunidades',
+      intro:'Prioriza contactos por etapa y actividad reciente. Las acciones sensibles siguen requiriendo decisión humana.',
+      items:candidates.length?candidates:[{title:'Sin prospectos pendientes',copy:'El CRM no muestra oportunidades comerciales abiertas en este momento.'}]
+    };
+  }
+
+  function academicAnalysis(){
+    const risk=model.activeStudents.filter(s=>s.risk).map(s=>({
+      title:s.name,
+      copy:s.percent+'% de avance · última actividad '+(s.lastActivity?fmtDate(s.lastActivity,{year:false}):'sin actividad')
+    }));
+    const low=model.activeStudents.filter(s=>!s.risk&&s.percent<30).slice(0,4).map(s=>({
+      title:s.name,
+      copy:s.percent+'% de avance · inicio de recorrido'
+    }));
+    return {
+      title:'Fly Académico · acompañamiento',
+      intro:'Señales de progreso basadas en actividad y porcentaje completado.',
+      items:[...risk,...low].slice(0,6)
+    };
+  }
+
+  function contentAnalysis(){
+    const ideas=[];
+    if(model.prospects.length>model.activeStudents.length)ideas.push({title:'¿Qué es Método MES® y para quién es?',copy:'Contenido de descubrimiento para convertir prospectos que todavía no son alumnas.'});
+    if(model.activeStudents.some(s=>s.risk))ideas.push({title:'Cómo volver a tu práctica cuando perdiste el ritmo',copy:'Tema de acompañamiento conectado con inactividad real de alumnas.'});
+    if(model.bookings.some(b=>b.status==='requested'))ideas.push({title:'Qué sucede en una clase gratuita del Método MES®',copy:'Reduce fricción para personas que están considerando agendar.'});
+    ideas.push({title:'Medita · Escribe · Sana en una práctica de 10 minutos',copy:'Pieza educativa reutilizable en blog y redes sociales.'});
+    return {title:'Fly Contenido · enfoque editorial',intro:'Ideas derivadas de señales actuales del embudo y de la Academia.',items:ideas.slice(0,6)};
+  }
+
+  function runAgent(kind){
+    if(!model)return;
+    const builders={director:directorAnalysis,sales:salesAnalysis,academic:academicAnalysis,content:contentAnalysis};
+    const result=builders[kind]?.();
+    if(!result)return;
+    const title=$('[data-agent-output-title]');
+    const host=$('[data-agent-output]');
+    if(title)title.textContent=result.title;
+    if(host)host.innerHTML='<p class="agent-result-intro">'+esc(result.intro)+'</p>'+agentList(result.items,'Sin señales relevantes.');
+    $('[data-agent-card]').forEach(card=>card.classList.toggle('selected',card.dataset.agentCard===kind));
+  }
+
   function setRoute(route){
     const page=$('[data-page="'+route+'"]')||$('[data-page="dashboard"]');
     $$('.page').forEach(x=>x.classList.remove('active'));
     page.classList.add('active');
     $$('.nav-item').forEach(x=>x.classList.toggle('active',x.dataset.route===route));
-    const names={dashboard:['Yamilet Admin · Resumen','Dashboard general'],crm:['Yamilet Admin · CRM','Contactos'],pipeline:['Yamilet Admin · Pipeline','Pipeline'],students:['Yamilet Admin · Academia','Alumnas'],agenda:['Yamilet Admin · Agenda','Citas'],blog:['Yamilet Admin · Contenido','Blog'],agents:['Yamilet Admin · Compás Fly','Agentes']};
+    const names={dashboard:['Yamilet Admin · Resumen','Dashboard general'],crm:['Yamilet Admin · CRM','Contactos'],pipeline:['Yamilet Admin · Pipeline','Pipeline'],students:['Yamilet Admin · Academia','Alumnas'],agenda:['Yamilet Admin · Agenda','Citas'],control:['Yamilet Admin · Compás One','Centro Compás'],blog:['Yamilet Admin · Contenido','Blog'],agents:['Yamilet Admin · Compás Fly','Agentes']};
     const meta=names[route]||names.dashboard;
     $('[data-breadcrumb]').textContent=meta[0];$('[data-page-title]').textContent=meta[1];
     location.hash=route==='dashboard'?'dashboard':route;
@@ -574,6 +654,7 @@
     $('[data-signout]')?.addEventListener('click',async()=>{await sb.auth.signOut();location.reload();});
     $('[data-denied-signout]')?.addEventListener('click',async()=>{await sb?.auth.signOut();location.reload();});
     $('[data-crm-search]')?.addEventListener('input',e=>renderCRM(e.target.value));
+    $('[data-agent-run]').forEach(btn=>btn.addEventListener('click',()=>runAgent(btn.dataset.agentRun)));
     $$('[data-status-filter]').forEach(btn=>btn.addEventListener('click',()=>{
       agendaFilter=btn.dataset.statusFilter;
       $$('[data-status-filter]').forEach(x=>x.classList.toggle('active',x===btn));
