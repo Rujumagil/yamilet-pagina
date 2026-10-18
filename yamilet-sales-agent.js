@@ -111,9 +111,9 @@
     const title=root.querySelector('.header strong');
     const subtitle=root.querySelector('.header small');
     const launcher=root.querySelector('.launcher');
-    if(title)title.textContent=isItalian?'Assistente di Yamilet':'Asistente de Yamilet';
-    if(subtitle)subtitle.textContent=isItalian?'Metodo MES® · orientamento personale':'Método MES® · orientación personal';
-    if(launcher)launcher.setAttribute('aria-label',isItalian?'Apri l’assistente di Yamilet':'Abrir asistente de Yamilet');
+    if(title)title.textContent='Andy';
+    if(subtitle)subtitle.textContent=isItalian?'Assistente di Yamilet · Metodo MES®':'Asistente de Yamilet · Método MES®';
+    if(launcher)launcher.setAttribute('aria-label',isItalian?'Parla con Andy':'Hablar con Andy');
 
     const patchConversation=()=>{
       const note=root.querySelector('.conversation-note');
@@ -136,8 +136,8 @@
       const textarea=composer?.querySelector('textarea');
       if(textarea){
         textarea.placeholder=isItalian
-          ? 'Scrivi cosa vorresti conoscere…'
-          : 'Escribe qué te gustaría conocer…';
+          ? 'Scrivi ad Andy…'
+          : 'Platícale a Andy…';
       }
 
       const messages=root.querySelector('.messages');
@@ -148,8 +148,8 @@
       quick.className='yamilet-quick-actions';
       quick.style.cssText='display:flex;gap:6px;overflow-x:auto;padding:8px 12px 0;background:#fff;scrollbar-width:none';
       const options=isItalian
-        ? [['Metodo MES®','Vorrei conoscere il Metodo MES®'],['Lezione gratuita','Vorrei sapere della lezione gratuita'],['Accademia','Vorrei conoscere l’Accademia Yamilet'],['Libri','Vorrei conoscere i libri di Yamilet']]
-        : [['Método MES®','Quiero conocer el Método MES®'],['Clase gratuita','Quiero saber de la clase gratuita'],['Academia','Quiero conocer la Academia Yamilet'],['Libros','Quiero conocer los libros de Yamilet']];
+        ? [['Metodo MES®','Ciao Andy, vorrei capire meglio come funziona il Metodo MES®'],['Lezione gratuita','Andy, mi racconti come funziona la lezione gratuita?'],['Accademia','Vorrei sapere com’è l’Accademia Yamilet'],['Libri','Mi consigli un libro di Yamilet da cui iniziare?']]
+        : [['Método MES®','Hola Andy, quiero entender mejor cómo funciona el Método MES®'],['Clase gratuita','Andy, ¿me cuentas cómo funciona la clase gratuita?'],['Academia','Quiero saber cómo es la Academia Yamilet'],['Libros','¿Qué libro de Yamilet me recomiendas para empezar?']];
       options.forEach(([label,value])=>{
         const button=document.createElement('button');
         button.type='button';
@@ -205,9 +205,9 @@
         }
       }
       const start=form.querySelector('.start');
-      if(start)start.textContent=isItalian?'Parlare con l’assistente':'Hablar con el asistente';
+      if(start)start.textContent=isItalian?'Parlare con Andy':'Hablar con Andy';
       const branding=form.querySelector('.branding');
-      if(branding)branding.textContent=isItalian?'Assistente di Yamilet Pérez':'Asistente de Yamilet Pérez';
+      if(branding)branding.textContent=isItalian?'Andy · Assistente di Yamilet':'Andy · Asistente de Yamilet';
     };
 
     patchConversation();
