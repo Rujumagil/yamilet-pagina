@@ -1,0 +1,21 @@
+name: Yamilet Compás Control summary checks
+
+on:
+  pull_request:
+    paths:
+      - "supabase/functions/compas-control-yamilet-summary/**"
+      - ".github/workflows/compas-control-summary.yml"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Check endpoint types
+        run: deno check supabase/functions/compas-control-yamilet-summary/index.ts supabase/functions/compas-control-yamilet-summary/tests/summary_test.ts
+      - name: Test authorization and tenant isolation
+        run: deno test --allow-env supabase/functions/compas-control-yamilet-summary/tests/summary_test.ts
