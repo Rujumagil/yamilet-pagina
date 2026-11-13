@@ -114,5 +114,5 @@ export async function handleEnrollmentSummary(
 }
 
 if (import.meta.main) {
-  Deno.serve(handleEnrollmentSummary);
+  Deno.serve((req) => handleEnrollmentSummary(req));
 }
