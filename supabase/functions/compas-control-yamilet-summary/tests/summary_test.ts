@@ -3,11 +3,12 @@ import { handleEnrollmentSummary } from "../index.ts";
 
 const token = "test_yamilet_super_secret_abcdefghijklmnopqrstuvwxyz";
 const base = "https://example.invalid/summary";
-const env = (name: string) => ({
+const vars: Record<string, string> = {
   COMPAS_CONTROL_YAMILET_METRICS_TOKEN: token,
   SUPABASE_URL: "https://fake.supabase.co",
   SUPABASE_SERVICE_ROLE_KEY: "test-service-role",
-} as Record<string, string>)[name]);
+};
+const env = (name: string) => vars[name];
 
 Deno.test("does not query the database when the caller has no token", async () => {
   const response = await handleEnrollmentSummary(new Request(base), env, (() => {
