@@ -7,7 +7,7 @@ const env = (name: string) => ({
   COMPAS_CONTROL_YAMILET_METRICS_TOKEN: token,
   SUPABASE_URL: "https://fake.supabase.co",
   SUPABASE_SERVICE_ROLE_KEY: "test-service-role",
-}[name]);
+} as Record<string, string>)[name]);
 
 Deno.test("does not query the database when the caller has no token", async () => {
   const response = await handleEnrollmentSummary(new Request(base), env, (() => {
